@@ -4,10 +4,6 @@
 		<configExtension>xml</configExtension>
 	</configExtensions>
 	<configs>
-		<config>base/src/webapp/WEB-INF/test-components-applicationContext.xml</config>
-		<config>base/src/webapp/WEB-INF/components-requestContext.xml</config>
-		<config>base/src/webapp/WEB-INF/test-components-requestContext.xml</config>
-		<config>base/src/webapp/WEB-INF/components-applicationContext.xml</config>
 	</configs>
 	<configSets>
 		<configSet>
@@ -19,10 +15,6 @@
 				<config>/J-RSFUtil/src/conf/blank-requestContext.xml</config>
 				<config>/J-RSFUtil/src/conf/rsf-config.xml</config>
 				<config>/J-RSFUtil/src/conf/rsf-requestscope-config.xml</config>
-				<config>base/src/webapp/WEB-INF/components-applicationContext.xml</config>
-				<config>base/src/webapp/WEB-INF/components-requestContext.xml</config>
-				<config>base/src/webapp/WEB-INF/test-components-applicationContext.xml</config>
-				<config>base/src/webapp/WEB-INF/test-components-requestContext.xml</config>
 			</configs>
 		</configSet>
 	</configSets>

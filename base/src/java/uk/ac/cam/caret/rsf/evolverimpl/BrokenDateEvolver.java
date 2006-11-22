@@ -4,7 +4,6 @@ package uk.ac.cam.caret.rsf.evolverimpl;
  * Created on 22 Sep 2006
  */
 
-
 import java.util.Date;
 
 import uk.org.ponder.beanutil.BeanGetter;
