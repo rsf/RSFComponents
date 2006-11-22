@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <!-- For security purposes, only beans listed in this collection may be the
+    target of EL operations coming in over the request -->
+  <bean parent="requestAddressibleParent">
+    <property name="value" value="dataBean, brokenDateTransit, fieldDateTransit, 
+       componentChoice" />
+  </bean>
+  
+  <!-- The beans which will be preserved across a flow via simple instance
+    copying -->
+  <bean parent="copyPreservingParent">
+    <property name="value" value="dataBean"/>
+  </bean>
+
+  <bean parent="beanScopeParent">
+    <property name="copyPreservingBeans" value="componentChoice" />
+  </bean>
+<!-- 
+  <bean parent="templateContributorParent">
+    <property name="templateNames" value="sakai-old-date, sakai-FCKEditor, 
+      sakai-plainTextEditor, yahoo-date"/>
+  </bean>
+  -->
+
+</beans>

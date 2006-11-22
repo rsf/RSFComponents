@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!-- The "request scope application context" file  -->
+
+<beans>
+
+  <bean id="dataBean" class="uk.ac.cam.caret.sakai.rsf.beans.DataBean" />
+
+  <bean id="componentChoice"
+    class="uk.ac.cam.caret.sakai.rsf.beans.ComponentChoiceBean">
+    <property name="dateEvolvers" ref="dateEvolvers" />
+    <property name="textEvolvers" ref="textEvolvers" />
+    <property name="sessionManager"
+      ref="org.sakaiproject.tool.api.SessionManager" />
+  </bean>
+
+  <bean id="textEvolver" factory-bean="componentChoice"
+    factory-method="getTextInputEvolver" />
+
+  <bean id="dateEvolver" factory-bean="componentChoice"
+    factory-method="getDateInputEvolver" />
+
+  <bean class="uk.org.ponder.localeutil.LocaleReceiver"/>
+
+
+  <bean class="uk.ac.cam.caret.sakai.rsf.producers.IndexProducer">
+    <!-- This would not be injected with OTP -->
+    <property name="dataBean" ref="dataBean" />
+    <property name="choiceBean" ref="componentChoice" />
+    <property name="dateEvolver" ref="dateEvolver" />
+    <property name="textEvolver" ref="textEvolver" />
+    <property name="locale" ref="requestLocale" />
+  </bean>
+
+  <bean class="uk.ac.cam.caret.sakai.rsf.producers.ResultsProducer">
+    <property name="localeGetter" ref="requestLocaleProxy" />
+    <property name="dataBean" ref="dataBean" />
+  </bean>
+
+</beans>

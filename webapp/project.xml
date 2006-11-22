@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <pomVersion>3</pomVersion>
+  <artifactId>RSFComponents</artifactId>
+  <name>RSFComponents Webapp</name>
+  <groupId>rsfutil</groupId>
+  <currentVersion>${rsfutil.version}</currentVersion>
+  <organization>
+    <name>CARET</name>
+    <url>http://www.caret.cam.ac.uk</url>
+  </organization>
+  <inceptionYear>2005</inceptionYear>
+  <logo>/images/logo.gif</logo>
+  <description>
+    RSF Components package, packaged for a standard Servlet environment.
+  </description>
+  <repository />
+  <mailingLists>
+    <mailingList>
+      <name>${pom.name} Dev List</name>
+    </mailingList>
+    <mailingList>
+      <name>${pom.name} User List</name>
+    </mailingList>
+  </mailingLists>
+  <reports></reports>
+  <dependencies>
+    <dependency>
+      <groupId>rsftest</groupId>
+      <artifactId>RSFComponents-base</artifactId>
+      <version>${rsfutil.version}</version>
+      <type>war</type>
+      <properties>
+        <explode>true</explode>
+      </properties>
+    </dependency>
+    <!--  Spring and its dependencies are added in at this level since 
+      in some environments they must live at a shared classloader level -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring</artifactId>
+      <version>1.2.8</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <!--  The framework requires CGLIB (Java bytecode manipulation library) 
+      in order to implement lazy-loaded beans  -->
+    <dependency>
+      <groupId>aopalliance</groupId>
+      <artifactId>aopalliance</artifactId>
+      <version>1.0</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib</artifactId>
+      <version>nodep-2.1_3</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+  </dependencies>
+  <build>
+    <sourceDirectory>src/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+    <unitTest>
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
+    </unitTest>
+  </build>
+</project>
+
