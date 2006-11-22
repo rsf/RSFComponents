@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="base/src/java"/>
 	<classpathentry kind="src" path="test/src/java"/>
+	<classpathentry kind="src" path="evolvers/src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/J-RSFUtil"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/PonderUtilCore"/>
-	<classpathentry kind="output" path="base/bin"/>
+	<classpathentry kind="output" path="evolvers/bin"/>
 </classpath>
