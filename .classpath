@@ -4,5 +4,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/J-RSFUtil"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/PonderUtilCore"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="base/bin"/>
 </classpath>
