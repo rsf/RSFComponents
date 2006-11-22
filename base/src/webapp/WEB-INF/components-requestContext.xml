@@ -41,7 +41,7 @@
     factory-method="getDateInputEvolver" />
 
   <!-- ***** BEGIN Component Evolvers ****** -->
-  <bean class="uk.ac.cam.caret.sakai.rsf.evolverimpl.FieldDateEvolver">
+  <bean class="uk.ac.cam.caret.rsf.evolverimpl.FieldDateEvolver">
     <property name="JSEmitter" ref="dateSymbolJSEmitter" />
     <property name="requestBeanGetter" ref="ELEvaluatorProxy" />
     <property name="transitBase" value="fieldDateTransit" />
@@ -60,20 +60,5 @@
 
   <!-- ***** END Component Evolvers ****** -->
 
-
-  <bean class="uk.ac.cam.caret.sakai.rsf.producers.IndexProducer">
-    <!-- This would not be injected with OTP -->
-    <property name="dataBean" ref="dataBean" />
-    <property name="choiceBean" ref="componentChoice" />
-    <property name="dateEvolver" ref="dateEvolver" />
-    <property name="textEvolver" ref="textEvolver" />
-    <property name="locale" ref="sakai-Locale" />
-  </bean>
-
-
-  <bean class="uk.ac.cam.caret.sakai.rsf.producers.ResultsProducer">
-    <property name="localeGetter" ref="sakai-LocaleProxy" />
-    <property name="dataBean" ref="dataBean" />
-  </bean>
 
 </beans>

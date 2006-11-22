@@ -18,6 +18,10 @@
   <bean parent="beanScopeParent">
     <property name="copyPreservingBeans" value="componentChoice" />
   </bean>
+  
+  <bean id="dateEvolvers" class="uk.org.ponder.springutil.StringListFactory">
+    <property name="strings" value="fieldDateEvolver, brokenDateEvolver"/>
+  </bean>
 <!-- 
   <bean parent="templateContributorParent">
     <property name="templateNames" value="sakai-old-date, sakai-FCKEditor, 
