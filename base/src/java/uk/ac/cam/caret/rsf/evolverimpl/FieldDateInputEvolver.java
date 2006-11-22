@@ -1,7 +1,7 @@
 /*
  * Created on 24 Oct 2006
  */
-package uk.ac.cam.caret.sakai.rsf.evolverimpl;
+package uk.ac.cam.caret.rsf.evolverimpl;
 
 import java.util.Date;
 

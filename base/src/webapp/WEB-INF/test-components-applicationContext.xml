@@ -19,6 +19,10 @@
     <property name="copyPreservingBeans" value="componentChoice" />
   </bean>
   
+  <bean id="sessionLocaleScope" parent="beanScopeParent">
+    <property name="copyPreservingBeans" value="localeSetter"/>
+  </bean>
+  
   <bean id="dateEvolvers" class="uk.org.ponder.springutil.StringListFactory">
     <property name="strings" value="fieldDateEvolver, brokenDateEvolver"/>
   </bean>

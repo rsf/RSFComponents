@@ -5,14 +5,13 @@
 
 <beans>
 
-  <bean id="dataBean" class="uk.ac.cam.caret.sakai.rsf.beans.DataBean" />
+  <bean id="dataBean" class="uk.ac.cam.caret.rsf.testcomponents.beans.DataBean" />
 
   <bean id="componentChoice"
-    class="uk.ac.cam.caret.sakai.rsf.beans.ComponentChoiceBean">
+    class="uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceBean">
     <property name="dateEvolvers" ref="dateEvolvers" />
     <property name="textEvolvers" ref="textEvolvers" />
-    <property name="sessionManager"
-      ref="org.sakaiproject.tool.api.SessionManager" />
+    <property name="localeSetter" ref="localeSetter" />
   </bean>
 
   <bean id="textEvolver" factory-bean="componentChoice"
@@ -21,10 +20,10 @@
   <bean id="dateEvolver" factory-bean="componentChoice"
     factory-method="getDateInputEvolver" />
 
-  <bean class="uk.org.ponder.localeutil.LocaleReceiver"/>
+  <bean id="localeSetter" class="uk.org.ponder.localeutil.LocaleReceiver"/>
 
 
-  <bean class="uk.ac.cam.caret.sakai.rsf.producers.IndexProducer">
+  <bean class="uk.ac.cam.caret.rsf.testcomponents.producers.IndexProducer">
     <!-- This would not be injected with OTP -->
     <property name="dataBean" ref="dataBean" />
     <property name="choiceBean" ref="componentChoice" />
@@ -33,7 +32,7 @@
     <property name="locale" ref="requestLocale" />
   </bean>
 
-  <bean class="uk.ac.cam.caret.sakai.rsf.producers.ResultsProducer">
+  <bean class="uk.ac.cam.caret.rsf.testcomponents.producers.ResultsProducer">
     <property name="localeGetter" ref="requestLocaleProxy" />
     <property name="dataBean" ref="dataBean" />
   </bean>

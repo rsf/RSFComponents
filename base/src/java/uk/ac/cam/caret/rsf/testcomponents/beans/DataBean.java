@@ -1,7 +1,7 @@
 /*
  * Created on 22 Sep 2006
  */
-package uk.ac.cam.caret.sakai.rsf.beans;
+package uk.ac.cam.caret.rsf.testcomponents.beans;
 
 import java.util.Date;
 import java.util.GregorianCalendar;

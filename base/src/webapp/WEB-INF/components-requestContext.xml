@@ -16,39 +16,25 @@
     <property name="factory">
       <bean class="uk.org.ponder.dateutil.FieldDateTransit"
         init-method="init">
-        <property name="locale" ref="sakai-Locale" />
+        <property name="locale" ref="requestLocale" />
       </bean>
     </property>
   </bean>
 
   <bean name="monthBean" class="uk.org.ponder.dateutil.MonthBean"
     init-method="init">
-    <property name="locale" ref="request-Locale" />
+    <property name="locale" ref="requestLocale" />
   </bean>
-
-  <bean id="componentChoice"
-    class="uk.ac.cam.caret.sakai.rsf.beans.ComponentChoiceBean">
-    <property name="dateEvolvers" ref="dateEvolvers" />
-    <property name="textEvolvers" ref="textEvolvers" />
-    <property name="sessionManager"
-      ref="org.sakaiproject.tool.api.SessionManager" />
-  </bean>
-
-  <bean id="textEvolver" factory-bean="componentChoice"
-    factory-method="getTextInputEvolver" />
-
-  <bean id="dateEvolver" factory-bean="componentChoice"
-    factory-method="getDateInputEvolver" />
 
   <!-- ***** BEGIN Component Evolvers ****** -->
-  <bean class="uk.ac.cam.caret.rsf.evolverimpl.FieldDateEvolver">
+  <bean class="uk.ac.cam.caret.rsf.evolverimpl.FieldDateInputEvolver">
     <property name="JSEmitter" ref="dateSymbolJSEmitter" />
     <property name="requestBeanGetter" ref="ELEvaluatorProxy" />
     <property name="transitBase" value="fieldDateTransit" />
     <property name="viewStateHandler" ref="viewStateHandler" />
   </bean>
 
-  <bean class="uk.ac.cam.caret.sakai.rsf.evolverimpl.BrokenDateEvolver">
+  <bean class="uk.ac.cam.caret.rsf.evolverimpl.BrokenDateEvolver">
     <property name="requestBeanGetter" ref="ELEvaluatorProxy" />
     <property name="monthBeanName" value="monthBean" />
     <property name="yearList" value="2002, 2003, 2004, 2005, 2006, 2007" />

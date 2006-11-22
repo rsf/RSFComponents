@@ -1,11 +1,11 @@
 /*
  * Created on 21 Sep 2006
  */
-package uk.ac.cam.caret.sakai.rsf.producers;
+package uk.ac.cam.caret.rsf.testcomponents.producers;
 
 import java.text.DateFormat;
 
-import uk.ac.cam.caret.sakai.rsf.beans.DataBean;
+import uk.ac.cam.caret.rsf.testcomponents.beans.DataBean;
 import uk.org.ponder.localeutil.LocaleGetter;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIInternalLink;
@@ -17,7 +17,7 @@ import uk.org.ponder.rsf.viewstate.ViewParameters;
 
 public class ResultsProducer implements ViewComponentProducer {
 
-  public static final String VIEW_ID = "results";
+  public static final String VIEW_ID = "test-components-results";
   private LocaleGetter localegetter;
   private DataBean databean;
 

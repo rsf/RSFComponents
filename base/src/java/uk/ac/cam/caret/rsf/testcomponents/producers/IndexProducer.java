@@ -1,11 +1,12 @@
-package uk.ac.cam.caret.sakai.rsf.producers;
+package uk.ac.cam.caret.rsf.testcomponents.producers;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import uk.ac.cam.caret.sakai.rsf.beans.ComponentChoiceBean;
-import uk.ac.cam.caret.sakai.rsf.beans.DataBean;
+
+import uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceBean;
+import uk.ac.cam.caret.rsf.testcomponents.beans.DataBean;
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
@@ -23,7 +24,7 @@ import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
 
 /**
- * Demonstrates modular RSF components in Sakai.
+ * Demonstrates modular RSF components.
  * 
  * @author Antranig Basman (antranig@caret.cam.ac.uk)
  * 
@@ -32,7 +33,7 @@ import uk.org.ponder.rsf.viewstate.ViewParameters;
 public class IndexProducer implements ViewComponentProducer, DefaultView,
     NavigationCaseReporter {
 
-  public static final String VIEW_ID = "index";
+  public static final String VIEW_ID = "test-components-index";
   private DateInputEvolver dateevolver;
   private TextInputEvolver textevolver;
   private DataBean databean;

@@ -1,0 +1,68 @@
+<!DOCTYPE html      PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:rsf="http://ponder.org.uk/rsf">
+<head>
+<title>RSF Components Test Tool</title>
+<link rel="stylesheet" href="../style.css" type="text/css" />
+</head>
+<body>
+<script>
+//<![CDATA[
+var myLogReader1 = new YAHOO.widget.LogReader(null,{width: "60em", verboseOutput: false}); 
+myLogReader1.formatMsg = function(oLogMsg) { 
+  var category = oLogMsg.category; 
+  return "<p><span class='"+category+"'>"+category+"</span> "+ 
+	        this.html2Text(oLogMsg.msg)+"</p>"; 
+	 
+}; 
+//]]>
+</script>
+<div class="portletBody">
+<h1>RSF Components Test Tool</h1>
+<form rsf:id="components-form">
+Select Date 1: <div rsf:id="date-1:">(Date control goes here)</div>
+<br/>
+
+Select Date 2: <div rsf:id="date-2:">(Date control goes here)</div>
+<br/>
+Rich text control:
+
+<div rsf:id="rich-text:">(Rich text control goes here) </div>
+<br/>
+<input type="submit" rsf:id="submit" value="Submit values"></input>
+
+</form>
+
+<form rsf:id="text-select-form">
+Choose a style of rich text control: 
+
+<select rsf:id="text-select"> 
+ <option value="FCK">FCKEditor</option>
+ <option value="HTML">HTMLArea</option>
+ <option value="plain">Plain &lt;textarea&gt;</option>
+</select>
+<input type="submit" rsf:id="submit-text-select" value="Update text control"></input>
+</form>
+
+<form rsf:id="date-select-form">
+Choose a style of date control: 
+
+<select rsf:id="date-select"> 
+ <option value="Broken">Broken</option>
+ <option value="Simple">Simple</option>
+</select>
+<input type="submit" rsf:id="submit-date-select" value="Update date control"></input>
+</form>
+
+<form rsf:id="locale-select-form">
+Choose a locale:
+
+<select rsf:id="locale-select">
+  <option value="en_GB" selected="selected">en_GB</option>
+  <option value="de_DE">de_DE</option>
+</select>
+<input type="submit" rsf:id="submit-locale" value="Update locale"></input>
+</form>
+</div>
+</body>
+</html>
