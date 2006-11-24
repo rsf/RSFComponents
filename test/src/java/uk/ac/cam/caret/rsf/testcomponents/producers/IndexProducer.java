@@ -22,6 +22,7 @@ import uk.org.ponder.rsf.view.DefaultView;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
+import uk.org.ponder.stringutil.StringList;
 
 /**
  * Demonstrates modular RSF components.
@@ -81,13 +82,13 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
     UICommand.make(cform, "submit", "#{dataBean.update}");
 
     UIForm tform = UIForm.make(tofill, "text-select-form");
-    List texts = choicebean.getTextEvolvers();
+    StringList texts = choicebean.getTextEvolvers();
     makeEvolveSelect(tform, texts, "text-select",
         "#{componentChoice.textEvolverIndex}");
 
     UIForm dform = UIForm.make(tofill, "date-select-form");
 
-    List dates = choicebean.getDateEvolvers();
+    StringList dates = choicebean.getDateEvolvers();
     makeEvolveSelect(dform, dates, "date-select",
         "#{componentChoice.dateEvolverIndex}");
 
@@ -102,7 +103,7 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
     UICommand.make(lform, "submit-locale");
   }
 
-  private void makeEvolveSelect(UIForm tform, List texts, String selectID,
+  private void makeEvolveSelect(UIForm tform, StringList texts, String selectID,
       String EL) {
     int ctexts = texts.size();
     String[] choices = new String[ctexts];
@@ -110,11 +111,7 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
 
     for (int i = 0; i < ctexts; ++i) {
       choices[i] = Integer.toString(i);
-      String classname = texts.get(i).getClass().getName();
-      int dotpos = classname.lastIndexOf('.');
-      classname = classname.substring(dotpos + 1, classname.length()
-          - "Evolver".length());
-      choicenames[i] = classname;
+      choicenames[i] = texts.stringAt(i);
     }
     UISelect.make(tform, selectID, choices, choicenames, EL, null);
     UICommand.make(tform, "submit-" + selectID);

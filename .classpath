@@ -5,5 +5,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/J-RSFUtil"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/PonderUtilCore"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/J-ServletUtil"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Spring 1.2.8"/>
 	<classpathentry kind="output" path="evolvers/bin"/>
 </classpath>

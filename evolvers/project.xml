@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
   <pomVersion>3</pomVersion>
-  <artifactId>RSFComponents-base</artifactId>
-  <name>RSFComponents Base</name>
+  <artifactId>RSFComponents-evolvers</artifactId>
+  <name>RSFComponents Evolvers</name>
   <groupId>rsfutil</groupId>
   <currentVersion>${rsfutil.version}</currentVersion>
   <organization>
@@ -11,9 +11,8 @@
   </organization>
   <inceptionYear>2005</inceptionYear>
   <logo>/images/logo.gif</logo>
-  <description>Components base package for RSF. This artifact is
-  a "partial WAR" omitting essential packaging information to allow it to be
-  retargetted for different environments (servlet, JSR-168 portlet, Sakai tool &amp;c)
+  <description>Components package for RSF - produces a JAR containing the
+  Java definitions of evolvers.
   </description>
   <repository />
   <mailingLists>
@@ -33,27 +32,18 @@
       <artifactId>ponderutilcore</artifactId>
       <version>${ponderutilcore.version}</version>
       <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
     </dependency>
     <dependency>
       <groupId>j-servletutil</groupId>
       <artifactId>j-servletutil</artifactId>
       <version>${jservletutil.version}</version>
       <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
     </dependency>
     <dependency>
       <groupId>rsfutil</groupId>
       <artifactId>rsfutil</artifactId>
       <version>${rsfutil.version}</version>
       <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
     </dependency>
     <dependency>
       <groupId>servletapi</groupId>
@@ -66,9 +56,6 @@
       <artifactId>log4j</artifactId>
       <version>1.2.9</version>
       <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -83,9 +70,6 @@
       <artifactId>concurrent</artifactId>
       <version>1.3.4</version>
       <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
     </dependency>
     <!-- Aleksander Slominski's (U Indiana) lightning-fast XML pull parser -->
       <dependency>
@@ -93,13 +77,23 @@
       <artifactId>xpp3</artifactId>
       <version>1.1.3.4-RC8_min</version>
       <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
     </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
+    <resources>
+      <resource>
+       <directory>src/java/</directory>
+        <targetPath>/</targetPath>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+        <includes>
+          <include>**/*.dtd</include>
+        </includes>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>

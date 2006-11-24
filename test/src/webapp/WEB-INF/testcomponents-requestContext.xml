@@ -9,6 +9,7 @@
 
   <bean id="componentChoice"
     class="uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceBean">
+    <property name="requestBeanLocator" ref="requestBeanLocator"/>
     <property name="dateEvolvers" ref="dateEvolvers" />
     <property name="textEvolvers" ref="textEvolvers" />
     <property name="localeSetter" ref="localeSetter" />

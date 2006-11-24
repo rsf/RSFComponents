@@ -2,8 +2,20 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-  <bean name="dateSymbolJSEmitter" class="uk.org.ponder.htmlutil.DateSymbolJSEmitter">
-    <property name="localeGetter" ref="requestLocaleProxy"/>
+  <bean name="dateSymbolJSEmitter"
+    class="uk.org.ponder.htmlutil.DateSymbolJSEmitter">
+    <property name="localeGetter" ref="requestLocaleProxy" />
+  </bean>
+
+  <bean id="componentTemplateContributor"
+    parent="templateContributorParent">
+    <property name="templateResourceBase" value="../RSFComponents-templates/"/>
+    <property name="templateNames"
+      value="old-date, plainTextEditor, yahoo-date" />
+  </bean>
+
+  <bean parent="requestAddressibleParent">
+    <property name="value" value="brokenDateTransit, fieldDateTransit" />
   </bean>
 
 </beans>

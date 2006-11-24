@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
   <pomVersion>3</pomVersion>
-  <artifactId>RSFComponents</artifactId>
-  <name>RSFComponents Webapp</name>
+  <artifactId>RSFComponents-templates</artifactId>
+  <name>RSFComponents Templates</name>
   <groupId>rsfutil</groupId>
   <currentVersion>${rsfutil.version}</currentVersion>
   <organization>
@@ -11,6 +11,12 @@
   </organization>
   <inceptionYear>2005</inceptionYear>
   <logo>/images/logo.gif</logo>
+  <properties>
+    <!-- deploy as a war -->
+    <deploy.type>war</deploy.type>
+    <!-- deploy to "shared", "common" or "server" -->
+    <deploy.target>server</deploy.target>
+  </properties>
   <description>
     RSF Components package, packaged for a standard Servlet environment.
   </description>
@@ -26,40 +32,18 @@
   <reports></reports>
   <dependencies>
     <dependency>
-      <groupId>rsftest</groupId>
-      <artifactId>RSFComponents-base</artifactId>
-      <version>${rsfutil.version}</version>
-      <type>war</type>
-      <properties>
-        <explode>true</explode>
-      </properties>
-    </dependency>
-    <!--  Spring and its dependencies are added in at this level since 
-      in some environments they must live at a shared classloader level -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring</artifactId>
-      <version>1.2.8</version>
-      <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <!--  The framework requires CGLIB (Java bytecode manipulation library) 
-      in order to implement lazy-loaded beans  -->
-    <dependency>
-      <groupId>aopalliance</groupId>
-      <artifactId>aopalliance</artifactId>
-      <version>1.0</version>
+      <groupId>ponderutilcore</groupId>
+      <artifactId>ponderutilcore</artifactId>
+      <version>${ponderutilcore.version}</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
     <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib</artifactId>
-      <version>nodep-2.1_3</version>
+      <groupId>j-servletutil</groupId>
+      <artifactId>j-servletutil</artifactId>
+      <version>${jservletutil.version}</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>

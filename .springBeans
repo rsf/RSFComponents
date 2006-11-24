@@ -4,6 +4,10 @@
 		<configExtension>xml</configExtension>
 	</configExtensions>
 	<configs>
+		<config>test/src/webapp/WEB-INF/testcomponents-requestContext.xml</config>
+		<config>evolvers/src/java/conf/components-applicationContext.xml</config>
+		<config>test/src/webapp/WEB-INF/testcomponents-applicationContext.xml</config>
+		<config>evolvers/src/java/conf/components-requestContext.xml</config>
 	</configs>
 	<configSets>
 		<configSet>
@@ -15,6 +19,10 @@
 				<config>/J-RSFUtil/src/conf/blank-requestContext.xml</config>
 				<config>/J-RSFUtil/src/conf/rsf-config.xml</config>
 				<config>/J-RSFUtil/src/conf/rsf-requestscope-config.xml</config>
+				<config>evolvers/src/java/conf/components-applicationContext.xml</config>
+				<config>evolvers/src/java/conf/components-requestContext.xml</config>
+				<config>test/src/webapp/WEB-INF/testcomponents-applicationContext.xml</config>
+				<config>test/src/webapp/WEB-INF/testcomponents-requestContext.xml</config>
 			</configs>
 		</configSet>
 	</configSets>

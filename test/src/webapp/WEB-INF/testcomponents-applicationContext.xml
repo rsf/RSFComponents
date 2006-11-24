@@ -5,8 +5,7 @@
   <!-- For security purposes, only beans listed in this collection may be the
     target of EL operations coming in over the request -->
   <bean parent="requestAddressibleParent">
-    <property name="value" value="dataBean, brokenDateTransit, fieldDateTransit, 
-       componentChoice" />
+    <property name="value" value="dataBean, componentChoice" />
   </bean>
   
   <!-- The beans which will be preserved across a flow via simple instance
@@ -24,7 +23,11 @@
   </bean>
   
   <bean id="dateEvolvers" class="uk.org.ponder.springutil.StringListFactory">
-    <property name="strings" value="fieldDateEvolver, brokenDateEvolver"/>
+    <property name="strings" value="fieldDateInputEvolver, brokenDateInputEvolver"/>
+  </bean>
+  
+  <bean id="textEvolvers" class="uk.org.ponder.springutil.StringListFactory">
+    <property name="strings" value="plainTextInputEvolver"/>
   </bean>
 <!-- 
   <bean parent="templateContributorParent">

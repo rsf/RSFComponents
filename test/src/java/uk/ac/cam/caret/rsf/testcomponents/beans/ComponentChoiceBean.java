@@ -4,52 +4,57 @@
 
 package uk.ac.cam.caret.rsf.testcomponents.beans;
 
-import java.util.List;
 import java.util.Locale;
 
+import uk.org.ponder.beanutil.BeanLocator;
 import uk.org.ponder.localeutil.LocaleSetter;
 import uk.org.ponder.localeutil.LocaleUtil;
 import uk.org.ponder.rsf.evolvers.DateInputEvolver;
 import uk.org.ponder.rsf.evolvers.TextInputEvolver;
+import uk.org.ponder.stringutil.StringList;
 
 
 public class ComponentChoiceBean {
-  private List dateEvolvers;
-  private List textEvolvers;
+  private StringList dateEvolvers;
+  private StringList textEvolvers;
   private LocaleSetter localeSetter;
+  
+  private BeanLocator rbg;
 
   public void setLocaleSetter(LocaleSetter localeSetter) {
     this.localeSetter = localeSetter;
   }
   
-  public void setDateEvolvers(List dateEvolvers) {
+  public void setDateEvolvers(StringList dateEvolvers) {
     this.dateEvolvers = dateEvolvers;
   }
 
-  public void setTextEvolvers(List textEvolvers) {
+  public void setTextEvolvers(StringList textEvolvers) {
     this.textEvolvers = textEvolvers;
   }
   
 
-  public List getTextEvolvers() {
+  public StringList getTextEvolvers() {
     return textEvolvers;
   }
   
-  public List getDateEvolvers() {
+  public StringList getDateEvolvers() {
     return dateEvolvers;
   }
   
+  public void setRequestBeanLocator(BeanLocator rbg) {
+    this.rbg = rbg;
+  }
   
   public int dateEvolverIndex = 0;
   public int textEvolverIndex = 0;
   
-  
   public TextInputEvolver getTextInputEvolver() {
-    return (TextInputEvolver) textEvolvers.get(textEvolverIndex);  
+    return (TextInputEvolver) rbg.locateBean(textEvolvers.stringAt(textEvolverIndex));  
   }
   
   public DateInputEvolver getDateInputEvolver() {
-    return (DateInputEvolver) dateEvolvers.get(dateEvolverIndex);
+    return (DateInputEvolver) rbg.locateBean(dateEvolvers.stringAt(dateEvolverIndex));
   }
   
   public void setLocale(String localestring) {
