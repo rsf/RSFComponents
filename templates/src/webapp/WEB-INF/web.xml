@@ -7,9 +7,4 @@
  "webapp" -->
   <display-name>RSFComponents-templates</display-name>
   <description>RSF component templates</description>
-  
-  <servlet>
-    <servlet-name>
-    <servlet-class>uk.org.ponder.servletutil.ContextReportingServlet</servlet-class>
-  </servlet>
 </web-app>

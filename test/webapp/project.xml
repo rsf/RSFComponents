@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
   <pomVersion>3</pomVersion>
-  <artifactId>RSFComponents-test</artifactId>
+  <artifactId>RSFComponents-test-webapp</artifactId>
   <name>RSFComponents Test Webapp</name>
   <groupId>rsfutil</groupId>
   <currentVersion>${rsfutil.version}</currentVersion>
@@ -31,6 +31,15 @@
   </mailingLists>
   <reports></reports>
   <dependencies>
+   <dependency>
+      <groupId>rsfutil</groupId>
+      <artifactId>RSFComponents-test-base-webapp</artifactId>
+      <version>${rsfutil.version}</version>
+      <type>war</type>
+      <properties>
+        <explode>true</explode>
+      </properties>
+    </dependency>
     <dependency>
       <groupId>rsfutil</groupId>
       <artifactId>RSFComponents-templates</artifactId>
@@ -150,4 +159,3 @@
     </unitTest>
   </build>
 </project>
-

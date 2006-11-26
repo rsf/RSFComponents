@@ -10,7 +10,6 @@
     <url>http://www.caret.cam.ac.uk</url>
   </organization>
   <inceptionYear>2005</inceptionYear>
-  <logo>/images/logo.gif</logo>
   <properties>
     <!-- deploy as a war -->
     <deploy.type>war</deploy.type>
@@ -20,16 +19,6 @@
   <description>
     RSF Components package, packaged for a standard Servlet environment.
   </description>
-  <repository />
-  <mailingLists>
-    <mailingList>
-      <name>${pom.name} Dev List</name>
-    </mailingList>
-    <mailingList>
-      <name>${pom.name} User List</name>
-    </mailingList>
-  </mailingLists>
-  <reports></reports>
   <dependencies>
     <dependency>
       <groupId>ponderutilcore</groupId>
