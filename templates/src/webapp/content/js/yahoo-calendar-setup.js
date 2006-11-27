@@ -249,8 +249,8 @@ dateField are both <input>, annotation is a <div> **/
     var selMonthID = nameBase + "select-month";
     var selDayID = nameBase + "select-day";
 
-	var selMonth = $it(selMonthID);
-	var selDay = $it(selDayID);
+    var selMonth = $it(selMonthID);
+    var selDay = $it(selDayID);
 
     var controlIDs = [selMonthID, selDayID];
 
@@ -282,17 +282,17 @@ from the controls of an active calendar dismisses its popup **/
   function yahoo_documentClick(e, cal, IDs) { 
     var target = YAHOO.util.Event.getTarget(e);
 	  
-	var found = false;
-	while(target) {
-	  if (IDs[target.id]) {
-	    found = true;
-	    }
-	  target = target.parentNode;
+    var found = false;
+    while(target) {
+      if (IDs[target.id]) {
+	      found = true;
+	      }
+	    target = target.parentNode;
       }
     if (!found) {
       cal.hide();
-    }
+      }
 //	alert("click " + e); 
-  }
+    }
 	
 
