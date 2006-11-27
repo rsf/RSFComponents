@@ -38,5 +38,10 @@
       <fileset dir="${maven.war.webapp.dir}" />
     </copy>
   </goal>
+  
+    <!-- Override jar:install goal to compose "partial WAR" strategy -->
+  <goal name="jar:install">
+    <attainGoal name="war:install"/> 
+  </goal>
 
 </project>

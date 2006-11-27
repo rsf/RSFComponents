@@ -10,6 +10,11 @@
     <attainGoal name="deploy" />
   </goal>
 
+  <!-- Override jar:install goal to compose "partial WAR" strategy -->
+  <goal name="jar:install">
+    <attainGoal name="war:install"/> 
+  </goal>
+
 <!-- This standard stanza is required for any webapps participating in the
    "partial WAR" build strategy -->
   <preGoal name="war:webapp">

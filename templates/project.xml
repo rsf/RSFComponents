@@ -11,10 +11,9 @@
   </organization>
   <inceptionYear>2005</inceptionYear>
   <properties>
-    <!-- deploy as a war -->
-    <deploy.type>war</deploy.type>
-    <!-- deploy to "shared", "common" or "server" -->
-    <deploy.target>server</deploy.target>
+    <!-- This project is NOT REALLY a JAR, but we want it not to deploy
+    to the server when invoked as a byproduct of a Sakai build. -->
+    <deploy.type>jar</deploy.type>
   </properties>
   <description>
     RSF Components package, packaged for a standard Servlet environment.

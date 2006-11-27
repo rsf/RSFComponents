@@ -6,8 +6,7 @@
 
   <!-- the common "full" goal invokes the default goal.  Used in maven -Dgoal=full multiproject:goal from .. -->
   <goal name="full">
-    <!--attainGoal name="dependencies" /-->
-    <attainGoal name="deploy" />
+    <attainGoal name="jar:install" />
   </goal>
 
 <!-- This standard stanza is required for any webapps participating in the
@@ -25,18 +24,10 @@
       </j:if>
     </j:forEach>
   </preGoal>
-
-  <goal name="deploy" prereqs="war:install">
-    <maven:property defaultValue="${pom.artifactId}" var="webappName"
-      name="deploy.webappname" />
-    <j:set var="destination"
-      value="${maven.tomcat.home}/webapps/${webappName}" />
-    <delete dir="${destination}"/>
-    <mkdir dir="${destination}" />
-
-    <copy todir="${destination}">
-      <fileset dir="${maven.war.webapp.dir}" />
-    </copy>
+  
+  <!-- Override jar:install goal to compose "partial WAR" strategy -->
+  <goal name="jar:install">
+    <attainGoal name="war:install"/> 
   </goal>
 
 </project>

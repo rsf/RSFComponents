@@ -12,8 +12,9 @@
   <inceptionYear>2005</inceptionYear>
   <logo>/images/logo.gif</logo>
   <properties>
-    <!-- deploy as a war -->
-    <deploy.type>war</deploy.type>
+    <!-- This project is not REALLY a jar, but we never want it to be deployed
+      as a war. The jar:install goal is overridden in maven.xml -->
+    <deploy.type>jar</deploy.type>
   </properties>
   <description>
     RSF Components package, packaged for a standard Servlet environment.
