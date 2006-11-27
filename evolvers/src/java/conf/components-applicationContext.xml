@@ -2,14 +2,18 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-  <bean name="dateSymbolJSEmitter"
+  <bean id="componentsTemplateResourceBase" class="java.lang.String">
+    <constructor-arg value="/../RSFComponents-templates/"/>
+  </bean>
+
+  <bean id="dateSymbolJSEmitter"
     class="uk.org.ponder.htmlutil.DateSymbolJSEmitter">
     <property name="localeGetter" ref="requestLocaleProxy" />
   </bean>
 
   <bean id="componentTemplateContributor"
     parent="templateContributorParent">
-    <property name="templateResourceBase" value="../RSFComponents-templates/"/>
+    <property name="templateResourceBase" ref="componentsTemplateResourceBase"/>
     <property name="templateNames"
       value="old-date, plainTextEditor, yahoo-date" />
   </bean>
