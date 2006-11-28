@@ -26,17 +26,15 @@
     </j:forEach>
   </preGoal>
 
-  <goal name="deploy" prereqs="war:install">
+   <goal name="deploy" prereqs="war:install">
     <maven:property defaultValue="${pom.artifactId}" var="webappName"
       name="deploy.webappname" />
     <j:set var="destination"
       value="${maven.tomcat.home}/webapps/${webappName}" />
     <delete dir="${destination}"/>
-    <mkdir dir="${destination}" />
-
-    <copy todir="${destination}">
-      <fileset dir="${maven.war.webapp.dir}" />
-    </copy>
+    <echo>Copying ${maven.war.build.dir}/${maven.war.final.name} to ${destination}.war</echo>
+    <copy file="${maven.war.build.dir}/${maven.war.final.name}" 
+      tofile="${destination}.war"/>
   </goal>
   
     <!-- Override jar:install goal to compose "partial WAR" strategy -->

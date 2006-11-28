@@ -35,6 +35,18 @@
 
 <body style="margin:0px">
 
+<script>
+//<![CDATA[
+var myLogReader1 = new YAHOO.widget.LogReader(null,{width: "60em", verboseOutput: false}); 
+myLogReader1.formatMsg = function(oLogMsg) { 
+  var category = oLogMsg.category; 
+  return "<p><span class='"+category+"'>"+category+"</span> "+ 
+          this.html2Text(oLogMsg.msg)+"</p>"; 
+   
+}; 
+//]]>
+</script>
+
 <div style="margin: 5em">
 <div rsf:id="date-field-input:">
   <script rsf:id="datesymbols">

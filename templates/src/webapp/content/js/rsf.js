@@ -26,6 +26,11 @@ var RSF = function() {
     return togo;
     }
 
+  function isFossil(element, input) {
+    if (element.id && input.name == element.id + "-fossil") return true;
+    return (input.name == element.name + "-fossil");
+    }
+
   var requestactive = false;
   var queuemap = new Object();
   
@@ -43,13 +48,14 @@ var RSF = function() {
     }
     
   // private defs for addEvent - see attribution comments below
-  var addEventguid = 1;
+  var addEvent_guid = 1;
+  var addEvent_handlers = {};
   
   function handleEvent(event) {
     event = event || fixEvent(window.event);
     var returnValue = true;
-    var handlers = this.events[event.type];
-
+    var handlers = addEvent_handlers[this.$$guid][event.type];
+    
     for (var i in handlers) {
       if (!Object.prototype[i]) {
         this.$$handler = handlers[i];
@@ -75,6 +81,65 @@ var RSF = function() {
     this.cancelBubble = true;
     }
   
+  function getEventFirer() {
+    var listeners = {};
+	return {
+	  addListener: function (listener) {
+	    if (!listener.$$guid) listener.$$guid = addEvent_guid++;
+	    listeners[listener.$$guid] = listener;
+	    },
+	  fireEvent: function() {
+	    for (var i in listeners) {
+          listeners[i].apply(null, arguments);
+	      }
+	    }
+	  };
+    }
+    
+  /** Returns the standard registered firer for this field, creating if
+    necessary. This will have method "addListener" and "fireEvent" **/
+    function getElementFirer (element) {
+      if (!element.$$RSF_firer) {
+        element.$$RSF_firer = getEventFirer();
+        }
+      return element.$$RSF_firer;
+      }
+    var primaryElements = {};
+      
+    function copyObject(target, newel) {
+      for (var i in newel) {
+        YAHOO.log("Copied value " + newel[i] + " for key " + i);
+        target[i] = newel[i];
+        }
+      }
+    function clearObject(target, newel) {
+      for (var i in newel) {
+        delete target[i];
+        }
+      }
+    // a THING, that when given "elements", returns a THING, that when it is
+    // given a CALLBACK, returns a THING, that does the SAME as the CALLBACK,
+    // only with wrappers which are bound to the value that ELEMENTS had at
+    // the function start
+    function primaryRestorationWrapper() {
+      var elementscopy = {};
+      copyObject(elementscopy, primaryElements);
+      YAHOO.log("Primary elements storing in wrapper");
+      
+      return function(callback) {
+        return function () {
+          copyObject(primaryElements, elementscopy);
+          try {
+            callback.apply(null, arguments);
+            }
+          finally {
+            YAHOO.log("Restoration clearing");
+            clearObject(primaryElements, elementscopy);
+            YAHOO.log("Restoration cleared");
+            }
+          }
+        }
+      }
 
   return {
     // Following definitions taken from PPK's "Event handling challenge" winner
@@ -84,47 +149,92 @@ var RSF = function() {
     // written by Dean Edwards, 2005
     // with input from Tino Zijdel - crisp@xs4all.nl
     // http://dean.edwards.name/weblog/2005/10/add-event/
+    // Further fixed by Taco van den Broek 
+    // http://dean.edwards.name/weblog/2005/10/add-event/?full#comments
     addEvent: function (element, type, handler) {
       if (element.addEventListener)
         element.addEventListener(type, handler, false);
       else {
-        if (!handler.$$guid) handler.$$guid = addEventguid++;
-        if (!element.events) element.events = {};
-        var handlers = element.events[type];
+        if (!handler.$$guid) handler.$$guid = addEvent_guid++;
+        if (!element.$$guid) element.$$guid = addEvent_guid++;
+        if (!addEvent_handlers[element.$$guid]) addEvent_handlers[element.$$guid] = {};
+        var handlers = addEvent_handlers[element.$$guid][type];
         if (!handlers) {
-          handlers = element.events[type] = {};
-          if (element['on' + type]) handlers[0] = element['on' + type];
-          element['on' + type] = handleEvent;
+          handlers = addEvent_handlers[element.$$guid][type] = {};
+          if (element['on' + type]) 
+            handlers[0] = element['on' + type];
           }
         handlers[handler.$$guid] = handler;
+        element['on' + type] = handleEvent;
         }
-      }    
+      },
 
     removeEvent: function (element, type, handler) {
+      if (!element.$$guid) return;
       if (element.removeEventListener)
         element.removeEventListener(type, handler, false);
-      else if (element.events && element.events[type] && handler.$$guid)
-        delete element.events[type][handler.$$guid];
-      }
+      if (addEvent_handlers[element.$$guid] && addEvent_handlers[element.$$guid][type]) {
+        delete addEvent_handlers[element.$$guid][type][handler.$$guid];
+        }
+      },
+      
+	
+    /** Gets a function of signature (source, newvalue) that will update this
+     * field's value **/
+	getModelFirer: function(element) {
+	  return function(primary, newvalue, oldvalue) {
+  	    YAHOO.log("modelFirer element " + element.id + " fire primary=" + primary + " newvalue " + newvalue 
+  	        + " oldvalue " + oldvalue);
+	    if (!primary && primaryElements[element.id]) {
+	      YAHOO.log("Censored model fire for non-primary element " + element.id);
+	      return;
+	      }
+	    var actualold = arguments.length == 3? oldvalue : element.value;
+        if (newvalue != actualold) {
+          if (primary) {
+            YAHOO.log("Set primary element for " + element.id);
+            primaryElements[element.id] = true;
+            }
+          try {
+            var firer = getElementFirer(element);
+            YAHOO.log("fieldChange: " + actualold + " to " + newvalue);
+            element.value = newvalue;
+            firer.fireEvent();
+            }
+          finally {
+            if (primary) {
+              YAHOO.log("Unset primary element for " + element.id);
+              delete primaryElements[element.id];
+              }
+            }
+          }
+        }
+      },
+    /** target is the element on which the listener is to be attached.
+     */
+    addElementListener: function(target, listener) {
+      getElementFirer(target).addListener(listener);
+      },
 
-    queueAJAXRequest: function(token, method, url, parameters, callback) {
+    queueAJAXRequest: function(token, method, url, parameters, callbacks) {
       YAHOO.log("queueAJAXRequest: token " + token);
       if (requestactive) {
         YAHOO.log("Request is active, queuing for token " + token);
-        queuemap[token] = packAJAXRequest(method, url, parameters, callback);
+        queuemap[token] = packAJAXRequest(method, url, parameters, callbacks);
         }
       else {
         requestactive = true;
-        RSF.issueAJAXRequest(method, url, parameters, wrapCallbacks(callback, 
-          wrapCallback));
+        var callbacks1 = wrapCallbacks(callbacks, restartWrapper);
+        var callbacks2 = wrapCallbacks(callbacks1, primaryRestorationWrapper());
+        RSF.issueAJAXRequest(method, url, parameters, callbacks2);
         }
         
-      function wrapCallback(callback) {
-        return function(args) {
-//          YAHOO.log("wrapCallback begin callback " + callback + " args " + args);
+      function restartWrapper(callback) {
+        return function() {
           requestactive = false;
-          callback(args);
-          YAHOO.log("Callback concluded");
+          YAHOO.log("Restart callback wrapper begin");
+          callback.apply(null, arguments);
+          YAHOO.log("Callback concluded, beginning restart search");
           for (var i in queuemap) {
             YAHOO.log("Examining for token " + i);
             if (requestactive) return;
@@ -137,6 +247,24 @@ var RSF = function() {
         }
       },
     
+    /** Inbindings is mapping of input EL to their values,
+     ** Outbindings is mapping of output EL to their callbacks
+     */
+     getAJAXUpdater: function (sourceField, AJAXURL, bindings, callback) {
+      // Assumes a FieldDateTransit for which we require to read the "long" format
+      var AJAXcallback = {
+        success: function(response) {
+          YAHOO.log("Response success: " + response + " " + response.responseText);
+          var UVB = RSF.accumulateUVBResponse(response.responseXML);
+          callback(UVB);
+          }
+        };
+      return function() {
+        var body = RSF.getUVBSubmissionBody(sourceField, bindings);
+        YAHOO.log("Firing AJAX request " + body);
+        RSF.queueAJAXRequest(bindings[0], "POST", AJAXURL, body, AJAXcallback);
+      }
+    },
   
     issueAJAXRequest: function(method, url, parameters, callback) {
       var alertContents = function() {
@@ -144,6 +272,7 @@ var RSF = function() {
           if (http_request.status == 200) {
             YAHOO.log("AJAX request success status: " + http_request.status);
             callback.success(http_request);
+            YAHOO.log("AJAX callback concluded");
             } 
           else {
             YAHOO.log("AJAX request error status: " + http_request.status);
@@ -328,13 +457,13 @@ var RSF = function() {
       var fossil;
       var bindings = new Array(); // an array of parsed bindings
   
-      var bindingex = /(.*)-binding/;
+      var bindingex = /(.*)-binding/; // recognises el-binding as well as virtual-el-binding
   
       for (var i in inputs) {
         var input = inputs[i];
         if (input.name) {
           YAHOO.log("Discovered input name " + input.name + " value " + input.value);
-          if (input.name == element.name + "-fossil") {
+          if (isFossil(element, input)) {
             fossil = RSF.parseFossil(input.value);
             fossil.element = input;
             YAHOO.log("Own Fossil " + fossil.lvalue + " oldvalue " + fossil.oldvalue);
@@ -348,6 +477,7 @@ var RSF = function() {
             }
           }
         }
+
       // a map of EL expressions to DOM elements
       var invalidated = new Object();
       invalidated.list = new Array();

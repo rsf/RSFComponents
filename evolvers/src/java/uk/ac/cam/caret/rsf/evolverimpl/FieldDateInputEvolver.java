@@ -88,8 +88,11 @@ public class FieldDateInputEvolver implements DateInputEvolver {
 //    UIInput.make(togo, "true-date", toevolve.valuebinding.value, 
 //        truedateval);
     
-    UIInput.make(togo, "date-field", ttb + "short", transit.getShort());
-    UIOutput.make(togo, "true-date", LocalSDF.w3cformat.format(value));
+    UIInput field = UIInput.make(togo, "date-field", ttb + "short", transit.getShort());
+    field.mustapply = true;
+    UIInput truedate = UIInput.make(togo, "true-date", ttb + "date", 
+         LocalSDF.w3cformat.format(value));
+    truedate.willinput = false;
     UIOutput.make(togo, "date-container");
     UIOutput.make(togo, "date-link");
     UIOutput.make(togo, "date-annotation", null, ttb + "shortFormat");
@@ -108,6 +111,9 @@ public class FieldDateInputEvolver implements DateInputEvolver {
     
     form.parameters.add(new UIELBinding(toevolve.valuebinding.value, 
         new ELReference(ttb + "date")));
+    // Add "virtual binding" to let true date submissions be "validated".
+    form.parameters.add(new UIELBinding(truedate.valuebinding.value, 
+        new ELReference(ttb + "date"), true));
     
     return togo;
   }
