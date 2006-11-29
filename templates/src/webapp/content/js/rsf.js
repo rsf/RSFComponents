@@ -6,20 +6,20 @@
 var RSF = function() {
 
   function invalidate(invalidated, EL, entry) {
-      if (!EL) {
-        YAHOO.log("invalidate null EL: " + invalidated + " " + entry);
+    if (!EL) {
+      YAHOO.log("invalidate null EL: " + invalidated + " " + entry);
       }
-      var stack = RSF.parseEL(EL);
-      invalidated[stack[0]] = entry;
-      invalidated[stack[1]] = entry;
-      invalidated.list.push(entry);
-      YAHOO.log("invalidate " + EL);
+    var stack = RSF.parseEL(EL);
+    invalidated[stack[0]] = entry;
+    invalidated[stack[1]] = entry;
+    invalidated.list.push(entry);
+    YAHOO.log("invalidate " + EL);
     };
 
   function isInvalidated(invalidated, EL) {
     if (!EL) {
       YAHOO.log("isInvalidated null EL: " + invalidated);
-    }
+      }
     var stack = RSF.parseEL(EL);
     var togo = invalidated[stack[0]] || invalidated[stack[1]];
     YAHOO.log("isInvalidated "+EL+" " + togo); 
@@ -29,6 +29,10 @@ var RSF = function() {
   function isFossil(element, input) {
     if (element.id && input.name == element.id + "-fossil") return true;
     return (input.name == element.name + "-fossil");
+    }
+    
+  function normaliseBinding(elname) {
+    return elname == "virtual-el-binding"? "el-binding" : elname;
     }
 
   var requestactive = false;
@@ -42,7 +46,6 @@ var RSF = function() {
     var togo = new Object();
     for (var i in callbacks) {
       togo[i] = wrapper(callbacks[i]);
-//      YAHOO.log("For " + i + " wrapped to " + togo[i]);
       }
     return togo;
     }
@@ -83,17 +86,33 @@ var RSF = function() {
   
   function getEventFirer() {
     var listeners = {};
-	return {
-	  addListener: function (listener) {
-	    if (!listener.$$guid) listener.$$guid = addEvent_guid++;
-	    listeners[listener.$$guid] = listener;
-	    },
-	  fireEvent: function() {
-	    for (var i in listeners) {
-          listeners[i].apply(null, arguments);
-	      }
-	    }
-	  };
+    return {
+      addListener: function (listener, exclusions) {
+        if (!listener.$$guid) listener.$$guid = addEvent_guid++;
+        excludeids = [];
+        for (var i in exclusions) {
+          excludeids.push(exclusions[i].id);
+          }
+        listeners[listener.$$guid] = {listener: listener, exclusions: excludeids};
+        },
+      fireEvent: function() {
+        for (var i in listeners) {
+          var lisrec = listeners[i];
+          var excluded = false;
+          for (var j in lisrec.exclusions) {
+            var exclusion = lisrec.exclusions[j];
+            YAHOO.log("Checking exclusion for " + exclusion);
+            if (primaryElements[exclusion]) {
+              YAHOO.log("Excluded");
+              excluded = true; break;
+              }
+            }
+          if (!excluded) {
+            lisrec.listener.apply(null, arguments);
+            }
+          }
+        }
+      };
     }
     
   /** Returns the standard registered firer for this field, creating if
@@ -178,18 +197,20 @@ var RSF = function() {
         }
       },
       
-	
-    /** Gets a function of signature (source, newvalue) that will update this
-     * field's value **/
-	getModelFirer: function(element) {
-	  return function(primary, newvalue, oldvalue) {
-  	    YAHOO.log("modelFirer element " + element.id + " fire primary=" + primary + " newvalue " + newvalue 
-  	        + " oldvalue " + oldvalue);
-	    if (!primary && primaryElements[element.id]) {
-	      YAHOO.log("Censored model fire for non-primary element " + element.id);
-	      return;
-	      }
-	    var actualold = arguments.length == 3? oldvalue : element.value;
+  
+    /** Gets a function that will update this field's value. Supply "oldvalue"
+     * explicitly if this has been an "autonomous" change, otherwise it will
+     * be taken from the current value. **/
+    getModelFirer: function(element) {
+      return function(primary, newvalue, oldvalue) {
+        YAHOO.log("modelFirer element " + element.id + " fire primary=" + primary + " newvalue " + newvalue 
+            + " oldvalue " + oldvalue);
+        if (!primary && primaryElements[element.id]) {
+          YAHOO.log("Censored model fire for non-primary element " + element.id);
+          return;
+          }
+        var actualold = arguments.length == 3? oldvalue : element.value;
+        YAHOO.log("Actual old value " + actualold);
         if (newvalue != actualold) {
           if (primary) {
             YAHOO.log("Set primary element for " + element.id);
@@ -212,8 +233,8 @@ var RSF = function() {
       },
     /** target is the element on which the listener is to be attached.
      */
-    addElementListener: function(target, listener) {
-      getElementFirer(target).addListener(listener);
+    addElementListener: function(target, listener, exclusions) {
+      getElementFirer(target).addListener(listener, exclusions);
       },
 
     queueAJAXRequest: function(token, method, url, parameters, callbacks) {
@@ -283,7 +304,7 @@ var RSF = function() {
       if (window.XMLHttpRequest) { // Mozilla, Safari,...
         http_request = new XMLHttpRequest();
         if (method == "POST" && http_request.overrideMimeType) {
-         	// set type accordingly to anticipated content type
+           // set type accordingly to anticipated content type
             //http_request.overrideMimeType('text/xml');
           http_request.overrideMimeType('text/xml');
           }
@@ -372,7 +393,7 @@ var RSF = function() {
         queries.push(RSF.renderUVBQuery(queryEL[i]));
         }
       queries.push(RSF.renderUVBAction());
-	  return queries.join("&");      
+    return queries.join("&");      
       },    
     /** Accumulates a response from the UVBView into a compact object 
      * representation.<b>
@@ -424,7 +445,7 @@ var RSF = function() {
       
     findForm: function (element) {
       while(element) {
-	    if (element.nodeName.toLowerCase() == "form") return element;
+      if (element.nodeName.toLowerCase() == "form") return element;
         element = element.parentNode;
         }
       },  
@@ -506,7 +527,9 @@ var RSF = function() {
     getPartialSubmissionBody: function(element) {
       var upstream = RSF.getUpstreamElements(element);
       var body = new Array();
-      body.push(RSF.encodeElement(element.name, element.value));
+      // a "virtual field" has no submitting name, implicitly its id.
+      var subname = element.name? element.name : element.id; 
+      body.push(RSF.encodeElement(subname, element.value));
       for (var i in upstream) {
         var upel = upstream[i];
      
@@ -516,7 +539,7 @@ var RSF = function() {
           value = 'j' + value.substring(1);
           }
         YAHOO.log("Upstream " + i + " value " + value + " el " + upel );
-        body.push(RSF.encodeElement(upel.name, value));
+        body.push(RSF.encodeElement(normaliseBinding(upel.name), value));
         }
       return body.join("&");
       },

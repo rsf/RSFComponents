@@ -111,10 +111,7 @@ public class FieldDateInputEvolver implements DateInputEvolver {
     
     form.parameters.add(new UIELBinding(toevolve.valuebinding.value, 
         new ELReference(ttb + "date")));
-    // Add "virtual binding" to let true date submissions be "validated".
-    form.parameters.add(new UIELBinding(truedate.valuebinding.value, 
-        new ELReference(ttb + "date"), true));
-    
+
     return togo;
   }
 

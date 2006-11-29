@@ -23,6 +23,7 @@
 
   <bean id="localeSetter" class="uk.org.ponder.localeutil.LocaleReceiver"/>
 
+  <bean id="requestLocale" factory-bean="localeSetter" factory-method="getLocale"/>
 
   <bean class="uk.ac.cam.caret.rsf.testcomponents.producers.IndexProducer">
     <!-- This would not be injected with OTP -->

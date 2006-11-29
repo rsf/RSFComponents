@@ -19,13 +19,12 @@
       this.Config.Locale.WEEKDAYS_MEDIUM = PUC_WEEKDAYS_MEDIUM;
       this.Config.Locale.WEEKDAYS_LONG = PUC_WEEKDAYS_LONG;
       this.Config.Options.START_WEEKDAY = PUC_FIRST_DAY_OF_WEEK;
-    }
+      }
 
     /** Plain object is **UI** for Calendar, of type YAHOO.widget **/
 
     YAHOO.widget.Calendar2up_PUC = function(id, containerId, monthyear, selected) {
-      if (arguments.length > 0)
-      {
+      if (arguments.length > 0) {
         this.buildWrapper(containerId);
         this.init(2, id, containerId, monthyear, selected);
       }
@@ -88,6 +87,7 @@
     var shortbinding = transitbase + "short";
     var longbinding = transitbase + "long";
     var truebinding = transitbase + "date";
+    var calField = newcal.outerContainer;
     
     var format = annotationField.innerHTML;
     
@@ -96,20 +96,20 @@
       }
     dateField.onblur = function() {
       YAHOO.util.Dom.replaceClass(annotationField, "annotation-active", "annotation-inactive");
-    }
+      }
    
     var updateTrueValue = RSF.getModelFirer(trueValueField);
     var updateFieldValue = RSF.getModelFirer(dateField);
 
-	var updateAnnotation = function(isvalid, longvalue) {
-	  if (isvalid) {
-	    annotationField.innerHTML = longvalue;
-	    YAHOO.util.Dom.replaceClass(annotationField, "annotation-incomplete", "annotation-complete");
-	  }
-	  else {
-	    annotationField.innerHTML = format;
-	    YAHOO.util.Dom.replaceClass(annotationField, "annotation-complete", "annotation-incomplete");
-	    }
+	  var updateAnnotation = function(isvalid, longvalue) {
+	    if (isvalid) {
+	      annotationField.innerHTML = longvalue;
+	      YAHOO.util.Dom.replaceClass(annotationField, "annotation-incomplete", "annotation-complete");
+	      }
+	    else {
+	      annotationField.innerHTML = format;
+	      YAHOO.util.Dom.replaceClass(annotationField, "annotation-complete", "annotation-incomplete");
+	      }
       };
       
     if (AJAXURL) {
@@ -132,7 +132,7 @@
             var shortresult = UVB.EL[shortbinding];
             updateAnnotation(!UVB.isError, longresult);
             if (shortresult) {
-              updateFieldValue(false, shortvalue);
+              updateFieldValue(false, shortresult);
               }
             }
           );
@@ -162,14 +162,28 @@
     dateField.onkeyup = fieldChange;
     dateField.onChange = fieldChange;
     
-    RSF.addElementListener(dateField, fieldValueChanged);
-    RSF.addElementListener(trueValueField, trueValueChanged);
+    RSF.addElementListener(dateField, fieldValueChanged, [trueValueField]);
+    RSF.addElementListener(trueValueField, trueValueChanged, [dateField]);
+    RSF.addElementListener(trueValueField, function() {
+      YAHOO.log("Fire cal change");
+      var date = new Date();
+      date.setISO8601(trueValueField.value);
+      var year = date.getFullYear();
+      var day = date.getDay();
+      var month = date.getMonth();
+      newcal.select(month + "/" + day + "/" + year);
+      newcal.setMonth(month - 1);
+      newcal.setYear(year);
+      newcal.render();
+      }, [trueValueField]);
     
     newcal.setChildFunction("onSelect", 
       function() {
+        newcal.hide();
         var controlDate = newcal.getSelectedDates()[0];
+        YAHOO.log("controlDate " + controlDate);
         var converted = controlDate.toISO8601String();
-        updateTrueValue(true, trueValueField, converted);
+        updateTrueValue(true, converted);
         }
       );
       

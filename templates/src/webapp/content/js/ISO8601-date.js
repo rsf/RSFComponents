@@ -2,6 +2,8 @@
  * http://delete.me.uk/2005/03/iso8601.html
  * Originally written by Paul Sowden
  * Acquired by Antranig Basman 03/11/2006
+ * Corrected to ALWAYS supply one or more fractional second digits in format 6 as
+ * per the actual standard http://www.w3.org/TR/NOTE-datetime
  */
 
 Date.prototype.setISO8601 = function (string) {
@@ -57,8 +59,12 @@ Date.prototype.toISO8601String = function (format, offset) {
         var date = new Date(Number(Number(this) + (offsetnum * 60000)));
     }
 
-    var zeropad = function (num) { return ((num < 10) ? '0' : '') + num; }
-
+    var zeropad = function (num, width) {
+      if (!width) width = 2;
+      var numstr = num.toString();
+      return "00000".substring(5 - width + numstr.length) + numstr;
+      }
+      
     var str = "";
     str += date.getUTCFullYear();
     if (format > 1) { str += "-" + zeropad(date.getUTCMonth() + 1); }
@@ -67,12 +73,13 @@ Date.prototype.toISO8601String = function (format, offset) {
         str += "T" + zeropad(date.getUTCHours()) +
                ":" + zeropad(date.getUTCMinutes());
     }
-    if (format > 5) {
-        var secs = Number(date.getUTCSeconds() + "." +
-                   ((date.getUTCMilliseconds() < 100) ? '0' : '') +
-                   zeropad(date.getUTCMilliseconds()));
-        str += ":" + zeropad(secs);
-    } else if (format > 4) { str += ":" + zeropad(date.getUTCSeconds()); }
+
+    if (format > 4) { 
+      str += ":" + zeropad(date.getUTCSeconds()); 
+      if (format == 6) {
+        str += "." + zeropad(date.getUTCMilliseconds(), 3);
+        }
+      }
 
     if (format > 3) { str += offset; }
     return str;
