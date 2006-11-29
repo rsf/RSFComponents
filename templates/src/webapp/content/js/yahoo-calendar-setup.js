@@ -1,3 +1,5 @@
+var RSF_Calendar = function() {
+
     /* _Cal is **IMPL** for Calendar */
 
     YAHOO.widget.Calendar2up_PUC_Cal = function(id, containerId, monthyear, selected) {
@@ -40,10 +42,7 @@
 
     /* End YAHOO setup defs */
 
-    YAHOO.namespace("example.calendar");
-
   function yahoo_showCalendar(cal, dateLink) {
-//      YAHOO.example.calendar.cal2.hide();
       
     var pos = YAHOO.util.Dom.getXY(dateLink);
     cal.outerContainer.style.display='block';
@@ -69,27 +68,35 @@
     cal.render();
   }
 
-
-  function yahoo_dateControlChanged(cal, trueDate) {
-    var controlDate = cal.getSelectedDates()[0];
-    var converted = controlDate.toISO8601String();
-    trueDate.value = converted;
+  function $it(elementID) {
+    return document.getElementById(elementID);
+    }
+  function keyArray(o) {
+    var togo = [];
+    for (var i in o) {
+      togo.push(i);
+      }
     }
 
 /** An object coordinating updates of the textual field value. trueDate and
     dateField are both <input>, annotation is a <div> **/
   var registerDateFieldUpdateHandler = function (newcal, nameBase, transitbase, AJAXURL) {
     var annotationField = $it(nameBase + "date-annotation");
+    var timeAnnotationField = $it(nameBase + "time-annotation");
     var trueValueFieldID = nameBase + "true-date";
     var trueValueField = $it(trueValueFieldID);
     var dateFieldID = nameBase + "date-field";
     var dateField = $it(dateFieldID);
+    var timeFieldID = nameBase + "time-field";
+    var timeField = $it(timeFieldID);
     var shortbinding = transitbase + "short";
     var longbinding = transitbase + "long";
     var truebinding = transitbase + "date";
+    var timebinding = transitbase + "time";
     var calField = newcal.outerContainer;
     
-    var format = annotationField.innerHTML;
+    var dateformat = annotationField.innerHTML;
+    var timeformat = timeAnnotationField? timeAnnotationField.innerHTML : "";
     
     dateField.onfocus = function() {
       YAHOO.util.Dom.replaceClass(annotationField, "annotation-inactive", "annotation-active");
@@ -97,73 +104,120 @@
     dateField.onblur = function() {
       YAHOO.util.Dom.replaceClass(annotationField, "annotation-active", "annotation-inactive");
       }
+    if (timeField) {
+      timeField.onfocus = function() {
+        YAHOO.util.Dom.replaceClass(timeAnnotationField, "annotation-inactive", "annotation-active");
+      }
+      timeField.onblur = function() {
+        YAHOO.util.Dom.replaceClass(timeAnnotationField, "annotation-active", "annotation-inactive");
+        }
+      }
    
     var updateTrueValue = RSF.getModelFirer(trueValueField);
-    var updateFieldValue = RSF.getModelFirer(dateField);
+    var updateDateFieldValue = RSF.getModelFirer(dateField);
+    var updateTimeFieldValue = RSF.getModelFirer(timeField);
 
-	  var updateAnnotation = function(isvalid, longvalue) {
-	    if (isvalid) {
-	      annotationField.innerHTML = longvalue;
-	      YAHOO.util.Dom.replaceClass(annotationField, "annotation-incomplete", "annotation-complete");
-	      }
-	    else {
-	      annotationField.innerHTML = format;
-	      YAHOO.util.Dom.replaceClass(annotationField, "annotation-complete", "annotation-incomplete");
-	      }
+	var updateAnnotation = function(annotField, isvalid, longvalue, defvalue) {
+	  if (isvalid) {
+	    annotField.innerHTML = longvalue;
+	    YAHOO.util.Dom.replaceClass(annotField, "annotation-incomplete", "annotation-complete");
+	    }
+	  else {
+	    annotField.innerHTML = defvalue;
+	    YAHOO.util.Dom.replaceClass(annotField, "annotation-complete", "annotation-incomplete");
+	    }
       };
-      
-    if (AJAXURL) {
-      var fieldValueChanged = RSF.getAJAXUpdater(dateField, AJAXURL, 
-        [truebinding, longbinding], 
-          function(UVB) {
-            var longresult = UVB.EL[longbinding];
-            var trueresult = UVB.EL[truebinding];
-            updateAnnotation(!UVB.isError, longresult);
-            if (trueresult) {
-              updateTrueValue(false, trueresult);
+// sourceField is dateField, trueValueField or timeField.
+	function getAJAXUpdater(sourceField, AJAXURL) {
+	  var allbindings = {truebinding: 1, longbinding:1, shortbinding:1};
+	  if (timeField && sourceField != timeField) {
+	    allbindings[timebinding] = 1;
+	    }
+	  if (sourceField == dateField) {
+	    delete allbindings[shortbinding];
+	    }
+	  else if (sourceField == trueValueField) {
+	    delete allbinding[truebinding];
+	    }
+	  var bindings = keyArray(allbindings);
+	  return RSF.getAJAXUpdater(sourceField, AJAXURL, bindings,
+	    function(UVB) {
+          var longresult = UVB.EL[longbinding];
+          var trueresult = UVB.EL[truebinding];
+          var timeresult = UVB.EL[timebinding];
+          updateAnnotation(annotationField, !UVB.isError, longresult, dateformat);
+          if (trueresult) {
+            updateTrueValue(false, trueresult);
+            }
+          if (shortresult) {
+            updateDateFieldValue(false, shortresult);
+            }
+          if (timeresult) {
+            updateAnnotation(timeAnnotationField, !UVB.isError, timeresult, timeformat);
+            if (sourceField != timeField) {
+              updateTimeFieldValue(false, timeresult);
               }
             }
-          );
-          
-      var trueValueChanged = RSF.getAJAXUpdater(trueValueField, AJAXURL, 
-        [shortbinding, longbinding], 
-          function(UVB) {
-            var longresult = UVB.EL[longbinding];
-            var shortresult = UVB.EL[shortbinding];
-            updateAnnotation(!UVB.isError, longresult);
-            if (shortresult) {
-              updateFieldValue(false, shortresult);
-              }
-            }
-          );
+          }
+        );
+	  }
+
+    if (AJAXURL) {      
+      var fieldValueChanged = getAJAXUpdater(dateField, AJAXURL);
+      var trueValueChanged = getAJAXUpdater(trueValueField, AJAXURL);
+      if (timeField) {
+	    var timeFieldValueChanged = getAJAXUpdater(timeField, AJAXURL);
+	    }
       }
     else {
       var fieldValueChanged = function() {
         var isvalid = dateField.value == "08/11/06"       
-        updateAnnotation(isvalid, "08 November 2006");
+        updateAnnotation(annotationField, isvalid, "08 November 2006", dateformat);
         if (isvalid) {
           var trueDate = new Date(2006, 11, 8);
           updateTrueValue(false, trueDate.toISO8601String());
           }
         };
       var trueValueChanged = function() {
-        updateAnnotation(true, "08 November 2006");
-        updateFieldValue(false, "08/11/06");
+        updateAnnotation(annotationField, true, "08 November 2006", dateformat);
+        updateDateFieldValue(false, "08/11/06");
         };
+      var timeFieldValueChanged = function() {
+        var isvalid = timeField.value == "09:00";
+          YAHOO.log("timeFieldValueChange " + isvalid);
+        updateAnnotation(timeAnnotationField, isvalid, "09:00", timeformat);
+        }
       }
     // track the "old" value in outer scope. Do not initialise to ensure initial fire
-    var fieldvalue;
+    var datefieldvalue;
     //primitive event handler for changes to field value
-    var fieldChange = function() {
-      updateFieldValue(true, dateField.value, fieldvalue);
-      fieldvalue = dateField.value;
+    var dateFieldChange = function() {
+      updateDateFieldValue(true, dateField.value, datefieldvalue);
+      datefieldvalue = dateField.value;
       };
     
-    dateField.onkeyup = fieldChange;
-    dateField.onChange = fieldChange;
+    dateField.onkeyup = dateFieldChange;
+    dateField.onchange = dateFieldChange;
     
-    RSF.addElementListener(dateField, fieldValueChanged, [trueValueField]);
-    RSF.addElementListener(trueValueField, trueValueChanged, [dateField]);
+    var dateFieldFireExclusions = [trueValueField];
+    var trueValueFireExclusions = [dateField];
+    
+    if (timeField) {
+      var timefieldvalue;
+      var timeFieldChange = function() {
+        YAHOO.log("timeFieldChange");
+        updateTimeFieldValue(true, timeField.value, timefieldvalue);
+        timefieldvalue = timeField.value;
+        };
+      timeField.onkeyup = timeFieldChange;
+      timeField.onchange = timeFieldChange;
+      RSF.addElementListener(timeField, timeFieldValueChanged, [trueValueField, dateField]);
+      dateFieldFireExclusions.push(timeField);
+      trueValueFireExclusions.push(timeField);
+    }
+    
+    RSF.addElementListener(dateField, fieldValueChanged, dateFieldFireExclusions);
+    RSF.addElementListener(trueValueField, trueValueChanged, trueValueFireExclusions);
     RSF.addElementListener(trueValueField, function() {
       YAHOO.log("Fire cal change");
       var date = new Date();
@@ -190,10 +244,6 @@
     
     }
 
-	
-  function $it(elementID) {
-    return document.getElementById(elementID);
-    }
 
 /** Base initialisation for the calendar controls.
  * Parses a JS Date object into a form suitable to initialise the control,
@@ -237,31 +287,6 @@
   
     return newcal;
     }
-
-  function initYahooCalendar_Datefield(nameBase, title, transitbase, AJAXURL) {
-    var dateFieldID = nameBase + "date-field";
-    var dateField = $it(dateFieldID);
-
-    var trueDate = $it(nameBase + "true-date");
-    var valuestring = trueDate.value;
-    var value = new Date();
-    if (valuestring.length != 0) {
-      value.setISO8601(valuestring);
-    }
-  
-    controlIDs = [dateFieldID];
-  
-    var newcal = initYahooCalendar_base(value, nameBase, controlIDs, title);
-    
-//    var annotation = $it(nameBase + "date-annotation");
-    var dateLink = $it(nameBase + "date-link");
-    dateLink.style.display="inline";
-    
-    registerDateFieldUpdateHandler(newcal, nameBase, transitbase, AJAXURL);
-    dateField.onChange();
-  
-    newcal.render();
-  }
 
   function initYahooCalendar_Dropdowns(nameBase, title) {
     var today = new Date();
@@ -318,5 +343,32 @@ from the controls of an active calendar dismisses its popup **/
       }
 //	alert("click " + e); 
     }
-	
 
+  return {	
+    initYahooCalendar_Datefield: function(nameBase, title, transitbase, AJAXURL) {
+      var dateFieldID = nameBase + "date-field";
+      var dateField = $it(dateFieldID);
+
+	  var timeFieldID = nameBase + "time-field";
+      var trueDate = $it(nameBase + "true-date");
+      var valuestring = trueDate.value;
+      var value = new Date();
+      if (valuestring.length != 0) {
+        value.setISO8601(valuestring);
+        }
+  
+      controlIDs = [dateFieldID, timeFieldID];
+  
+      var newcal = initYahooCalendar_base(value, nameBase, controlIDs, title);
+    
+//    var annotation = $it(nameBase + "date-annotation");
+      var dateLink = $it(nameBase + "date-link");
+      dateLink.style.display="inline";
+    
+      registerDateFieldUpdateHandler(newcal, nameBase, transitbase, AJAXURL);
+      dateField.onchange();
+  
+      newcal.render();
+      }
+    }
+  }();

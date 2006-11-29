@@ -33,8 +33,9 @@
 
 </head>
 
-<body style="margin:0px">
-
+<body style="margin:10px">
+<h1>"New-style" Date Choosing Widget - Yahoo implementation</h1>
+Test template by entering <b>08/11/06</b> for date and <b>09:00</b> for time value.
 <script>
 //<![CDATA[
 var myLogReader1 = new YAHOO.widget.LogReader(null,{width: "60em", verboseOutput: false}); 
@@ -67,23 +68,35 @@ myLogReader1.formatMsg = function(oLogMsg) {
 <script type="text/javascript" src="../js/yahoo-calendar-setup.js?nocache"></script>
 <div>
 
-<input rsf:id="date-field" id="nameBase1:date-field" />
+<span rsf:id="date-title">Date:</span>
+<span class="annotation-target">
+ <span rsf:id="date-annotation" id="nameBase1:date-annotation"
+  class="annotation-inactive annotation-incomplete">dd/MM/YY</span>
+  </span>
+<input rsf:id="date-field" id="nameBase1:date-field" size="12"/>
 <input rsf:id="true-date" id="nameBase1:true-date" type="hidden"/>
 
 <a rsf:id="date-link" id="nameBase1:date-link"
   href="javascript:void(null)" class="annotation-target" style="display:none">
   <img src="../images/pdate.gif" border="0"
   style="vertical-align:middle; margin:5px" />
-  <span rsf:id="date-annotation" id="nameBase1:date-annotation"
-  class="annotation-inactive annotation-incomplete">dd/MM/YY</span>
 </a>
-</div>
 
 <div rsf:id="date-container" id="nameBase1:date-container"
   style="position:absolute; display:none"></div>
+&nbsp;
+<span rsf:id="time-controls:" id="nameBase1:time-controls">
+<span rsf:id="time-title">Time:</span>
+ <span class="annotation-target">
+   <span rsf:id="time-annotation" id="nameBase1:time-annotation"
+  class="annotation-inactive annotation-incomplete">hh:mm</span></span>
+<input rsf:id="time-field" id="nameBase1:time-field" size="7" />
+ 
+</span>
+</div>
 
 <script rsf:id="init-date">
-  initYahooCalendar_Datefield("nameBase1:", "Select Date");
+  RSF_Calendar.initYahooCalendar_Datefield("nameBase1:", "Select Date");
 </script>
 </div> <!-- end enclosing div for branch container -->
 
@@ -91,7 +104,8 @@ myLogReader1.formatMsg = function(oLogMsg) {
 <!-- A dummy 2nd instance of the component used to test JS isolation -->
 <div style="margin-top:5em">
 
-<input rsf:id="date-field" id="nameBase2:date-field" />
+<span rsf:id="date-title">Date:</span>
+<input rsf:id="date-field" id="nameBase2:date-field" size="12"/>
 <input rsf:id="true-date" id="nameBase2:true-date" type="hidden"/>
 <a rsf:id="date-link" id="nameBase2:date-link" 
   href="javascript:void(null)" class="annotation-target" style="display:none">
@@ -105,7 +119,7 @@ myLogReader1.formatMsg = function(oLogMsg) {
   style="position:absolute; display:none"></div>
 
 <script rsf:id="init-date">
-  initYahooCalendar_Datefield("nameBase2:", "Select Date");
+  RSF_Calendar.initYahooCalendar_Datefield("nameBase2:", "Select Date");
 </script></div>
 
 </body>

@@ -393,7 +393,7 @@ var RSF = function() {
         queries.push(RSF.renderUVBQuery(queryEL[i]));
         }
       queries.push(RSF.renderUVBAction());
-    return queries.join("&");      
+      return queries.join("&");      
       },    
     /** Accumulates a response from the UVBView into a compact object 
      * representation.<b>

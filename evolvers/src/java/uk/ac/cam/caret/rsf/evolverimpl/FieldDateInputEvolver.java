@@ -39,7 +39,7 @@ public class FieldDateInputEvolver implements DateInputEvolver {
   
   private ViewStateHandler vsh;
 
-  private String JSInitName = "initYahooCalendar_Datefield";
+  private String JSInitName = "RSF_Calendar.initYahooCalendar_Datefield";
   
   public void setViewStateHandler(ViewStateHandler vsh) {
     this.vsh = vsh;
