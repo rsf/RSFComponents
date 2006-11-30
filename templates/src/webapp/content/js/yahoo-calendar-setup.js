@@ -76,6 +76,14 @@ var RSF_Calendar = function() {
     for (var i in o) {
       togo.push(i);
       }
+    return togo;
+    }
+  function arrayToKeys(a) {
+    var togo = {};
+    for (var i in a) {
+      togo[a[i]] = 1;
+      }
+    return togo;
     }
 
 /** An object coordinating updates of the textual field value. trueDate and
@@ -93,6 +101,7 @@ var RSF_Calendar = function() {
     var longbinding = transitbase + "long";
     var truebinding = transitbase + "date";
     var timebinding = transitbase + "time";
+    var longtimebinding = transitbase + "longTime";
     var calField = newcal.outerContainer;
     
     var dateformat = annotationField.innerHTML;
@@ -129,22 +138,32 @@ var RSF_Calendar = function() {
       };
 // sourceField is dateField, trueValueField or timeField.
 	function getAJAXUpdater(sourceField, AJAXURL) {
-	  var allbindings = {truebinding: 1, longbinding:1, shortbinding:1};
-	  if (timeField && sourceField != timeField) {
-	    allbindings[timebinding] = 1;
+  	var sourceFields = [sourceField];
+	  var allbindings = arrayToKeys([truebinding, longbinding, shortbinding]);
+	  if (timeField) {
+	    allbindings[longtimebinding] = 1;
+	    if (sourceField == timeField) {
+	      sourceFields.push(dateField);
+	      }
+	    else if (sourceField == dateField) {
+	      sourceFields.push(timeField);
+	      }
+	    // No other field can update time, do not backpropagate from true
 	    }
 	  if (sourceField == dateField) {
 	    delete allbindings[shortbinding];
 	    }
 	  else if (sourceField == trueValueField) {
-	    delete allbinding[truebinding];
+	    delete allbindings[truebinding];
 	    }
 	  var bindings = keyArray(allbindings);
-	  return RSF.getAJAXUpdater(sourceField, AJAXURL, bindings,
+	 
+	  return RSF.getAJAXUpdater(sourceFields, AJAXURL, bindings,
 	    function(UVB) {
           var longresult = UVB.EL[longbinding];
           var trueresult = UVB.EL[truebinding];
-          var timeresult = UVB.EL[timebinding];
+          var shortresult = UVB.EL[shortbinding];
+          var longtimeresult = UVB.EL[longtimebinding];
           updateAnnotation(annotationField, !UVB.isError, longresult, dateformat);
           if (trueresult) {
             updateTrueValue(false, trueresult);
@@ -152,11 +171,11 @@ var RSF_Calendar = function() {
           if (shortresult) {
             updateDateFieldValue(false, shortresult);
             }
-          if (timeresult) {
-            updateAnnotation(timeAnnotationField, !UVB.isError, timeresult, timeformat);
-            if (sourceField != timeField) {
-              updateTimeFieldValue(false, timeresult);
-              }
+          if (longtimeresult) {
+            updateAnnotation(timeAnnotationField, !UVB.isError, longtimeresult, timeformat);
+     //       if (sourceField != timeField) {
+     //         updateTimeFieldValue(false, timeresult);
+     //         }
             }
           }
         );
@@ -235,9 +254,16 @@ var RSF_Calendar = function() {
       function() {
         newcal.hide();
         var controlDate = newcal.getSelectedDates()[0];
+        var normDate = new Date();
+        normDate.setUTCDate(controlDate.getDate());
+        normDate.setUTCMonth(controlDate.getMonth());
+        normDate.setUTCFullYear(controlDate.getFullYear());
         YAHOO.log("controlDate " + controlDate);
-        var converted = controlDate.toISO8601String();
-        updateTrueValue(true, converted);
+        var converted = normDate.toISO8601String();
+        YAHOO.log("Converted " + converted);
+        // do not trash time value in underlying date!
+        var fused = converted.substring(0, 10) + trueValueField.value.substring(10);
+        updateTrueValue(true, fused);
         }
       );
       

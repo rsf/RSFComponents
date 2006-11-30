@@ -19,7 +19,7 @@
     factory-method="getTextInputEvolver" />
 
   <bean id="dateEvolver" factory-bean="componentChoice"
-    factory-method="getDateInputEvolver" />
+    factory-method="getDateInputEvolver" singleton="false"/>
 
   <bean id="localeSetter" class="uk.org.ponder.localeutil.LocaleReceiver"/>
 
@@ -29,7 +29,8 @@
     <!-- This would not be injected with OTP -->
     <property name="dataBean" ref="dataBean" />
     <property name="choiceBean" ref="componentChoice" />
-    <property name="dateEvolver" ref="dateEvolver" />
+    <property name="dateEvolver1" ref="dateEvolver" />
+    <property name="dateEvolver2" ref="dateEvolver" />
     <property name="textEvolver" ref="textEvolver" />
     <property name="locale" ref="requestLocale" />
   </bean>

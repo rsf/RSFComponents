@@ -271,7 +271,7 @@ var RSF = function() {
     /** Inbindings is mapping of input EL to their values,
      ** Outbindings is mapping of output EL to their callbacks
      */
-     getAJAXUpdater: function (sourceField, AJAXURL, bindings, callback) {
+     getAJAXUpdater: function (sourceFields, AJAXURL, bindings, callback) {
       // Assumes a FieldDateTransit for which we require to read the "long" format
       var AJAXcallback = {
         success: function(response) {
@@ -281,7 +281,7 @@ var RSF = function() {
           }
         };
       return function() {
-        var body = RSF.getUVBSubmissionBody(sourceField, bindings);
+        var body = RSF.getUVBSubmissionBody(sourceFields, bindings);
         YAHOO.log("Firing AJAX request " + body);
         RSF.queueAJAXRequest(bindings[0], "POST", AJAXURL, body, AJAXcallback);
       }
@@ -386,9 +386,11 @@ var RSF = function() {
       },
     /** Accepts a submitting element (<input>) and a list of EL paths to be
      * queried */
-    getUVBSubmissionBody: function(element, queryEL) {
+    getUVBSubmissionBody: function(elements, queryEL) {
       var queries = new Array();
-      queries.push(RSF.getPartialSubmissionBody(element));
+      for (var i in elements) {
+        queries.push(RSF.getPartialSubmissionBody(elements[i]));
+        }
       for (var i in queryEL) {
         queries.push(RSF.renderUVBQuery(queryEL[i]));
         }

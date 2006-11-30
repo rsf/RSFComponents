@@ -18,7 +18,7 @@ import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.components.UIVerbatim;
-import uk.org.ponder.rsf.evolvers.DateInputEvolver;
+import uk.org.ponder.rsf.evolvers.FormatAwareDateInputEvolver;
 import uk.org.ponder.rsf.util.RSFUtil;
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
@@ -26,7 +26,7 @@ import uk.org.ponder.rsf.viewstate.ViewStateHandler;
 import uk.org.ponder.stringutil.StringGetter;
 import uk.org.ponder.stringutil.StringHolder;
 
-public class FieldDateInputEvolver implements DateInputEvolver {
+public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
   public static final String COMPONENT_ID = "date-field-input:";
   
   private DateSymbolJSEmitter jsemitter;
@@ -40,6 +40,8 @@ public class FieldDateInputEvolver implements DateInputEvolver {
   private ViewStateHandler vsh;
 
   private String JSInitName = "RSF_Calendar.initYahooCalendar_Datefield";
+
+  private String style = DATE_INPUT;
   
   public void setViewStateHandler(ViewStateHandler vsh) {
     this.vsh = vsh;
@@ -64,6 +66,10 @@ public class FieldDateInputEvolver implements DateInputEvolver {
   public void setJSInitName(String JSInitName) {
     this.JSInitName  = JSInitName;
   }
+
+  public void setStyle(String style) {
+    this.style = style;
+  }
   
   public UIJointContainer evolveDateInput(UIInput toevolve, Date value) {
     UIJointContainer togo = new UIJointContainer(toevolve.parent, toevolve.ID, 
@@ -82,24 +88,33 @@ public class FieldDateInputEvolver implements DateInputEvolver {
     
     String jsblock = jsemitter.emitDateSymbols();
     UIVerbatim.make(togo, "datesymbols", jsblock);
-   
-//    String truedateval = value == null? null : LocalSDF.w3cformat.format(value);
-//    
-//    UIInput.make(togo, "true-date", toevolve.valuebinding.value, 
-//        truedateval);
     
-    UIInput field = UIInput.make(togo, "date-field", ttb + "short", transit.getShort());
-    field.mustapply = true;
+    if (style.equals(DATE_INPUT) || style.equals(DATE_TIME_INPUT)) {
+      UIInput field = UIInput.make(togo, "date-field", ttb + "short", transit.getShort());
+      field.mustapply = true;
+      UIOutput.make(togo, "date-annotation", null, ttb + "shortFormat");
+    }
+    
+    if (style.equals(TIME_INPUT) || style.equals(DATE_TIME_INPUT)) {
+      UIInput field = UIInput.make(togo, "time-field", ttb + "time", transit.getTime());
+      field.mustapply = true;
+      UIOutput.make(togo, "time-annotation", null, ttb + "timeFormat");
+    }
+    
+    String truedateval = value == null? null : LocalSDF.w3cformat.format(value);
     UIInput truedate = UIInput.make(togo, "true-date", ttb + "date", 
-         LocalSDF.w3cformat.format(value));
+         truedateval); 
     truedate.willinput = false;
+    
+    UIForm form = RSFUtil.findBasicForm(togo);
+    
+    form.parameters.add(new UIELBinding(toevolve.valuebinding.value, 
+        new ELReference(ttb + "date")));
+    
     UIOutput.make(togo, "date-container");
     UIOutput.make(togo, "date-link");
-    UIOutput.make(togo, "date-annotation", null, ttb + "shortFormat");
     
     ViewParameters uvbparams = new SimpleViewParameters(UVBProducer.VIEW_ID);
-    
-//    String readbinding = ttb + "long";
     
     String initdate = HTMLUtil.emitJavascriptCall(JSInitName, 
         new String[] {togo.getFullID(), title.get(), ttb, 
@@ -107,12 +122,8 @@ public class FieldDateInputEvolver implements DateInputEvolver {
     
     UIVerbatim.make(togo, "init-date", initdate);
 
-    UIForm form = RSFUtil.findBasicForm(togo);
-    
-    form.parameters.add(new UIELBinding(toevolve.valuebinding.value, 
-        new ELReference(ttb + "date")));
-
     return togo;
   }
+
 
 }

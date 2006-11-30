@@ -17,6 +17,7 @@
       <bean class="uk.org.ponder.dateutil.FieldDateTransit"
         init-method="init">
         <property name="locale" ref="requestLocale" />
+        <property name="timeZone" ref="requestTimeZone"/>
       </bean>
     </property>
   </bean>
@@ -28,7 +29,7 @@
 
   <!-- ***** BEGIN Component Evolvers ****** -->
   <bean id="fieldDateInputEvolver" 
-     class="uk.ac.cam.caret.rsf.evolverimpl.FieldDateInputEvolver">
+     class="uk.ac.cam.caret.rsf.evolverimpl.FieldDateInputEvolver" singleton="false">
     <property name="JSEmitter" ref="dateSymbolJSEmitter" />
     <property name="requestBeanGetter" ref="ELEvaluatorProxy" />
     <property name="transitBase" value="fieldDateTransit" />

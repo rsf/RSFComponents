@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-
 import uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceBean;
 import uk.ac.cam.caret.rsf.testcomponents.beans.DataBean;
 import uk.org.ponder.rsf.components.UICommand;
@@ -13,6 +12,7 @@ import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UISelect;
 import uk.org.ponder.rsf.evolvers.DateInputEvolver;
+import uk.org.ponder.rsf.evolvers.FormatAwareDateInputEvolver;
 import uk.org.ponder.rsf.evolvers.TextInputEvolver;
 import uk.org.ponder.rsf.flow.ARIResult;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
@@ -35,7 +35,8 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
     NavigationCaseReporter {
 
   public static final String VIEW_ID = "test-components-index";
-  private DateInputEvolver dateevolver;
+  private DateInputEvolver dateevolver1;
+  private FormatAwareDateInputEvolver dateevolver2;
   private TextInputEvolver textevolver;
   private DataBean databean;
   private ComponentChoiceBean choicebean;
@@ -45,8 +46,12 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
     return VIEW_ID;
   }
 
-  public void setDateEvolver(DateInputEvolver dateevolver) {
-    this.dateevolver = dateevolver;
+  public void setDateEvolver1(DateInputEvolver dateevolver1) {
+    this.dateevolver1 = dateevolver1;
+  }
+
+  public void setDateEvolver2(FormatAwareDateInputEvolver dateevolver2) {
+    this.dateevolver2 = dateevolver2;
   }
 
   public void setTextEvolver(TextInputEvolver textevolver) {
@@ -65,16 +70,18 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
   public void setLocale(Locale locale) {
     this.locale = locale;
   }
-  
+
   public void fillComponents(UIContainer tofill, ViewParameters viewparamso,
       ComponentChecker checker) {
 
     UIForm cform = UIForm.make(tofill, "components-form");
 
     UIInput date1 = UIInput.make(cform, "date-1:", "#{dataBean.date1}");
-    dateevolver.evolveDateInput(date1, databean.date1);
+    dateevolver1.evolveDateInput(date1, databean.date1);
+
     UIInput date2 = UIInput.make(cform, "date-2:", "#{dataBean.date2}");
-    dateevolver.evolveDateInput(date2, databean.date2);
+    dateevolver2.setStyle(FormatAwareDateInputEvolver.DATE_TIME_INPUT);
+    dateevolver2.evolveDateInput(date2, databean.date2);
 
     UIInput text = UIInput.make(cform, "rich-text:", "#{dataBean.text}");
     textevolver.evolveTextInput(text);
@@ -93,18 +100,19 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
         "#{componentChoice.dateEvolverIndex}");
 
     UIForm lform = UIForm.make(tofill, "locale-select-form");
-    
+
     Locale[] s = Locale.getAvailableLocales();
     String[] locnames = new String[s.length];
-    for (int i = 0; i < s.length; ++ i) {
+    for (int i = 0; i < s.length; ++i) {
       locnames[i] = s[i].toString();
     }
-    UISelect.make(lform, "locale-select", locnames, "#{componentChoice.locale}", locale.toString());
+    UISelect.make(lform, "locale-select", locnames,
+        "#{componentChoice.locale}", locale.toString());
     UICommand.make(lform, "submit-locale");
   }
 
-  private void makeEvolveSelect(UIForm tform, StringList texts, String selectID,
-      String EL) {
+  private void makeEvolveSelect(UIForm tform, StringList texts,
+      String selectID, String EL) {
     int ctexts = texts.size();
     String[] choices = new String[ctexts];
     String[] choicenames = new String[ctexts];
