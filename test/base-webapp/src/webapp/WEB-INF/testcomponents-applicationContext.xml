@@ -29,6 +29,10 @@
   <bean id="textEvolvers" class="uk.org.ponder.springutil.StringListFactory">
     <property name="strings" value="plainTextInputEvolver"/>
   </bean>
+  
+  <bean id="selectEvolvers" class="uk.org.ponder.springutil.StringListFactory">
+    <property name="strings" value="standardDoubleSelectEvolver, plainSelectEvolver"/>
+  </bean>
 <!-- 
   <bean parent="templateContributorParent">
     <property name="templateNames" value="sakai-old-date, sakai-FCKEditor, 

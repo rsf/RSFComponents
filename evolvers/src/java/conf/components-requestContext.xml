@@ -45,6 +45,12 @@
 
   <bean id="plainTextInputEvolver"
     class="uk.org.ponder.rsf.evolvers.PlainTextInputEvolver" />
+    
+  <bean id="standardDoubleSelectEvolver"
+    class="uk.ac.cam.caret.rsf.evolverimpl.StandardDoubleSelectEvolver"/>
+    
+  <bean id="plainSelectEvolver"
+    class="uk.org.ponder.rsf.evolvers.PlainSelectEvolver" />
 
   <!-- ***** END Component Evolvers ****** -->
 

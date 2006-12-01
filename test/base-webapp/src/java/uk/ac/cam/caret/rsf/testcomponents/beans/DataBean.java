@@ -15,4 +15,6 @@ public class DataBean {
   public String update() {
     return "updated";
   }
+  
+  public String[] selections;
 }

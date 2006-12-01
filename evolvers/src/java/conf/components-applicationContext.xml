@@ -15,7 +15,7 @@
     parent="templateContributorParent">
     <property name="templateResourceBase" ref="componentsTemplateResourceBase"/>
     <property name="templateNames"
-      value="old-date, plainTextEditor, yahoo-date" />
+      value="old-date, yahoo-date, plainTextEditor, plainSelect, double-list-select" />
   </bean>
 
   <bean parent="requestAddressibleParent">

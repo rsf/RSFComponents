@@ -6,7 +6,6 @@
 
 var RSF = function() {
 
-
   var ns4 = (document.layers);
   var ie4 = (document.all && !document.getElementById);
   var ie5 = (document.all && document.getElementById);

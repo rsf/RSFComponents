@@ -12,6 +12,7 @@
     <property name="requestBeanLocator" ref="requestBeanLocator"/>
     <property name="dateEvolvers" ref="dateEvolvers" />
     <property name="textEvolvers" ref="textEvolvers" />
+    <property name="selectEvolvers" ref="selectEvolvers"/>
     <property name="localeSetter" ref="localeSetter" />
   </bean>
 
@@ -19,7 +20,10 @@
     factory-method="getTextInputEvolver" />
 
   <bean id="dateEvolver" factory-bean="componentChoice"
-    factory-method="getDateInputEvolver" singleton="false"/>
+    factory-method="getDateInputEvolver" singleton="false" />
+    
+  <bean id="selectEvolver" factory-bean="componentChoice"
+    factory-method="getSelectEvolver" singleton="false" />
 
   <bean id="localeSetter" class="uk.org.ponder.localeutil.LocaleReceiver"/>
 
@@ -32,6 +36,7 @@
     <property name="dateEvolver1" ref="dateEvolver" />
     <property name="dateEvolver2" ref="dateEvolver" />
     <property name="textEvolver" ref="textEvolver" />
+    <property name="selectEvolver" ref="selectEvolver" />
     <property name="locale" ref="requestLocale" />
   </bean>
 

@@ -27,12 +27,14 @@ var RSF = function() {
     }
 
   function isFossil(element, input) {
-    if (element.id && input.name == element.id + "-fossil") return true;
+    if (element.id && input.id == element.id + "-fossil") return true;
     return (input.name == element.name + "-fossil");
     }
     
-  function normaliseBinding(elname) {
-    return elname == "virtual-el-binding"? "el-binding" : elname;
+  function normaliseBinding(element) {
+    YAHOO.log("normaliseBinding name " + element.name + " id " + element.id);
+    if (!element.name) return element.id;
+    else return element.name == "virtual-el-binding"? "el-binding" : element.name;
     }
 
   var requestactive = false;
@@ -484,14 +486,15 @@ var RSF = function() {
   
       for (var i in inputs) {
         var input = inputs[i];
-        if (input.name) {
-          YAHOO.log("Discovered input name " + input.name + " value " + input.value);
+        if (input.name || input.id) {
+          var name = input.name? input.name : input.id;
+          YAHOO.log("Discovered input name " + name + " value " + input.value);
           if (isFossil(element, input)) {
             fossil = RSF.parseFossil(input.value);
             fossil.element = input;
             YAHOO.log("Own Fossil " + fossil.lvalue + " oldvalue " + fossil.oldvalue);
             }
-          var matches = input.name.match(bindingex);
+          var matches = name.match(bindingex);
           if (matches != null) {
             var binding = RSF.parseBinding(input.value, matches[0]);
             YAHOO.log("Binding lvalue " + binding.lvalue + " " + binding.rvalue);
@@ -537,11 +540,12 @@ var RSF = function() {
      
         var fossilex = /(.*)-fossil/;
         var value = upel.value;
-        if (upel.name.match(fossilex)) {
+        var name = upel.name? upel.name : upel.id;
+        if (name.match(fossilex)) {
           value = 'j' + value.substring(1);
           }
-        YAHOO.log("Upstream " + i + " value " + value + " el " + upel );
-        body.push(RSF.encodeElement(normaliseBinding(upel.name), value));
+        YAHOO.log("Upstream " + i + " name " + name + " value " + value + " el " + upel );
+        body.push(RSF.encodeElement(normaliseBinding(upel), value));
         }
       return body.join("&");
       },

@@ -10,10 +10,12 @@ import uk.org.ponder.localeutil.LocaleGetter;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIInternalLink;
 import uk.org.ponder.rsf.components.UIOutput;
+import uk.org.ponder.rsf.components.UIOutputMultiline;
 import uk.org.ponder.rsf.view.ComponentChecker;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
+import uk.org.ponder.stringutil.StringList;
 
 public class ResultsProducer implements ViewComponentProducer {
 
@@ -41,6 +43,10 @@ public class ResultsProducer implements ViewComponentProducer {
     UIOutput.make(tofill, "date1", format.format(databean.date1));
     UIOutput.make(tofill, "date2", format.format(databean.date2));
     UIOutput.make(tofill, "text", null, "#{dataBean.text}");
+    if (databean.selections != null) {
+      UIOutputMultiline.make(tofill, "selections", null, 
+        new StringList(databean.selections));
+    }
 
     UIInternalLink.make(tofill, "back", new SimpleViewParameters(
         IndexProducer.VIEW_ID));

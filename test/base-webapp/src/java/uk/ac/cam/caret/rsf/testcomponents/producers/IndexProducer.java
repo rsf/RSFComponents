@@ -13,6 +13,7 @@ import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UISelect;
 import uk.org.ponder.rsf.evolvers.DateInputEvolver;
 import uk.org.ponder.rsf.evolvers.FormatAwareDateInputEvolver;
+import uk.org.ponder.rsf.evolvers.SelectEvolver;
 import uk.org.ponder.rsf.evolvers.TextInputEvolver;
 import uk.org.ponder.rsf.flow.ARIResult;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
@@ -41,6 +42,7 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
   private DataBean databean;
   private ComponentChoiceBean choicebean;
   private Locale locale;
+  private SelectEvolver selectevolver;
 
   public String getViewID() {
     return VIEW_ID;
@@ -58,6 +60,10 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
     this.textevolver = textevolver;
   }
 
+  public void setSelectEvolver(SelectEvolver selectevolver) {
+    this.selectevolver = selectevolver;
+  }
+  
   // This would not be injected in an OTP implementation
   public void setDataBean(DataBean databean) {
     this.databean = databean;
@@ -86,6 +92,12 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
     UIInput text = UIInput.make(cform, "rich-text:", "#{dataBean.text}");
     textevolver.evolveTextInput(text);
 
+    UISelect select = UISelect.makeMultiple(cform, "select:", 
+        new String[] {"Baboon", "Marmoset", "Wensleydale", "Tamarin", "Cheddar", "Yarg", "Macaque", "Colobus"},
+        "#{dataBean.selections}",
+        new String[] {"Marmoset", "Tamarin", "Cheddar", "Macaque"});
+    selectevolver.evolveSelect(select);
+    
     UICommand.make(cform, "submit", "#{dataBean.update}");
 
     UIForm tform = UIForm.make(tofill, "text-select-form");
@@ -99,6 +111,12 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
     makeEvolveSelect(dform, dates, "date-select",
         "#{componentChoice.dateEvolverIndex}");
 
+    UIForm sform = UIForm.make(tofill, "select-select-form");
+    
+    StringList selects = choicebean.getSelectEvolvers();
+    makeEvolveSelect(sform, selects, "select-select",
+        "#{componentChoice.selectEvolverIndex}");
+    
     UIForm lform = UIForm.make(tofill, "locale-select-form");
 
     Locale[] s = Locale.getAvailableLocales();
