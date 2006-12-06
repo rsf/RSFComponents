@@ -36,18 +36,18 @@
 <body style="margin:10px">
 <h1>"New-style" Date Choosing Widget - Yahoo implementation</h1>
 Test template by entering <b>08/11/06</b> for date and <b>09:00</b> for time value.
+<!--
 <script>
 //<![CDATA[
+window.setTimeout(function() {
 var myLogReader1 = new YAHOO.widget.LogReader(null,{width: "60em", verboseOutput: false}); 
 myLogReader1.formatMsg = function(oLogMsg) { 
   var category = oLogMsg.category; 
   return "<p><span class='"+category+"'>"+category+"</span> "+ 
-          this.html2Text(oLogMsg.msg)+"</p>"; 
-   
-}; 
+          this.html2Text(oLogMsg.msg)+"</p>"; }}, 10 );
 //]]>
 </script>
-
+-->
 <div style="margin: 5em">
 <div rsf:id="date-field-input:">
   <script rsf:id="datesymbols">

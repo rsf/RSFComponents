@@ -4,9 +4,8 @@
 <head>
 <title>Double List Selection</title>
 <link href="../css/tool-default.css" type="text/css" rel="stylesheet" media="all" rsf:id="scr=contribute-style"/>
-<link href="../css/tool.css" type="text/css" rel="stylesheet" media="all" rsf:id="scr=contribute-style"/>
-<!--  
- Comment out YAHOO logger defns for production -->
+<link href="../css/tool.css" type="text/css" rel="stylesheet" media="all" rsf:id="scr=contribute-style"/> 
+<!-- Comment out YAHOO logger defns for production -->
 <link type="text/css" rel="stylesheet" 
   href="../yui/logger/assets/logger.css" rsf:id="scr=contribute-style"/> 
 
@@ -28,16 +27,14 @@
 <div class="portletBody">
 
 <h1>Double List Selection</h1>
- 
 <script>
 //<![CDATA[
+window.setTimeout(function() {
 var myLogReader1 = new YAHOO.widget.LogReader(null,{width: "60em", verboseOutput: false}); 
 myLogReader1.formatMsg = function(oLogMsg) { 
   var category = oLogMsg.category; 
   return "<p><span class='"+category+"'>"+category+"</span> "+ 
-          this.html2Text(oLogMsg.msg)+"</p>"; 
-   
-}; 
+          this.html2Text(oLogMsg.msg)+"</p>"; }}, 10 );
 //]]>
 </script>
 <!-- Implementation of double list input control, markup taken from 

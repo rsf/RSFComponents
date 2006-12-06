@@ -14,7 +14,7 @@
 
   <bean id="fieldDateTransit" parent="beanExploder">
     <property name="factory">
-      <bean class="uk.org.ponder.dateutil.FieldDateTransit"
+      <bean class="uk.org.ponder.dateutil.StandardFieldDateTransit"
         init-method="init">
         <property name="locale" ref="requestLocale" />
         <property name="timeZone" ref="requestTimeZone"/>
@@ -44,13 +44,13 @@
   </bean>
 
   <bean id="plainTextInputEvolver"
-    class="uk.org.ponder.rsf.evolvers.PlainTextInputEvolver" />
+    class="uk.org.ponder.rsf.evolvers.support.PlainTextInputEvolver" />
     
   <bean id="standardDoubleSelectEvolver"
     class="uk.ac.cam.caret.rsf.evolverimpl.StandardDoubleSelectEvolver"/>
     
   <bean id="plainSelectEvolver"
-    class="uk.org.ponder.rsf.evolvers.PlainSelectEvolver" />
+    class="uk.org.ponder.rsf.evolvers.support.PlainSelectEvolver" />
 
   <!-- ***** END Component Evolvers ****** -->
 
