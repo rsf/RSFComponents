@@ -26,7 +26,7 @@
     </j:forEach>
   </preGoal>
 
-   <goal name="deploy" prereqs="war:install">
+  <goal name="deploy" prereqs="war:install">
     <maven:property defaultValue="${pom.artifactId}" var="webappName"
       name="deploy.webappname" />
     <j:set var="destination"
