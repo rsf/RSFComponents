@@ -5,6 +5,10 @@
   <name>RSFComponents Evolvers</name>
   <groupId>rsfutil</groupId>
   <currentVersion>${rsfutil.version}</currentVersion>
+  <properties>
+    <!-- build a jar, no deploy -->
+    <deploy.type>jar</deploy.type>
+  </properties>
   <organization>
     <name>CARET</name>
     <url>http://www.caret.cam.ac.uk</url>
