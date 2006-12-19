@@ -443,7 +443,6 @@ var RSF = function() {
           text = text + child.nodeValue;
           }
         }
-//      YAHOO.log("text " + text);
       return text; 
     },
       
