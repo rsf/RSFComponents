@@ -49,7 +49,7 @@ myLogReader1.formatMsg = function(oLogMsg) {
 </script>
 -->
 <div style="margin: 5em">
-<div rsf:id="date-field-input:">
+<div rsf:id="date-field-input:" style="display:inline">
 <script rsf:id="datesymbols">
 //<![CDATA[
   // These are the date symbols for en_ZA
@@ -66,7 +66,7 @@ myLogReader1.formatMsg = function(oLogMsg) {
 //]]>
 </script> 
 <script type="text/javascript" src="../js/yahoo-calendar-setup.js?nocache"></script>
-<div>
+<span>
 
 <span rsf:id="date-title">Date:</span>
 <span class="annotation-target">
@@ -82,8 +82,8 @@ myLogReader1.formatMsg = function(oLogMsg) {
   style="vertical-align:middle; margin:5px" />
 </a>
 
-<div rsf:id="date-container" id="nameBase1:date-container"
-  style="position:absolute; display:none"></div>
+<span rsf:id="date-container" id="nameBase1:date-container"
+  style="position:absolute; display:none"></span>
 &nbsp;
 <span rsf:id="time-title">Time:</span>
  <span class="annotation-target">
@@ -91,15 +91,15 @@ myLogReader1.formatMsg = function(oLogMsg) {
   class="annotation-inactive annotation-incomplete">hh:mm</span>
 <input rsf:id="time-field" id="nameBase1:time-field" size="7" />
  </span>
-</div>
+</span>
 
 <script rsf:id="init-date">
   RSF_Calendar.initYahooCalendar_Datefield("nameBase1:", "Select Date");
 </script>
-</div> <!-- end enclosing div for branch container -->
-
-
+</div> <!-- end enclosing span for branch container -->
 <!-- A dummy 2nd instance of the component used to test JS isolation -->
+
+
 <div style="margin-top:5em">
 
 

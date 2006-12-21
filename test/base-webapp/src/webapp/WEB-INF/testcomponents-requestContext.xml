@@ -34,7 +34,7 @@
     <property name="dataBean" ref="dataBean" />
     <property name="choiceBean" ref="componentChoice" />
     <property name="dateEvolver1" ref="dateEvolver" />
-    <property name="dateEvolver2" ref="dateEvolver" />
+    <property name="dateEvolver2" ref="fieldDateInputEvolver" />
     <property name="textEvolver" ref="textEvolver" />
     <property name="selectEvolver" ref="selectEvolver" />
     <property name="locale" ref="requestLocale" />
