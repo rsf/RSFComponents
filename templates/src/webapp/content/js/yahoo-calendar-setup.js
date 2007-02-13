@@ -293,7 +293,7 @@ var RSF_Calendar = function() {
     var dateLink = $it(dateLinkID);
   
     dateLink.onclick = function() { 
-      yahoo_showCalendar(newcal, this);
+     yahoo_showCalendar(newcal, this);
     };
     
     controlIDs.push(dateLinkID);
@@ -389,7 +389,7 @@ from the controls of an active calendar dismisses its popup **/
     
 //    var annotation = $it(nameBase + "date-annotation");
       var dateLink = $it(nameBase + "date-link");
-      dateLink.style.display="inline";
+      dateLink.style.display = "inline";
     
       registerDateFieldUpdateHandler(newcal, nameBase, transitbase, AJAXURL);
       dateField.onchange();

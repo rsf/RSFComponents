@@ -31,7 +31,7 @@
   <bean id="fieldDateInputEvolver" 
      class="uk.ac.cam.caret.rsf.evolverimpl.FieldDateInputEvolver" singleton="false">
     <property name="JSEmitter" ref="dateSymbolJSEmitter" />
-    <property name="requestBeanGetter" ref="ELEvaluatorProxy" />
+    <property name="requestBeanGetter" ref="ELEvaluator" />
     <property name="transitBase" value="fieldDateTransit" />
     <property name="viewStateHandler" ref="viewStateHandler" />
   </bean>

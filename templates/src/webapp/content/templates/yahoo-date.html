@@ -70,20 +70,20 @@ myLogReader1.formatMsg = function(oLogMsg) {
 
 <span rsf:id="date-title">Date:</span>
 <span class="annotation-target">
- <span rsf:id="date-annotation" id="nameBase1:date-annotation"
+<span rsf:id="date-annotation" id="nameBase1:date-annotation"
   class="annotation-inactive annotation-incomplete">dd/MM/YY</span>
+</span>
 <input rsf:id="date-field" id="nameBase1:date-field" size="12"/>
-  </span>
 <input rsf:id="true-date" id="nameBase1:true-date" type="hidden"/>
-
-<a rsf:id="date-link" id="nameBase1:date-link"
-  href="javascript:void(null)" class="annotation-target" style="display:none">
-  <img src="../images/pdate.gif" border="0"
-  style="vertical-align:middle; margin:5px" />
-</a>
 
 <span rsf:id="date-container" id="nameBase1:date-container"
   style="position:absolute; display:none"></span>
+
+<a rsf:id="date-link" id="nameBase1:date-link"
+  href="javascript:void(null)" style="display:none">
+  <img src="../images/pdate.gif" border="0"
+  style="vertical-align:middle; margin:5px" /></a>
+
 &nbsp;
 <span rsf:id="time-title">Time:</span>
  <span class="annotation-target">
@@ -105,20 +105,20 @@ myLogReader1.formatMsg = function(oLogMsg) {
 
 <span rsf:id="date-title">Date:</span>
 <span class="annotation-target">
-<input rsf:id="date-field" id="nameBase2:date-field" size="12"/>
 <span rsf:id="date-annotation" id="nameBase2:date-annotation"
     class="annotation-inactive annotation-incomplete">dd/MM/YY</span>
 </span>
+<input rsf:id="date-field" id="nameBase2:date-field" size="12"/>
 <input rsf:id="true-date" id="nameBase2:true-date" type="hidden"/>
+
 <a rsf:id="date-link" id="nameBase2:date-link" 
   href="javascript:void(null)" style="display:none">
   <img src="../images/pdate.gif" border="0"
-  style="vertical-align:middle;margin:5px" /> 
+  style="vertical-align:middle;margin:5px" /></a>
 
-  </a>
-  </div>
-<div rsf:id="date-container" id="nameBase2:date-container"
-  style="position:absolute; display:none"></div>
+<span rsf:id="date-container" id="nameBase2:date-container"
+  style="position:absolute; display:none"></span>
+</div>
 
 <script rsf:id="init-date">
   RSF_Calendar.initYahooCalendar_Datefield("nameBase2:", "Select Date");

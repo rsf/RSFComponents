@@ -4,7 +4,7 @@
 // http://www.dustindiaz.com/namespace-your-javascript/
 
 var RSF = function() {
-
+ 
   function invalidate(invalidated, EL, entry) {
     if (!EL) {
       YAHOO.log("invalidate null EL: " + invalidated + " " + entry);
@@ -256,6 +256,8 @@ var RSF = function() {
         return function() {
           requestactive = false;
           YAHOO.log("Restart callback wrapper begin");
+          YAHOO.log("Callback " + callback + " type " + typeof(callback)  + " arguments " + arguments);
+          YAHOO.log("callback.apply " + typeof(callback.apply));
           callback.apply(null, arguments);
           YAHOO.log("Callback concluded, beginning restart search");
           for (var i in queuemap) {
@@ -270,30 +272,29 @@ var RSF = function() {
         }
       },
     
-    /** Inbindings is mapping of input EL to their values,
-     ** Outbindings is mapping of output EL to their callbacks
-     */
-     getAJAXUpdater: function (sourceFields, AJAXURL, bindings, callback) {
-      // Assumes a FieldDateTransit for which we require to read the "long" format
-      var AJAXcallback = {
-        success: function(response) {
-          YAHOO.log("Response success: " + response + " " + response.responseText);
-          var UVB = RSF.accumulateUVBResponse(response.responseXML);
-          callback(UVB);
-          }
-        };
-      return function() {
-        var body = RSF.getUVBSubmissionBody(sourceFields, bindings);
-        YAHOO.log("Firing AJAX request " + body);
-        RSF.queueAJAXRequest(bindings[0], "POST", AJAXURL, body, AJAXcallback);
-      }
-    },
-  
     issueAJAXRequest: function(method, url, parameters, callback) {
       var alertContents = function() {
         if (http_request.readyState == 4) {
           if (http_request.status == 200) {
             YAHOO.log("AJAX request success status: " + http_request.status);
+            var xml = http_request.responseXML; // First try to use the auto-parsed value
+            if (!xml || !xml.documentElement ) { // The browser failed, but we think we're smarter
+              YAHOO.log("Detected failed responseXML");
+              if (window.ActiveXObject ) { // Internet Explorer, use the Msxml COM object
+                YAHOO.log("Parsing ActiveX");
+                xml = new ActiveXObject( "Msxml2.DOMDocument" );
+                xml.loadXML( http_request.responseText );
+                YAHOO.log("Parsed " + typeof(xml.documentElement));
+                } 
+              else if ( DOMParser ) { // Use the gecko builtin if it's available.
+                xml = new DOMParser().parseFromString(http_request.responseText, "text/xml" );
+              }
+              new_http_request = new Object();
+              new_http_request.responseXML = xml;
+              new_http_request.responseText = http_request.responseText;
+              http_request = new_http_request;
+            }
+            YAHOO.log("Starting callback");
             callback.success(http_request);
             YAHOO.log("AJAX callback concluded");
             } 
@@ -406,17 +407,34 @@ var RSF = function() {
      * for any TargettedMessages generated during the request cycle.
      */
     accumulateUVBResponse: function(responseDOM) {
+      YAHOO.log("Begin aUVBR " + responseDOM.documentElement + " type " + typeof(responseDOM.documentElement));
+      
+      if (responseDOM.parseError) {
+        YAHOO.log("parseError code" + responseDOM.parseError.errorCode);
+        YAHOO.log("parseError reason" + responseDOM.parseError.reason);
+      }
+      
+      YAHOO.log("ChildNodes Type " + typeof(responseDOM.documentElement.childNodes));
+      YAHOO.log("ChildNodes " + responseDOM.documentElement.childNodes);
+      
+      YAHOO.log("childNodes count " + responseDOM.documentElement.childNodes.length);
       var togo = new Object();
       togo.EL = new Object();
       togo.message = new Array();
       togo.isError = false;
       
-      var values = responseDOM.getElementsByTagName("value");
-      for (var i in values) {
+      YAHOO.log("ETagName " + typeof(responseDOM.getElementsByTagName));
+//      var values = responseDOM.getElementsByTagName("value");
+      var values = responseDOM.documentElement.childNodes;
+      YAHOO.log("values " + values);
+      for (var i = 0; i < values.length; ++ i) {
+        YAHOO.log("i " + i);
         var value = values[i];
-//        YAHOO.log("value " + i + " " + value[i]);
+        YAHOO.log("value " + i + " " + value);
+        YAHOO.log("getAttribute " + typeof(value.getAttribute));
         if (!value.getAttribute) continue;
         var id = value.getAttribute("id");
+        YAHOO.log("getElementText " + typeof(RSF.getElementText));
         var text = RSF.getElementText(value);
         YAHOO.log("Value id " + id + " text " + text);
         if (id.substring(0, 4) == "tml:") {
@@ -554,8 +572,28 @@ var RSF = function() {
     getRelativeID: function(baseid, targetid) {
       colpos = baseid.lastIndexOf(':');
       return baseid.substring(0, colpos + 1) + targetid;
+      },
+    /** Inbindings is mapping of input EL to their values,
+     ** Outbindings is mapping of output EL to their callbacks
+     */
+     getAJAXUpdater: function (sourceFields, AJAXURL, bindings, callback) {
+      // Assumes a FieldDateTransit for which we require to read the "long" format
+      var AJAXcallback = {
+        success: function(response) {
+          YAHOO.log("Response success: " + response + " " + response.responseText);
+          YAHOO.log("RSF " + RSF + " RSF.aUVBR " + typeof(RSF.accumulateUVBResponse));
+          YAHOO.log("ResponseXML " + typeof(response.responseXML));
+          var UVB = RSF.accumulateUVBResponse(response.responseXML);
+          YAHOO.log("Accumulated " + UVB);
+          callback(UVB);
+          }
+        };
+      return function() {
+        var body = RSF.getUVBSubmissionBody(sourceFields, bindings);
+        YAHOO.log("Firing AJAX request " + body);
+        RSF.queueAJAXRequest(bindings[0], "POST", AJAXURL, body, AJAXcallback);
       }
-      
+    }
       
     }; // end return internal "Object"
   }(); // end namespace RSF
