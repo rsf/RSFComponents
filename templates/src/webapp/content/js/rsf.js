@@ -241,6 +241,7 @@ var RSF = function() {
 
     queueAJAXRequest: function(token, method, url, parameters, callbacks) {
       YAHOO.log("queueAJAXRequest: token " + token);
+	  YAHOO.log("MESSAGE");
       if (requestactive) {
         YAHOO.log("Request is active, queuing for token " + token);
         queuemap[token] = packAJAXRequest(method, url, parameters, callbacks);
@@ -256,8 +257,6 @@ var RSF = function() {
         return function() {
           requestactive = false;
           YAHOO.log("Restart callback wrapper begin");
-          YAHOO.log("Callback " + callback + " type " + typeof(callback)  + " arguments " + arguments);
-          YAHOO.log("callback.apply " + typeof(callback.apply));
           callback.apply(null, arguments);
           YAHOO.log("Callback concluded, beginning restart search");
           for (var i in queuemap) {
@@ -277,24 +276,6 @@ var RSF = function() {
         if (http_request.readyState == 4) {
           if (http_request.status == 200) {
             YAHOO.log("AJAX request success status: " + http_request.status);
-            var xml = http_request.responseXML; // First try to use the auto-parsed value
-            if (!xml || !xml.documentElement ) { // The browser failed, but we think we're smarter
-              YAHOO.log("Detected failed responseXML");
-              if (window.ActiveXObject ) { // Internet Explorer, use the Msxml COM object
-                YAHOO.log("Parsing ActiveX");
-                xml = new ActiveXObject( "Msxml2.DOMDocument" );
-                xml.loadXML( http_request.responseText );
-                YAHOO.log("Parsed " + typeof(xml.documentElement));
-                } 
-              else if ( DOMParser ) { // Use the gecko builtin if it's available.
-                xml = new DOMParser().parseFromString(http_request.responseText, "text/xml" );
-              }
-              new_http_request = new Object();
-              new_http_request.responseXML = xml;
-              new_http_request.responseText = http_request.responseText;
-              http_request = new_http_request;
-            }
-            YAHOO.log("Starting callback");
             callback.success(http_request);
             YAHOO.log("AJAX callback concluded");
             } 
@@ -407,34 +388,16 @@ var RSF = function() {
      * for any TargettedMessages generated during the request cycle.
      */
     accumulateUVBResponse: function(responseDOM) {
-      YAHOO.log("Begin aUVBR " + responseDOM.documentElement + " type " + typeof(responseDOM.documentElement));
-      
-      if (responseDOM.parseError) {
-        YAHOO.log("parseError code" + responseDOM.parseError.errorCode);
-        YAHOO.log("parseError reason" + responseDOM.parseError.reason);
-      }
-      
-      YAHOO.log("ChildNodes Type " + typeof(responseDOM.documentElement.childNodes));
-      YAHOO.log("ChildNodes " + responseDOM.documentElement.childNodes);
-      
-      YAHOO.log("childNodes count " + responseDOM.documentElement.childNodes.length);
       var togo = new Object();
       togo.EL = new Object();
       togo.message = new Array();
       togo.isError = false;
-      
-      YAHOO.log("ETagName " + typeof(responseDOM.getElementsByTagName));
-//      var values = responseDOM.getElementsByTagName("value");
-      var values = responseDOM.documentElement.childNodes;
-      YAHOO.log("values " + values);
+      var values = responseDOM.getElementsByTagName("value");
+
       for (var i = 0; i < values.length; ++ i) {
-        YAHOO.log("i " + i);
         var value = values[i];
-        YAHOO.log("value " + i + " " + value);
-        YAHOO.log("getAttribute " + typeof(value.getAttribute));
-        if (!value.getAttribute) continue;
+        //if (!value.getAttribute) continue;
         var id = value.getAttribute("id");
-        YAHOO.log("getElementText " + typeof(RSF.getElementText));
         var text = RSF.getElementText(value);
         YAHOO.log("Value id " + id + " text " + text);
         if (id.substring(0, 4) == "tml:") {
@@ -455,7 +418,7 @@ var RSF = function() {
     getElementText: function(element) {
       var nodes = element.childNodes;
       var text = "";
-      for (var i in nodes) {
+      for (var i = 0; i < nodes.length; ++ i) {
         var child = nodes[i];
         if (child.nodeType == 3) {
           text = text + child.nodeValue;
@@ -581,8 +544,6 @@ var RSF = function() {
       var AJAXcallback = {
         success: function(response) {
           YAHOO.log("Response success: " + response + " " + response.responseText);
-          YAHOO.log("RSF " + RSF + " RSF.aUVBR " + typeof(RSF.accumulateUVBResponse));
-          YAHOO.log("ResponseXML " + typeof(response.responseXML));
           var UVB = RSF.accumulateUVBResponse(response.responseXML);
           YAHOO.log("Accumulated " + UVB);
           callback(UVB);
