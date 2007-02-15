@@ -241,7 +241,6 @@ var RSF = function() {
 
     queueAJAXRequest: function(token, method, url, parameters, callbacks) {
       YAHOO.log("queueAJAXRequest: token " + token);
-	  YAHOO.log("MESSAGE");
       if (requestactive) {
         YAHOO.log("Request is active, queuing for token " + token);
         queuemap[token] = packAJAXRequest(method, url, parameters, callbacks);
