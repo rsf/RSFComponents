@@ -11,7 +11,7 @@
     <property name="localeGetter" ref="requestLocaleProxy" />
   </bean>
 
-  <bean id="componentTemplateContributor"
+  <bean id="RSFComponentsTemplateContributor"
     parent="templateContributorParent">
     <property name="templateResourceBase" ref="componentsTemplateResourceBase"/>
     <property name="templateNames"
