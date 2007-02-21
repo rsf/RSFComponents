@@ -19,24 +19,6 @@
     RSF Components package, packaged for a standard Servlet environment.
   </description>
   <dependencies>
-    <dependency>
-      <groupId>ponderutilcore</groupId>
-      <artifactId>ponderutilcore</artifactId>
-      <version>${ponderutilcore.version}</version>
-      <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>j-servletutil</groupId>
-      <artifactId>j-servletutil</artifactId>
-      <version>${jservletutil.version}</version>
-      <type>jar</type>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
