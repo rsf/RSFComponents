@@ -74,13 +74,15 @@ public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
   public UIJointContainer evolveDateInput(UIInput toevolve, Date value) {
     UIJointContainer togo = new UIJointContainer(toevolve.parent, toevolve.ID, 
         COMPONENT_ID);
-    
     toevolve.parent.remove(toevolve);
     
     String ttbo = transitbase + "." + togo.getFullID();
-    FieldDateTransit transit = null;
-    if (value != null) {
-      transit = (FieldDateTransit) rbg.getBean(ttbo);
+  
+    FieldDateTransit transit = (FieldDateTransit) rbg.getBean(ttbo);
+    if (value == null) {
+      value = (Date) rbg.getBean(toevolve.valuebinding.value);
+    }
+    else {
       transit.setDate(value);
     }
 
