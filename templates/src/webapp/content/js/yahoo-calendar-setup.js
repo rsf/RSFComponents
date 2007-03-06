@@ -239,15 +239,19 @@ var RSF_Calendar = function() {
     RSF.addElementListener(trueValueField, trueValueChanged, trueValueFireExclusions);
     RSF.addElementListener(trueValueField, function() {
       YAHOO.log("Fire cal change");
+      YAHOO.log("Cal change for " + trueValueField.id + " value " + trueValueField.value);
       var date = new Date();
       date.setISO8601(trueValueField.value);
       var year = date.getFullYear();
-      var day = date.getDay();
-      var month = date.getMonth();
-      newcal.select(month + "/" + day + "/" + year);
+      var day = date.getDate();
+      var month = date.getMonth() + 1;
+      YAHOO.log("Cal id " + newcal.outerContainer.id + " controlDate before: " + newcal.getSelectedDates()[0]);
+      YAHOO.log("Cal selecting " + month + "/" + day + "/" + year);
+      newcal.select(month + "/" + day + "/" + year);     
       newcal.setMonth(month - 1);
       newcal.setYear(year);
       newcal.render();
+      YAHOO.log("controlDate after: " + newcal.getSelectedDates()[0]);
       }, [trueValueField]);
     
     newcal.setChildFunction("onSelect", 

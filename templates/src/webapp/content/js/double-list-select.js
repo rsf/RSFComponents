@@ -6,7 +6,8 @@ var DoubleList = function() {
   function $it(elementID) {
     return document.getElementById(elementID);
   }
-    
+  // Compute the ID of the "shadow" submission field that is dynamically
+  // maintained to back the left-hand list submission  
   function computeID(container, value) {
     return container.id + "$$$$double-list-select$$$$" + value;
     }

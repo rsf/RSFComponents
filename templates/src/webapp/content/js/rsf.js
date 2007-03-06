@@ -110,7 +110,14 @@ var RSF = function() {
               }
             }
           if (!excluded) {
-            lisrec.listener.apply(null, arguments);
+            try {
+              YAHOO.log("Firing to listener " + i + " with arguments " + arguments);
+              lisrec.listener.apply(null, arguments);
+              }
+            catch (e) {
+              YAHOO.log("Received exception " + e.message + " e " +e);
+               throw (e);       
+              }
             }
           }
         }
@@ -241,14 +248,14 @@ var RSF = function() {
 
     queueAJAXRequest: function(token, method, url, parameters, callbacks) {
       YAHOO.log("queueAJAXRequest: token " + token);
+      var callbacks1 = wrapCallbacks(callbacks, restartWrapper);
+      var callbacks2 = wrapCallbacks(callbacks1, primaryRestorationWrapper());
       if (requestactive) {
         YAHOO.log("Request is active, queuing for token " + token);
-        queuemap[token] = packAJAXRequest(method, url, parameters, callbacks);
+        queuemap[token] = packAJAXRequest(method, url, parameters, callbacks2);
         }
       else {
         requestactive = true;
-        var callbacks1 = wrapCallbacks(callbacks, restartWrapper);
-        var callbacks2 = wrapCallbacks(callbacks1, primaryRestorationWrapper());
         RSF.issueAJAXRequest(method, url, parameters, callbacks2);
         }
         
