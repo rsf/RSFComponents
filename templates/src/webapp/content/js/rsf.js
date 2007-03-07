@@ -535,6 +535,60 @@ var RSF = function() {
         }
       return body.join("&");
       },
+  /** Duplicates a node corresponding to an RSF branch, with rewriting of
+   * all the enclosed IDs. The new branch is returned.
+   * @param element The DOM element to be duplicated
+   * @param newBranchId The new full ID to be given to the branch
+   * @param The last existing replicate of the branch, after which the copy is
+   * to be placed
+   */    
+  duplicateBranch: function(element, newBranchId, lastExistingEl) {
+    var duplicate = element.cloneNode(true);  
+    RSF.rewriteIDs(duplicate, newBranchId);     
+    RSF.insertAfter(duplicate, lastExistingEl);
+    },
+  /** Mockup of a missing DOM function **/    
+  insertAfter: function (newChild, refChild) {
+    var nextSib = refChild.nextSibling;
+    if (!nextSib) {
+      refChild.parentNode.appendChild(newChild);
+      }
+    else {
+      refChild.parentNode.insertBefore(newChild, nextSib);
+      }
+    },
+      
+  /** Rewrite the ids of ALL recursively descended rsf-allocated nodes to
+   * reflect the change in nameBase
+   * @param element A DOM element which containing children whose IDs are to be
+   * rewritten (assumed freshly cloned and not joined to the main DOM)
+   * @param newBranchID The ID to be assigned at the root node of the DOM
+   */
+    rewriteIDs: function(element, newBranchId) {
+      var colpos = newBranchId.lastIndexOf(':');
+      var nameBase = newBranchId.substring(0, colpos + 1);
+      var localID = newBranchId.substring(colpos + 1);
+    
+      var elid = element.getAttribute('id');
+      if (elid) {
+      //      nameBase:dynamic-list-input-row::1:remove
+        if (elid.indexOf(nameBase) == 0) {
+          var colpos = elid.indexOf(':', nameBase.length);
+          var newid = nameBase + localID + (colpos == -1? "" : elid.substring(colpos));
+          element.setAttribute('id', newid);
+        }
+      }
+   
+      if (element.childNodes) {
+        for (var i = 0; i < element.childNodes.length; ++ i) {
+          var child = element.childNodes[i];
+          if (child.nodeType == 1) {
+            RSF.rewriteIDs(child, newBranchId);
+            }
+          }
+        }
+      },
+    
     /** Return the ID of another element in the same container as the
     * "base", only with the local ID (rsf:id) given by "targetiD"
     */
