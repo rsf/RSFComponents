@@ -5,7 +5,7 @@ var DynamicListInput = function() {
   }
   
   function deriveRowId(nameBase, index) {
-    return nameBase + 'dynamic-list-input-row::' + index;
+    return nameBase + 'dynamic-list-input-row::' + index + ":";
     }
   
   function lastRowInd(existrows) {
@@ -19,7 +19,7 @@ var DynamicListInput = function() {
   function assignRemoveClick(nameBase, i, existrows) {
     existrows[i] = true;
     var rowid = deriveRowId(nameBase, i);
-    var removeid = rowid + ':remove';
+    var removeid = rowid + 'remove';
     var removec = $it(removeid);
   
     removec.onclick = function () {
@@ -48,7 +48,7 @@ var DynamicListInput = function() {
         var duprow = RSF.duplicateBranch(sampleel, nextrowid, lastrow);
         
         assignRemoveClick(nameBase, nextrowind, existrows);
-        $it(nextrowid + ':input').value = "";
+        $it(nextrowid + 'input').value = "";
         ++nextrowind;
       };
     }

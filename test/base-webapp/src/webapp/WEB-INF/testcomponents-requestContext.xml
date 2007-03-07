@@ -39,6 +39,10 @@
     <property name="selectEvolver" ref="selectEvolver" />
     <property name="locale" ref="requestLocale" />
   </bean>
+  
+  <bean class="uk.ac.cam.caret.rsf.testcomponents.producers.SingleProducer">
+    <property name="dynamicListInputEvolver" ref="standardDynamicListInputEvolver"/>
+  </bean>
 
   <bean class="uk.ac.cam.caret.rsf.testcomponents.producers.ResultsProducer">
     <property name="localeGetter" ref="requestLocaleProxy" />
