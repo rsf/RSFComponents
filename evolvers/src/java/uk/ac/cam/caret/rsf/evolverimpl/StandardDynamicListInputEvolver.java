@@ -20,13 +20,14 @@ public class StandardDynamicListInputEvolver implements DynamicListInputEvolver 
   public static final String CORE_ID = "dynamic-list-input-core:";
   
   private BeanGetter rbg;
+  private UIBoundString removelabel;
+  private UIBoundString addlabel;
 
   public void setRequestBeanGetter(BeanGetter rbg) {
     this.rbg = rbg;
   }
   
-  public UIJointContainer evolve(UIInputMany toevolve, 
-      UIBoundString removelabel, UIBoundString addlabel) {
+  public UIJointContainer evolve(UIInputMany toevolve) {
     UIJointContainer togo = new UIJointContainer(toevolve.parent, toevolve.ID, 
         COMPONENT_ID);
     toevolve.parent.remove(toevolve);
@@ -55,5 +56,11 @@ public class StandardDynamicListInputEvolver implements DynamicListInputEvolver 
     UIVerbatim.make(togo, "init-script", script);
     return togo;
   }
+
+  public void setLabels(UIBoundString removelabel, UIBoundString addlabel) {
+    this.removelabel = removelabel;
+    this.addlabel = addlabel;
+  }
+
 
 }

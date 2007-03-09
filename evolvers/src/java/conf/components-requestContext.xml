@@ -53,7 +53,8 @@
     class="uk.org.ponder.rsf.evolvers.support.PlainSelectEvolver" />
 
   <bean id="standardDynamicListInputEvolver"
-    class="uk.ac.cam.caret.rsf.evolverimpl.StandardDynamicListInputEvolver">
+    class="uk.ac.cam.caret.rsf.evolverimpl.StandardDynamicListInputEvolver" 
+    singleton="false">
     <property name="requestBeanGetter" ref="ELEvaluator"/>
   </bean>
   <!-- ***** END Component Evolvers ****** -->
