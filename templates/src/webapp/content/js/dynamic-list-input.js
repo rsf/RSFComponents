@@ -8,6 +8,14 @@ var DynamicListInput = function() {
     return nameBase + 'dynamic-list-input-row::' + index + ":";
     }
   
+  function getControl(nameBase, index, extension) {
+    var rowid = deriveRowId(nameBase, index);
+    console.log("rowid " + rowid);
+    var controlid = rowid + extension;
+    var control = $it(controlid);
+    return control;
+    }
+  
   function lastRowInd(existrows) {
     var maxi = -1;
     for (var i in existrows) {
@@ -16,25 +24,54 @@ var DynamicListInput = function() {
     return maxi;
     }
   
-  function assignRemoveClick(nameBase, i, existrows) {
+  function makeEnabledUpdater(nameBase, existrows, minlength, maxlength) {
+    var removeenabled = true;
+    var addcontrol = $it(nameBase + 'add-row');
+    return function () {
+      console.log("count " + existrows.count + " min " + minlength);
+      var makeremoveenabled = existrows.count > minlength;
+      if (removeenabled ^ makeremoveenabled) {
+        for (var row in existrows) {
+          if (row == 'count') continue;
+          var removec = getControl(nameBase, row, 'remove');
+          console.log("control " + removec.id + " " + makeremoveenabled);
+          removec.disabled = !makeremoveenabled;
+          }
+        removeenabled = makeremoveenabled;
+        }
+      var makeaddenabled = existrows.count < maxlength;
+      console.log("Add control " + addcontrol.id + " enabled " + makeaddenabled);
+      addcontrol.disabled = !makeaddenabled;
+
+      };
+    }
+  
+  function assignRemoveClick(nameBase, i, existrows, enabledUpdater) {
     existrows[i] = true;
-    var rowid = deriveRowId(nameBase, i);
-    var removeid = rowid + 'remove';
-    var removec = $it(removeid);
+    ++existrows.count;
+    var removec = getControl(nameBase, i, 'remove');
   
     removec.onclick = function () {
-      var rowel = $it(rowid);
+      var rowel = getControl(nameBase, i, '');
       rowel.parentNode.removeChild(rowel);
       delete existrows[i];
+      --existrows.count;
+      enabledUpdater();
       };
     }
   
   return {
-    init_DynamicListInput: function(nameBase, rowcount) {
+    init_DynamicListInput: function(nameBase, rowcount, minlength, maxlength) {
       var existrows = new Object();
+      existrows.count = 0;
+          
+      var enabledUpdater = makeEnabledUpdater(nameBase, existrows, minlength, maxlength);
+      
       for (var i = 0; i < rowcount; ++ i) {
-        assignRemoveClick(nameBase, i, existrows);
+        assignRemoveClick(nameBase, i, existrows, enabledUpdater);
       }
+      enabledUpdater();
+      
       var sampleid = deriveRowId(nameBase, 0);
       var sampleel = $it(sampleid);
       var addid = nameBase + "add-row";
@@ -47,9 +84,10 @@ var DynamicListInput = function() {
         
         var duprow = RSF.duplicateBranch(sampleel, nextrowid, lastrow);
         
-        assignRemoveClick(nameBase, nextrowind, existrows);
+        assignRemoveClick(nameBase, nextrowind, existrows, enabledUpdater);
         $it(nextrowid + 'input').value = "";
         ++nextrowind;
+        enabledUpdater();
       };
     }
     
