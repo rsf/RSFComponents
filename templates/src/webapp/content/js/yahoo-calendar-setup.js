@@ -268,6 +268,7 @@ var RSF_Calendar = function() {
         // do not trash time value in underlying date!
         var fused = converted.substring(0, 10) + trueValueField.value.substring(10);
         updateTrueValue(true, fused);
+        dateField.focus();
         }
       );
       

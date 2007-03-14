@@ -10,7 +10,6 @@ var DynamicListInput = function() {
   
   function getControl(nameBase, index, extension) {
     var rowid = deriveRowId(nameBase, index);
-    console.log("rowid " + rowid);
     var controlid = rowid + extension;
     var control = $it(controlid);
     return control;
@@ -28,19 +27,16 @@ var DynamicListInput = function() {
     var removeenabled = true;
     var addcontrol = $it(nameBase + 'add-row');
     return function () {
-      console.log("count " + existrows.count + " min " + minlength);
       var makeremoveenabled = existrows.count > minlength;
       if (removeenabled ^ makeremoveenabled) {
         for (var row in existrows) {
           if (row == 'count') continue;
           var removec = getControl(nameBase, row, 'remove');
-          console.log("control " + removec.id + " " + makeremoveenabled);
           removec.disabled = !makeremoveenabled;
           }
         removeenabled = makeremoveenabled;
         }
       var makeaddenabled = existrows.count < maxlength;
-      console.log("Add control " + addcontrol.id + " enabled " + makeaddenabled);
       addcontrol.disabled = !makeaddenabled;
 
       };

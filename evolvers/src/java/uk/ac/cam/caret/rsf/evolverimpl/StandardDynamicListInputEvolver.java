@@ -44,10 +44,12 @@ public class StandardDynamicListInputEvolver implements
       toevolve.setValue(value);
     }
     UIBranchContainer core = UIBranchContainer.make(togo, CORE_ID);
-    for (int i = 0; i < value.length; ++i) {
+    int limit = Math.max(minlength, value.length);
+    for (int i = 0; i < limit; ++i) {
       UIBranchContainer row = UIBranchContainer.make(core,
           "dynamic-list-input-row:", Integer.toString(i));
-      UIOutput.make(row, "input", value[i]);
+      String thisvalue = i < value.length? value[i] : "";
+      UIOutput.make(row, "input", thisvalue);
       UIBasicListMember.makeBasic(row, "input", toevolve.getFullID(), i);
       UIOutput.make(row, "remove", removelabel.getValue(),
           removelabel.valuebinding == null ? null
@@ -58,7 +60,7 @@ public class StandardDynamicListInputEvolver implements
             : addlabel.valuebinding.value);
     String script = HTMLUtil.emitJavascriptCall(
         "DynamicListInput.init_DynamicListInput", new String[] {
-            core.getFullID(), Integer.toString(value.length),
+            core.getFullID(), Integer.toString(limit),
             Integer.toString(minlength), Integer.toString(maxlength) });
     UIVerbatim.make(togo, "init-script", script);
     return togo;
