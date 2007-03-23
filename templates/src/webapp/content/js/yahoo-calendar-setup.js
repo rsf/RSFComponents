@@ -11,15 +11,23 @@ var RSF_Calendar = function() {
 
     YAHOO.widget.Calendar2up_PUC_Cal.prototype = new YAHOO.widget.Calendar2up_Cal();
 
+	function copyArray(array) {
+	  var togo = new Array(array.length);
+	  for (var i = 0; i < array.length; ++ i) {
+	    togo[i] = array[i];
+	    }
+	  return togo;
+	  }
+
     /** "Forward" reference here to localisation block rendered into the 
     HTML document **/
     YAHOO.widget.Calendar2up_PUC_Cal.prototype.customConfig = function() {
-      this.Config.Locale.MONTHS_SHORT = PUC_MONTHS_SHORT;
-      this.Config.Locale.MONTHS_LONG =  PUC_MONTHS_LONG;
-      this.Config.Locale.WEEKDAYS_1CHAR = PUC_WEEKDAYS_1CHAR;
-      this.Config.Locale.WEEKDAYS_SHORT = PUC_WEEKDAYS_SHORT;
-      this.Config.Locale.WEEKDAYS_MEDIUM = PUC_WEEKDAYS_MEDIUM;
-      this.Config.Locale.WEEKDAYS_LONG = PUC_WEEKDAYS_LONG;
+      this.Config.Locale.MONTHS_SHORT = copyArray(PUC_MONTHS_SHORT);
+      this.Config.Locale.MONTHS_LONG =  copyArray(PUC_MONTHS_LONG);
+      this.Config.Locale.WEEKDAYS_1CHAR = copyArray(PUC_WEEKDAYS_1CHAR);
+      this.Config.Locale.WEEKDAYS_SHORT = copyArray(PUC_WEEKDAYS_SHORT);
+      this.Config.Locale.WEEKDAYS_MEDIUM = copyArray(PUC_WEEKDAYS_MEDIUM);
+      this.Config.Locale.WEEKDAYS_LONG = copyArray(PUC_WEEKDAYS_LONG);
       this.Config.Options.START_WEEKDAY = PUC_FIRST_DAY_OF_WEEK;
       }
 
