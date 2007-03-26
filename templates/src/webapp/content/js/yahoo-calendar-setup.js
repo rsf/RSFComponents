@@ -56,6 +56,7 @@ var RSF_Calendar = function() {
     cal.outerContainer.style.display='block';
     YAHOO.util.Dom.addClass(cal.outerContainer, "annotation-front");
     YAHOO.util.Dom.setXY(cal.outerContainer, [pos[0],pos[1]+dateLink.offsetHeight+1]);
+    RSF.getDOMModifyFirer().fireEvent();
   }
 
   function yahoo_setDate_Dropdowns(cal, selMonth, selDay) {

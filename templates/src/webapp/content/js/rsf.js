@@ -92,8 +92,10 @@ var RSF = function() {
       addListener: function (listener, exclusions) {
         if (!listener.$$guid) listener.$$guid = addEvent_guid++;
         excludeids = [];
-        for (var i in exclusions) {
-          excludeids.push(exclusions[i].id);
+        if (exclusions) {
+          for (var i in exclusions) {
+            excludeids.push(exclusions[i].id);
+            }
           }
         listeners[listener.$$guid] = {listener: listener, exclusions: excludeids};
         },

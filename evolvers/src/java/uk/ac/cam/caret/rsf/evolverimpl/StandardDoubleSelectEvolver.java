@@ -69,8 +69,7 @@ public class StandardDoubleSelectEvolver implements DoubleSelectEvolver {
     rightselect.selection.willinput = false;
     rightselect.selection.fossilize = false;
     
-    String initdate = HTMLUtil.emitJavascriptCall(JSInitName, 
-        new String[] {togo.getFullID()});
+    String initdate = HTMLUtil.emitJavascriptCall(JSInitName, togo.getFullID());
     UIVerbatim.make(togo, "init-select", initdate);
     
     UIOutput.make(togo, "move-left");

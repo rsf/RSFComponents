@@ -13,6 +13,7 @@ import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.components.UIVerbatim;
 import uk.org.ponder.rsf.evolvers.BoundedDynamicListInputEvolver;
+import uk.org.ponder.rsf.uitype.UITypes;
 
 public class StandardDynamicListInputEvolver implements
     BoundedDynamicListInputEvolver {
@@ -38,7 +39,9 @@ public class StandardDynamicListInputEvolver implements
     togo.addComponent(toevolve);
 
     String[] value = toevolve.getValue();
-    if (value == null) {
+    // Note that a bound value is NEVER null, an unset value is detected via
+    // this standard call
+    if (UITypes.isPlaceholder(value)) {
       value = (String[]) rbg.getBean(toevolve.valuebinding.value);
       // May as well save on later fixups
       toevolve.setValue(value);
