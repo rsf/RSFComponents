@@ -171,7 +171,55 @@ var RSF = function() {
         }
       }
 
+    function ignorableNode(node) {
+      return node.tagName.toLowerCase() == 'select';
+      }
+
+    function getNextNode(node) {
+      if (node.firstChild && !ignorableNode(node)) {
+        return node.firstChild;
+        }
+      while (node) {
+	    if (node.nextSibling) {
+          return node.nextSibling;
+          } 
+        node = node.parentNode;
+        }
+      return null;
+      }
+
   return {
+  // Compute the corrected height of an element, taking into account 
+  // any floating elements
+  // impl from http://www.three-tuns.net/~andrew/page-height-test2.html#
+    computeCorrectedHeight: function (node) {
+      var totalHeight = node.offsetHeight;
+      if (node.offsetParent) {
+        while (node.offsetParent) {
+	      totalHeight += node.offsetTop;
+          node = node.offsetParent;
+          }
+        } 
+      else if (node.y) {
+        totalHeight += node.y;
+        }
+      return totalHeight;
+      },
+      
+    computeDocumentHeight: function (dokkument) {
+      var currentNode = dokkument.body;
+      var biggestOffset = 0;
+      while (currentNode != null) {
+        if (currentNode.offsetHeight) {
+          var tempOffset = RSF.computeCorrectedHeight(currentNode);
+          if (tempOffset > biggestOffset) {
+            biggestOffset = tempOffset;
+            }
+          }
+        currentNode = getNextNode(currentNode);
+        }
+      return biggestOffset;
+      },
     // Following definitions taken from PPK's "Event handling challenge" winner
     // thread comments at 
     // http://www.quirksmode.org/blog/archives/2005/10/_and_the_winner_1.html
@@ -246,6 +294,10 @@ var RSF = function() {
      */
     addElementListener: function(target, listener, exclusions) {
       getElementFirer(target).addListener(listener, exclusions);
+      },
+      
+    getDOMModifyFirer: function() {
+      return getElementFirer(document);
       },
 
     queueAJAXRequest: function(token, method, url, parameters, callbacks) {
@@ -548,6 +600,7 @@ var RSF = function() {
       var duplicate = element.cloneNode(true);  
       RSF.rewriteIDs(duplicate, newBranchId);     
       RSF.insertAfter(duplicate, lastExistingEl);
+      RSF.getDOMModifyFirer().fireEvent();
       },
     /** Mockup of a missing DOM function **/    
     insertAfter: function (newChild, refChild) {
