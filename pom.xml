@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <name>RSF Components</name>
+  <groupId>uk.org.ponder.pure-poms</groupId>
+  <artifactId>rsf-components-base</artifactId>
+  <properties>
+    <rsfutil.version>0.7.1RC4</rsfutil.version>
+  </properties>
+  <version>${rsfutil.version}</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>evolvers</module>
+    <module>templates</module>
+    <module>test</module>
+  </modules>
+</project>

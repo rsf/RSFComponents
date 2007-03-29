@@ -3,8 +3,6 @@
   "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
   "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
-<!-- This empty web.xml is required to ensure the container can reload this
- "webapp" -->
-  <display-name>RSFComponents-templates</display-name>
-  <description>RSF component templates</description>
+<!-- This empty web.xml is required by the darn Maven 2 war plugin - it should
+never appear in an application -->
 </web-app>

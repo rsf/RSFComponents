@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                      http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <properties>
+    <rsfutil.version>0.7.1RC4</rsfutil.version>
+  </properties>
+  <version>${rsfutil.version}</version>
+  <parent>
+    <artifactId>rsf-master-pom</artifactId>
+    <groupId>uk.org.ponder</groupId>
+    <version>M2</version>
+  </parent>
+  <artifactId>RSFComponents-templates</artifactId>
+  <name>RSFComponents Templates</name>
+  <groupId>uk.org.ponder.rsfutil</groupId>
+
+
+  <organization>
+    <name>CARET</name>
+    <url>http://www.caret.cam.ac.uk</url>
+  </organization>
+  <inceptionYear>2005</inceptionYear>
+  <packaging>war</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <warSourceDirectory>src/webapp</warSourceDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
