@@ -65,7 +65,7 @@
   </licenses>
   <dependencies>
     <dependency>
-      <groupId>uk.org.ponder</groupId>
+      <groupId>uk.org.ponder.rsfutil</groupId>
       <artifactId>rsfutil</artifactId>
       <version>${rsfutil.version}</version>
       <type>jar</type>
