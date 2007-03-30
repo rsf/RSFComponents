@@ -26,6 +26,23 @@
   </organization>
   <inceptionYear>2005</inceptionYear>
   <packaging>war</packaging>
+  <dependencies>
+   <!-- Suppress these from our WAR image -->    
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring</artifactId>
+      <version>1.2.8</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>2.1_3</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>  
   <build>
     <plugins>
       <plugin>
