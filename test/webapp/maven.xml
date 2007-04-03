@@ -12,7 +12,7 @@
 
 <!-- This standard stanza is required for any webapps participating in the
    "partial WAR" build strategy -->
-  <preGoal name="war:webapp">
+  <preGoal name="war:resources">
     <echo>Expanding webapp dependencies</echo>
 
     <mkdir dir="${maven.war.webapp.dir}" />
