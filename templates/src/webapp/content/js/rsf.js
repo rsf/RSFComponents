@@ -134,6 +134,7 @@ var RSF = function() {
         }
       return element.$$RSF_firer;
       }
+    // This is set in getModelFirer, and checked in fireEvent
     var primaryElements = {};
       
     function copyObject(target, newel) {
@@ -256,6 +257,17 @@ var RSF = function() {
         }
       },
       
+    isPrimaryFirer: function(element) {
+      return primaryElements(element.id);
+      },
+      
+    primaryFirerCount: function() {
+      var count = 0;
+      for (var i in primaryElements) {
+        ++ count;
+        }
+      return count;
+      },
   
     /** Gets a function that will update this field's value. Supply "oldvalue"
      * explicitly if this has been an "autonomous" change, otherwise it will

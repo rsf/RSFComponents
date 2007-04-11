@@ -104,12 +104,12 @@ public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
     }
     
     String truedateval = value == null? null : LocalSDF.w3cformat.format(value);
-    UIInput truedate = UIInput.make(togo, "true-date", ttb + "date", 
+    UIInput truedate = UIInput.make(togo, "true-date", ttb + "ISO8601TZ", 
          truedateval); 
     truedate.willinput = false;
     
     UIForm form = RSFUtil.findBasicForm(togo);
-    
+ 
     form.parameters.add(new UIELBinding(toevolve.valuebinding.value, 
         new ELReference(ttb + "date")));
     

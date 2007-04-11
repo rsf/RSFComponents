@@ -108,7 +108,7 @@ var RSF_Calendar = function() {
     var timeField = $it(timeFieldID);
     var shortbinding = transitbase + "short";
     var longbinding = transitbase + "long";
-    var truebinding = transitbase + "date";
+    var truebinding = transitbase + "ISO8601TZ";
     var timebinding = transitbase + "time";
     var longtimebinding = transitbase + "longTime";
     var calField = newcal.outerContainer;
@@ -277,7 +277,10 @@ var RSF_Calendar = function() {
         // do not trash time value in underlying date!
         var fused = converted.substring(0, 10) + trueValueField.value.substring(10);
         updateTrueValue(true, fused);
-        dateField.focus();
+        if (RSF.primaryFirerCount() == 0) {
+          // only update focus if this is a direct event
+          dateField.focus();
+          }
         }
       );
       

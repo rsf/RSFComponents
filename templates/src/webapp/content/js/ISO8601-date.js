@@ -4,6 +4,8 @@
  * Acquired by Antranig Basman 03/11/2006
  * Corrected to ALWAYS supply one or more fractional second digits in format 6 as
  * per the actual standard http://www.w3.org/TR/NOTE-datetime
+ * Adjusted further to ignore ALL timezone information as this may not reliably
+ * be processed in a Javascript environment.
  */
 
 Date.prototype.setISO8601 = function (string) {
@@ -15,18 +17,18 @@ Date.prototype.setISO8601 = function (string) {
     var offset = 0;
     var date = new Date(d[1], 0, 1);
 
-    if (d[3]) { date.setMonth(d[3] - 1); }
-    if (d[5]) { date.setDate(d[5]); }
-    if (d[7]) { date.setHours(d[7]); }
-    if (d[8]) { date.setMinutes(d[8]); }
-    if (d[10]) { date.setSeconds(d[10]); }
-    if (d[12]) { date.setMilliseconds(Number("0." + d[12]) * 1000); }
-    if (d[14]) {
-        offset = (Number(d[16]) * 60) + Number(d[17]);
-        offset *= ((d[15] == '-') ? 1 : -1);
-    }
+    if (d[3]) { date.setUTCMonth(d[3] - 1); }
+    if (d[5]) { date.setUTCDate(d[5]); }
+    if (d[7]) { date.setUTCHours(d[7]); }
+    if (d[8]) { date.setUTCMinutes(d[8]); }
+    if (d[10]) { date.setUTCSeconds(d[10]); }
+    if (d[12]) { date.setUTCMilliseconds(Number("0." + d[12]) * 1000); }
+//    if (d[14]) {
+//        offset = (Number(d[16]) * 60) + Number(d[17]);
+//        offset *= ((d[15] == '-') ? 1 : -1);
+//    }
 
-    offset -= date.getTimezoneOffset();
+//    offset -= date.getTimezoneOffset();
     time = (Number(date) + (offset * 60 * 1000));
     this.setTime(Number(time));
 }
