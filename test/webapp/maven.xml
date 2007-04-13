@@ -12,7 +12,7 @@
 
 <!-- This standard stanza is required for any webapps participating in the
    "partial WAR" build strategy -->
-  <preGoal name="war:resources">
+  <preGoal name="war:war-resources">
     <echo>Expanding webapp dependencies</echo>
 
     <mkdir dir="${maven.war.webapp.dir}" />
@@ -35,11 +35,6 @@
     <echo>Copying ${maven.war.build.dir}/${maven.war.final.name} to ${destination}.war</echo>
     <copy file="${maven.war.build.dir}/${maven.war.final.name}" 
       tofile="${destination}.war"/>
-  </goal>
-  
-    <!-- Override jar:install goal to compose "partial WAR" strategy -->
-  <goal name="jar:install">
-    <attainGoal name="war:install"/> 
   </goal>
 
 </project>
