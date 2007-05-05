@@ -30,9 +30,9 @@ public class StandardDoubleSelectEvolver implements DoubleSelectEvolver {
   }
   
   public UIJointContainer evolveSelect(UISelect toevolve) {
+    toevolve.parent.remove(toevolve);
     UIJointContainer togo = new UIJointContainer(toevolve.parent, toevolve.ID, 
         COMPONENT_ID);
-    toevolve.parent.remove(toevolve);
     
     // Separate out the multiple selection into left and right 
     StringList leftnames = new StringList();

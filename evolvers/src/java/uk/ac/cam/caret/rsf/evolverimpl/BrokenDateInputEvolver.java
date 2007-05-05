@@ -69,10 +69,9 @@ public class BrokenDateInputEvolver implements DateInputEvolver {
   }
 
   public UIJointContainer evolveDateInput(UIInput toevolve, Date date) {
+    toevolve.parent.remove(toevolve);
     UIJointContainer togo = new UIJointContainer(toevolve.parent, toevolve.ID, 
         COMPONENT_ID);
-
-    toevolve.parent.remove(toevolve);
 
     String ttbo = transitbase + "." + togo.getFullID();
     BrokenDateTransit transit = null;
