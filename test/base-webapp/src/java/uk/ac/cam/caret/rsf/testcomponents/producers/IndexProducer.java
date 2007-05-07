@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceBean;
 import uk.ac.cam.caret.rsf.testcomponents.beans.DataBean;
+import uk.org.ponder.rsf.components.UIBranchContainer;
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
@@ -85,7 +86,9 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
     UIInput date1 = UIInput.make(cform, "date-1:", "#{dataBean.date1}");
     dateevolver1.evolveDateInput(date1, databean.date1);
 
-    UIInput date2 = UIInput.make(cform, "date-2:", "#{dataBean.date2}");
+    UIBranchContainer branchtest = UIBranchContainer.make(cform, "branch-test:");
+    
+    UIInput date2 = UIInput.make(branchtest, "date-2:", "#{dataBean.date2}");
     dateevolver2.setStyle(FormatAwareDateInputEvolver.DATE_TIME_INPUT);
     dateevolver2.evolveDateInput(date2, databean.date2);
 

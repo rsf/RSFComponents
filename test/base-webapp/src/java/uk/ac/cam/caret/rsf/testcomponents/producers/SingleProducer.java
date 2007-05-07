@@ -20,6 +20,12 @@ import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
 
+/** A view for testing those components which have just a single 
+ * implementation in the provided components package.
+ * @author Antranig Basman (amb26@ponder.org.uk)
+ *
+ */
+
 public class SingleProducer implements ViewComponentProducer,  NavigationCaseReporter{
   public static final String VIEW_ID = "test-components-single";
   public String getViewID() {
