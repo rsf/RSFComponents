@@ -7,22 +7,22 @@ var RSF = function() {
  
   function invalidate(invalidated, EL, entry) {
     if (!EL) {
-      YAHOO.log("invalidate null EL: " + invalidated + " " + entry);
+      RSF.log("invalidate null EL: " + invalidated + " " + entry);
       }
     var stack = RSF.parseEL(EL);
     invalidated[stack[0]] = entry;
     invalidated[stack[1]] = entry;
     invalidated.list.push(entry);
-    YAHOO.log("invalidate " + EL);
+    RSF.log("invalidate " + EL);
     };
 
   function isInvalidated(invalidated, EL) {
     if (!EL) {
-      YAHOO.log("isInvalidated null EL: " + invalidated);
+      RSF.log("isInvalidated null EL: " + invalidated);
       }
     var stack = RSF.parseEL(EL);
     var togo = invalidated[stack[0]] || invalidated[stack[1]];
-    YAHOO.log("isInvalidated "+EL+" " + togo); 
+    RSF.log("isInvalidated "+EL+" " + togo); 
     return togo;
     }
 
@@ -32,7 +32,7 @@ var RSF = function() {
     }
     
   function normaliseBinding(element) {
-    YAHOO.log("normaliseBinding name " + element.name + " id " + element.id);
+    RSF.log("normaliseBinding name " + element.name + " id " + element.id);
     if (!element.name) return element.id;
     else return element.name == "virtual-el-binding"? "el-binding" : element.name;
     }
@@ -105,19 +105,19 @@ var RSF = function() {
           var excluded = false;
           for (var j in lisrec.exclusions) {
             var exclusion = lisrec.exclusions[j];
-            YAHOO.log("Checking exclusion for " + exclusion);
+            RSF.log("Checking exclusion for " + exclusion);
             if (primaryElements[exclusion]) {
-              YAHOO.log("Excluded");
+              RSF.log("Excluded");
               excluded = true; break;
               }
             }
           if (!excluded) {
             try {
-              YAHOO.log("Firing to listener " + i + " with arguments " + arguments);
+              RSF.log("Firing to listener " + i + " with arguments " + arguments);
               lisrec.listener.apply(null, arguments);
               }
             catch (e) {
-              YAHOO.log("Received exception " + e.message + " e " +e);
+              RSF.log("Received exception " + e.message + " e " +e);
                throw (e);       
               }
             }
@@ -139,7 +139,7 @@ var RSF = function() {
       
     function copyObject(target, newel) {
       for (var i in newel) {
-        YAHOO.log("Copied value " + newel[i] + " for key " + i);
+        RSF.log("Copied value " + newel[i] + " for key " + i);
         target[i] = newel[i];
         }
       }
@@ -155,7 +155,7 @@ var RSF = function() {
     function primaryRestorationWrapper() {
       var elementscopy = {};
       copyObject(elementscopy, primaryElements);
-      YAHOO.log("Primary elements storing in wrapper");
+      RSF.log("Primary elements storing in wrapper");
       
       return function(callback) {
         return function () {
@@ -164,9 +164,9 @@ var RSF = function() {
             callback.apply(null, arguments);
             }
           finally {
-            YAHOO.log("Restoration clearing");
+            RSF.log("Restoration clearing");
             clearObject(primaryElements, elementscopy);
-            YAHOO.log("Restoration cleared");
+            RSF.log("Restoration cleared");
             }
           }
         }
@@ -190,6 +190,14 @@ var RSF = function() {
       }
 
   return {
+    log: function(message) {
+      if (YAHOO) {
+        RSF.log(message);
+      }
+      else if (console) {
+        console.log(message);
+        }
+      },
   // Compute the corrected height of an element, taking into account 
   // any floating elements
   // impl from http://www.three-tuns.net/~andrew/page-height-test2.html#
@@ -274,28 +282,28 @@ var RSF = function() {
      * be taken from the current value. **/
     getModelFirer: function(element) {
       return function(primary, newvalue, oldvalue) {
-        YAHOO.log("modelFirer element " + element.id + " fire primary=" + primary + " newvalue " + newvalue 
+        RSF.log("modelFirer element " + element.id + " fire primary=" + primary + " newvalue " + newvalue 
             + " oldvalue " + oldvalue);
         if (!primary && primaryElements[element.id]) {
-          YAHOO.log("Censored model fire for non-primary element " + element.id);
+          RSF.log("Censored model fire for non-primary element " + element.id);
           return;
           }
         var actualold = arguments.length == 3? oldvalue : element.value;
-        YAHOO.log("Actual old value " + actualold);
+        RSF.log("Actual old value " + actualold);
         if (newvalue != actualold) {
           if (primary) {
-            YAHOO.log("Set primary element for " + element.id);
+            RSF.log("Set primary element for " + element.id);
             primaryElements[element.id] = true;
             }
           try {
             var firer = getElementFirer(element);
-            YAHOO.log("fieldChange: " + actualold + " to " + newvalue);
+            RSF.log("fieldChange: " + actualold + " to " + newvalue);
             element.value = newvalue;
             firer.fireEvent();
             }
           finally {
             if (primary) {
-              YAHOO.log("Unset primary element for " + element.id);
+              RSF.log("Unset primary element for " + element.id);
               delete primaryElements[element.id];
               }
             }
@@ -313,11 +321,11 @@ var RSF = function() {
       },
 
     queueAJAXRequest: function(token, method, url, parameters, callbacks) {
-      YAHOO.log("queueAJAXRequest: token " + token);
+      RSF.log("queueAJAXRequest: token " + token);
       var callbacks1 = wrapCallbacks(callbacks, restartWrapper);
       var callbacks2 = wrapCallbacks(callbacks1, primaryRestorationWrapper());
       if (requestactive) {
-        YAHOO.log("Request is active, queuing for token " + token);
+        RSF.log("Request is active, queuing for token " + token);
         queuemap[token] = packAJAXRequest(method, url, parameters, callbacks2);
         }
       else {
@@ -328,11 +336,11 @@ var RSF = function() {
       function restartWrapper(callback) {
         return function() {
           requestactive = false;
-          YAHOO.log("Restart callback wrapper begin");
+          RSF.log("Restart callback wrapper begin");
           callback.apply(null, arguments);
-          YAHOO.log("Callback concluded, beginning restart search");
+          RSF.log("Callback concluded, beginning restart search");
           for (var i in queuemap) {
-            YAHOO.log("Examining for token " + i);
+            RSF.log("Examining for token " + i);
             if (requestactive) return;
             var queued = queuemap[i];
             delete queuemap[i];
@@ -347,12 +355,12 @@ var RSF = function() {
       var alertContents = function() {
         if (http_request.readyState == 4) {
           if (http_request.status == 200) {
-            YAHOO.log("AJAX request success status: " + http_request.status);
+            RSF.log("AJAX request success status: " + http_request.status);
             callback.success(http_request);
-            YAHOO.log("AJAX callback concluded");
+            RSF.log("AJAX callback concluded");
             } 
           else {
-            YAHOO.log("AJAX request error status: " + http_request.status);
+            RSF.log("AJAX request error status: " + http_request.status);
             }
           }
         }
@@ -376,7 +384,7 @@ var RSF = function() {
           }
         }
       if (!http_request) {
-        YAHOO.log('Cannot create XMLHTTP instance');
+        RSF.log('Cannot create XMLHTTP instance');
         return false;
       }
       
@@ -422,9 +430,9 @@ var RSF = function() {
       },
   /** Renders an OBJECT binding, i.e. assigning a concrete value to an EL path **/
     renderBinding: function(lvalue, rvalue) {
-      YAHOO.log("renderBinding: " + lvalue + " " + rvalue);
+      RSF.log("renderBinding: " + lvalue + " " + rvalue);
       var binding = RSF.encodeElement("el-binding", "o#{" + lvalue + "}" + rvalue);
-      YAHOO.log("Rendered: " + binding);
+      RSF.log("Rendered: " + binding);
       return binding;
       },
 
@@ -471,7 +479,7 @@ var RSF = function() {
         //if (!value.getAttribute) continue;
         var id = value.getAttribute("id");
         var text = RSF.getElementText(value);
-        YAHOO.log("Value id " + id + " text " + text);
+        RSF.log("Value id " + id + " text " + text);
         if (id.substring(0, 4) == "tml:") {
           var target = value.getAttribute("target");
           var severity = value.getAttribute("severity");
@@ -540,16 +548,16 @@ var RSF = function() {
         var input = inputs[i];
         if (input.name || input.id) {
           var name = input.name? input.name : input.id;
-          YAHOO.log("Discovered input name " + name + " value " + input.value);
+          RSF.log("Discovered input name " + name + " value " + input.value);
           if (isFossil(element, input)) {
             fossil = RSF.parseFossil(input.value);
             fossil.element = input;
-            YAHOO.log("Own Fossil " + fossil.lvalue + " oldvalue " + fossil.oldvalue);
+            RSF.log("Own Fossil " + fossil.lvalue + " oldvalue " + fossil.oldvalue);
             }
           var matches = name.match(bindingex);
           if (matches != null) {
             var binding = RSF.parseBinding(input.value, matches[0]);
-            YAHOO.log("Binding lvalue " + binding.lvalue + " " + binding.rvalue);
+            RSF.log("Binding lvalue " + binding.lvalue + " " + binding.rvalue);
             binding.element = input;
             bindings.push(binding);
             }
@@ -560,7 +568,7 @@ var RSF = function() {
       var invalidated = new Object();
       invalidated.list = new Array();
       invalidate(invalidated, fossil.lvalue, fossil.element);
-      YAHOO.log("Beginning invalidation sweep from initial lvalue " + fossil.lvalue);
+      RSF.log("Beginning invalidation sweep from initial lvalue " + fossil.lvalue);
    
       // silly O(n^2) algorithm - writing graph algorithms in Javascript is a pain!
       while (true) {
@@ -596,7 +604,7 @@ var RSF = function() {
         if (name.match(fossilex)) {
           value = 'j' + value.substring(1);
           }
-        YAHOO.log("Upstream " + i + " name " + name + " value " + value + " el " + upel );
+        RSF.log("Upstream " + i + " name " + name + " value " + value + " el " + upel );
         body.push(RSF.encodeElement(normaliseBinding(upel), value));
         }
       return body.join("&");
@@ -670,15 +678,15 @@ var RSF = function() {
       // Assumes a FieldDateTransit for which we require to read the "long" format
       var AJAXcallback = {
         success: function(response) {
-          YAHOO.log("Response success: " + response + " " + response.responseText);
+          RSF.log("Response success: " + response + " " + response.responseText);
           var UVB = RSF.accumulateUVBResponse(response.responseXML);
-          YAHOO.log("Accumulated " + UVB);
+          RSF.log("Accumulated " + UVB);
           callback(UVB);
           }
         };
       return function() {
         var body = RSF.getUVBSubmissionBody(sourceFields, bindings);
-        YAHOO.log("Firing AJAX request " + body);
+        RSF.log("Firing AJAX request " + body);
         RSF.queueAJAXRequest(bindings[0], "POST", AJAXURL, body, AJAXcallback);
       }
     }
