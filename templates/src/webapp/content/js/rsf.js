@@ -191,10 +191,10 @@ var RSF = function() {
 
   return {
     log: function(message) {
-      if (YAHOO) {
-        RSF.log(message);
+      if (typeof(YAHOO) != "undefined") {
+        YAHOO.log(message);
       }
-      else if (console) {
+      else if (typeof(console) != "undefined") {
         console.log(message);
         }
       },
