@@ -4,7 +4,7 @@
 // http://www.dustindiaz.com/namespace-your-javascript/
 
 var RSF = function() {
- 
+
   function invalidate(invalidated, EL, entry) {
     if (!EL) {
       RSF.log("invalidate null EL: " + invalidated + " " + entry);
@@ -190,10 +190,25 @@ var RSF = function() {
       }
 
   return {
+	decodeRSFStringArray: function (rsfString) {
+	  var resultArray = new Array();
+	  var numStart = 0;
+	  var numEnd = rsfString.indexOf(":");
+	  var arraySize = rsfString.substring(numStart, numEnd);
+	  for (var i=0; i < arraySize; i++) {
+		 numStart = numEnd + 1;
+		 numEnd = rsfString.indexOf(":", numStart);
+		 var num = parseInt(rsfString.substring(numStart, numEnd));
+		 var value = rsfString.substr(numEnd+1, num);
+	     resultArray[i] = value;
+	     numEnd += num;
+	  }
+	  return resultArray;
+	},
     log: function(message) {
       if (typeof(YAHOO) != "undefined") {
         YAHOO.log(message);
-      }
+        }
       else if (typeof(console) != "undefined") {
         console.log(message);
         }
