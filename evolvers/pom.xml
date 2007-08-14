@@ -14,7 +14,7 @@
   <packaging>jar</packaging>
   <groupId>uk.org.ponder.rsfutil</groupId>
   <properties>
-    <rsfutil.version>0.7.2M4</rsfutil.version>
+    <rsfutil.version>0.7.2M5-SNAPSHOT</rsfutil.version>
   </properties>
   <version>${rsfutil.version}</version>
   <organization>
@@ -25,6 +25,13 @@
   <description>Components package for RSF - produces a JAR containing the
   Java definitions of evolvers.
   </description>
+  <repositories>
+    <repository>
+      <id>CARET-Maven2</id>
+      <name>CARET Maven 2 Repository</name>
+      <url>http://www2.caret.cam.ac.uk/maven2</url>
+    </repository>
+  </repositories>
   <developers>
     <developer>
       <id>amb26</id>
