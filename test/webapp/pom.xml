@@ -17,6 +17,13 @@
   <name>RSFComponents Test Webapp</name>
   <groupId>uk.org.ponder.rsfsamples</groupId>
 
+  <repositories>
+    <repository>
+      <id>CARET-Maven2</id>
+      <name>CARET Maven 2 Repository</name>
+      <url>http://www2.caret.cam.ac.uk/maven2</url>
+    </repository>
+  </repositories>
   <organization>
     <name>CARET</name>
     <url>http://www.caret.cam.ac.uk</url>
@@ -24,7 +31,7 @@
   <inceptionYear>2005</inceptionYear>
   <packaging>war</packaging>
   <dependencies>
-     <dependency>
+    <dependency>
       <groupId>uk.org.ponder.rsfsamples</groupId>
       <artifactId>RSFComponents-test-base-webapp</artifactId>
       <version>${rsfutil.version}</version>
@@ -36,7 +43,7 @@
       <version>${rsfutil.version}</version>
       <type>jar</type>
     </dependency>
-   </dependencies>
+  </dependencies>
   <build>
     <plugins>
       <plugin>
