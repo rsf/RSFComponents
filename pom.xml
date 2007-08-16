@@ -10,7 +10,7 @@
   <parent>
     <artifactId>rsf-master-pom</artifactId>
     <groupId>uk.org.ponder</groupId>
-    <version>M2</version>
+    <version>POM-2</version>
   </parent>
   <repositories>
     <repository>

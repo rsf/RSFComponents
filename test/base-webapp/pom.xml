@@ -8,7 +8,7 @@
   <parent>
     <artifactId>rsf-master-pom</artifactId>
     <groupId>uk.org.ponder</groupId>
-    <version>M2</version>
+    <version>POM-2</version>
   </parent>
   <artifactId>RSFComponents-test-base-webapp</artifactId>
   <name>RSFComponents Test Base Webapp</name>

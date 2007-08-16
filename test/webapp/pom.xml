@@ -6,9 +6,9 @@
   <modelVersion>4.0.0</modelVersion>
   <version>${rsfutil.version}</version>
   <parent>
-    <artifactId>rsf-master-pom</artifactId>
-    <groupId>uk.org.ponder</groupId>
-    <version>M2</version>
+    <groupId>uk.org.ponder.pure-poms</groupId>
+    <artifactId>standard-war</artifactId>
+    <version>POM-2</version>
   </parent>
   <artifactId>RSFComponents-test-webapp</artifactId>
   <name>RSFComponents Test Webapp</name>
@@ -16,7 +16,12 @@
   <properties>
     <rsfutil.version>0.7.2M5-SNAPSHOT</rsfutil.version>
   </properties>
-
+  <organization>
+    <name>CARET</name>
+    <url>http://www.caret.cam.ac.uk</url>
+  </organization>
+  <inceptionYear>2005</inceptionYear>
+  <packaging>war</packaging>
   <repositories>
     <repository>
       <id>CARET-Maven2</id>
@@ -24,12 +29,6 @@
       <url>http://www2.caret.cam.ac.uk/maven2</url>
     </repository>
   </repositories>
-  <organization>
-    <name>CARET</name>
-    <url>http://www.caret.cam.ac.uk</url>
-  </organization>
-  <inceptionYear>2005</inceptionYear>
-  <packaging>war</packaging>
   <dependencies>
     <dependency>
       <groupId>uk.org.ponder.rsfsamples</groupId>
