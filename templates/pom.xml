@@ -9,8 +9,8 @@
   </properties>
   <version>${rsfutil.version}</version>
   <parent>
-    <artifactId>rsf-master-pom</artifactId>
-    <groupId>uk.org.ponder</groupId>
+    <groupId>uk.org.ponder.pure-poms</groupId>
+    <artifactId>standard-war</artifactId>
     <version>POM-2</version>
   </parent>
   <artifactId>RSFComponents-templates</artifactId>
