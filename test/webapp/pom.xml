@@ -15,6 +15,7 @@
   <groupId>uk.org.ponder.rsfsamples</groupId>
   <properties>
     <rsfutil.version>0.7.2M5-SNAPSHOT</rsfutil.version>
+    <deploy.webappname>RSFComponents-test</deploy.webappname>
   </properties>
   <organization>
     <name>CARET</name>
