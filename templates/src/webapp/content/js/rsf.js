@@ -5,6 +5,9 @@
 
 var RSF = function() {
 
+  /** control logging, set this to true to turn on logging or use the setLogging method */ 
+  var logging = false;
+
   function invalidate(invalidated, EL, entry) {
     if (!EL) {
       RSF.log("invalidate null EL: " + invalidated + " " + entry);
@@ -181,7 +184,7 @@ var RSF = function() {
         return node.firstChild;
         }
       while (node) {
-	    if (node.nextSibling) {
+       if (node.nextSibling) {
           return node.nextSibling;
           } 
         node = node.parentNode;
@@ -189,30 +192,146 @@ var RSF = function() {
       return null;
       }
 
+   /* parseUri 1.2; MIT License
+   By Steven Levithan <http://stevenlevithan.com> 
+   http://blog.stevenlevithan.com/archives/parseuri
+   */
+   var parseUri = function (source) {
+      var o = parseUri.options,
+         value = o.parser[o.strictMode ? "strict" : "loose"].exec(source);
+      
+      for (var i = 0, uri = {}; i < 14; i++) {
+         uri[o.key[i]] = value[i] || "";
+      }
+      
+      uri[o.q.name] = {};
+      uri[o.key[12]].replace(o.q.parser, function ($0, $1, $2) {
+         if ($1) uri[o.q.name][$1] = $2;
+      });
+      
+      return uri;
+   }
+   parseUri.options = {
+      strictMode: false,
+      key: ["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"],
+      q: {
+         name: "queryKey",
+         parser: /(?:^|&)([^&=]*)=?([^&]*)/g
+      },
+      parser: {
+         strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+         loose: /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
+      }
+   }
+
+
+  /** All public functions **/
+
   return {
-	decodeRSFStringArray: function (rsfString) {
-	  var resultArray = new Array();
-	  var numStart = 0;
-	  var numEnd = rsfString.indexOf(":");
-	  var arraySize = rsfString.substring(numStart, numEnd);
-	  for (var i=0; i < arraySize; i++) {
-		 numStart = numEnd + 1;
-		 numEnd = rsfString.indexOf(":", numStart);
-		 var num = parseInt(rsfString.substring(numStart, numEnd));
-		 var value = rsfString.substr(numEnd+1, num);
-	     resultArray[i] = value;
-	     numEnd += num;
-	  }
-	  return resultArray;
-	},
+   decodeRSFStringArray: function (rsfString) {
+     var resultArray = new Array();
+     var numStart = 0;
+     var numEnd = rsfString.indexOf(":");
+     var arraySize = rsfString.substring(numStart, numEnd);
+     for (var i=0; i < arraySize; i++) {
+       numStart = numEnd + 1;
+       numEnd = rsfString.indexOf(":", numStart);
+       var num = parseInt(rsfString.substring(numStart, numEnd));
+       var value = rsfString.substr(numEnd+1, num);
+        resultArray[i] = value;
+        numEnd += num;
+     }
+     return resultArray;
+   },
+
+   /** method to handle logging, logging is off by default so you may need to turn it on */
     log: function(message) {
-      if (typeof(YAHOO) != "undefined") {
-        YAHOO.log(message);
-        }
-      else if (typeof(console) != "undefined") {
-        console.log(message);
+      if (logging) {
+         if (typeof(YAHOO) != "undefined") {
+           YAHOO.log(message);
+         }
+         else if (typeof(console) != "undefined") {
+           console.log(message);
+         }
         }
       },
+
+   /** method to allow user to enable logging (off by default) */
+    setLogging: function(enabled) {
+      if (enabled) {
+         logging = true;
+      } else {
+         logging = false;
+      }
+    },
+
+   /**
+    * This is a set of methods to easily accumulate events on elements
+    */
+   /** adds functions to an element which will trigger when events occur,
+    * maintains any existing function and protects the execution to
+    * ensure that every function will have a chance to execute
+    * RETURN: the return of the final function is sent back, other returns are discarded
+    */
+    addEventToElement: function(element, event, newFunction) {
+      if (typeof newFunction == "function") {
+         var origEvent = element["on" + event];
+         if (typeof origEvent == "function") {
+            element["on" + event] = function() {
+               var result = false;
+               try {
+                  var r = origEvent();
+                  if (r != null && typeof r != 'undefined') {
+                     result = r;
+                  }
+               } catch(e) {
+                  RSF.log("function ("+origEvent+") failure occurred: " + e.message);
+               }
+               try {
+                  var r = newFunction();
+                  if (r != null && typeof r != 'undefined') {
+                     result = r;
+                  }
+               } catch(e) {
+                  alert("function ("+newFunction+") failure occurred: " + e.message);
+               }
+               return result;
+            }
+         } else {
+            element["on" + event] = function() {
+               var result = false;
+               try {
+                  var r = newFunction();
+                  if (r != null && typeof r != 'undefined') {
+                     result = r;
+                  }
+               } catch(e) {
+                  alert("function ("+newFunction+") failure occurred: " + e.message);
+               }
+               return result;
+            }
+         }
+      }
+    },
+
+   /** this should be a better add event that the other one in this file */
+   addEvent1: function(obj, type, newFunction) {
+      if (obj.addEventListener) {
+         obj.addEventListener(type, newFunction, false);
+      } else if (obj.attachEvent) {
+         RSF.removeEventFromElement(obj, type, newFunction);
+         obj.attachEvent("on" + type, newFunction.closure(obj));
+      }
+   },
+
+   removeEvent1: function(obj, type, newFunction) {
+      if (obj.removeEventListener) {
+         obj.removeEventListener(type, newFunction, false);
+      } else if (obj.detachEvent) {
+         obj.detachEvent("on" + type, newFunction.closure(obj));
+      }
+   },
+
   // Compute the corrected height of an element, taking into account 
   // any floating elements
   // impl from http://www.three-tuns.net/~andrew/page-height-test2.html#
@@ -220,7 +339,7 @@ var RSF = function() {
       var totalHeight = node.offsetHeight;
       if (node.offsetParent) {
         while (node.offsetParent) {
-	      totalHeight += node.offsetTop;
+         totalHeight += node.offsetTop;
           node = node.offsetParent;
           }
         } 
@@ -367,6 +486,7 @@ var RSF = function() {
       },
     
     issueAJAXRequest: function(method, url, parameters, callback) {
+      method = method.toUpperCase(); // force method to uppercase for comparison
       var alertContents = function() {
         if (http_request.readyState == 4) {
           if (http_request.status == 200) {
@@ -398,17 +518,26 @@ var RSF = function() {
             } catch (e) {}
           }
         }
-      if (!http_request) {
-        RSF.log('Cannot create XMLHTTP instance');
-        return false;
-      }
-      
-      http_request.onreadystatechange = alertContents;
-      http_request.open(method, url, true);
-      http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      http_request.setRequestHeader("Content-length", parameters.length);
-      http_request.setRequestHeader("Connection", "close");
-      http_request.send(parameters);
+         if (!http_request) {
+           RSF.log('Cannot create XMLHTTP instance');
+           return false;
+         }
+         
+         http_request.onreadystatechange = alertContents;
+         if (method == "GET") {
+            url = url + "?" + parameters;
+         }
+         http_request.open(method, url, true);
+         if (method == "GET") {
+            http_request.send(null);
+         } else { // assume POST
+            http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            http_request.setRequestHeader("Content-length", parameters.length);
+            http_request.setRequestHeader("Connection", "close");
+            http_request.send(parameters);
+         }
+         delete(http_request); // clear the http object
+         return true; // true if sent to the server
       },
 
   
@@ -443,7 +572,8 @@ var RSF = function() {
     encodeElement: function(key, value) {
       return encodeURIComponent(key) + "=" + encodeURIComponent(value);
       },
-  /** Renders an OBJECT binding, i.e. assigning a concrete value to an EL path **/
+
+    /** Renders an OBJECT binding, i.e. assigning a concrete value to an EL path **/
     renderBinding: function(lvalue, rvalue) {
       RSF.log("renderBinding: " + lvalue + " " + rvalue);
       var binding = RSF.encodeElement("el-binding", "o#{" + lvalue + "}" + rvalue);
@@ -463,19 +593,39 @@ var RSF = function() {
     getUVBResponseID: function(readEL) {
       return ":"+readEL+":";
       },
-    /** Accepts a submitting element (<input>) and a list of EL paths to be
-     * queried */
+
+    /** Accepts a list of elements and a list of EL paths to be queried */
     getUVBSubmissionBody: function(elements, queryEL) {
       var queries = new Array();
       for (var i in elements) {
-        queries.push(RSF.getPartialSubmissionBody(elements[i]));
+        queries.push(RSF.getPartialSubmissionSegment(elements[i]));
         }
       for (var i in queryEL) {
         queries.push(RSF.renderUVBQuery(queryEL[i]));
         }
       queries.push(RSF.renderUVBAction());
       return queries.join("&");      
-      },    
+      },
+
+    /** Accepts a list of elements, returns the params string (body) */
+    getPartialSubmissionBody: function(elements) {
+      var queries = new Array();
+      for (var i in elements) {
+         queries.push(RSF.getPartialSubmissionSegment(elements[i]));
+      }
+      return queries.join("&");      
+    },
+
+    /** Accepts a form, returns the params string (body) */
+    getCompleteSubmissionBody: function(form) {
+      var queries = new Array();
+      var elements = form.elements;
+      for (var i in elements) {
+         queries.push(RSF.encodeElement(elements[i].name, elements[i].value));
+      }
+      return queries.join("&");      
+    },
+
     /** Accumulates a response from the UVBView into a compact object 
      * representation.<b>
      * @return o, where o.EL is a map from the requested EL set to the text value
@@ -600,11 +750,12 @@ var RSF = function() {
         }
       return invalidated.list;
       }, // end getUpstreamElements
+
       /** Return the body of a "partial submission" POST corresponding to the
      * section of a form contained within argument "container" rooted at
      * the supplied "element", "as if" that form section were to be submitted
      * with element's value set to "value" */ 
-    getPartialSubmissionBody: function(element) {
+    getPartialSubmissionSegment: function(element) {
       var upstream = RSF.getUpstreamElements(element);
       var body = new Array();
       // a "virtual field" has no submitting name, implicitly its id.
@@ -624,6 +775,7 @@ var RSF = function() {
         }
       return body.join("&");
       },
+
     /** Duplicates a node corresponding to an RSF branch, with rewriting of
      * all the enclosed IDs. The new branch is returned.
      * @param element The DOM element to be duplicated
@@ -685,12 +837,14 @@ var RSF = function() {
     getRelativeID: function(baseid, targetid) {
       colpos = baseid.lastIndexOf(':');
       return baseid.substring(0, colpos + 1) + targetid;
-      },
-    /** Inbindings is mapping of input EL to their values,
-     ** Outbindings is mapping of output EL to their callbacks
+    },
+    /** 
+     * Sends a UVB AJAX request
+     * sourceFields is a list of the JS form elements which you want to send in this request,
+     * AJAXURL is the url to send to (this must be the UVB producer url),
+     * bindings is a list of strings which indicate the bindings to return
      */
-     getAJAXUpdater: function (sourceFields, AJAXURL, bindings, callback) {
-      // Assumes a FieldDateTransit for which we require to read the "long" format
+    getAJAXUpdater: function (sourceFields, AJAXURL, bindings, callback) {
       var AJAXcallback = {
         success: function(response) {
           RSF.log("Response success: " + response + " " + response.responseText);
@@ -704,7 +858,142 @@ var RSF = function() {
         RSF.log("Firing AJAX request " + body);
         RSF.queueAJAXRequest(bindings[0], "POST", AJAXURL, body, AJAXcallback);
       }
+    },
+
+   /** Submit a form via AJAX,
+    * the results of the submit are returned in the response 
+    * value which is passed to the callback function
+    */
+    getAJAXFormUpdater: function (form, callback) {
+      RSF.log("getAJAXFormUpdater: " + form);
+      var ajaxUrl = form.action;
+      var AJAXcallback = {
+        success: function(response) {
+          RSF.log("Response success: " + response + " " + response.responseText);
+          callback(response.responseText);
+          }
+        };
+      return function() {
+         var body = RSF.getCompleteSubmissionBody(form);
+         RSF.log("Firing AJAX request " + body);
+         RSF.queueAJAXRequest(form, form.method, ajaxUrl, body, AJAXcallback);
+         // ensure the non-ajax action does not fire
+         return false;
+      }
+    },
+
+   /** Submit a link (anchor) via AJAX,
+    * the results of the link submission are returned in the response 
+    * value which is passed to the callback function
+    * link: a JS anchor element ("A" tag)
+    */
+    getAJAXLinkUpdater: function (link, callback) {
+      RSF.log("getAJAXLinkUpdater: " + link);
+      var ajaxUrl = link.href;
+      var body = "";
+      if (ajaxUrl.indexOf("?") > 0) {
+         var parsed = link.href.split("?");
+         ajaxUrl = parsed[0];
+         body = parsed[1];
+      }
+      var AJAXcallback = {
+        success: function(response) {
+          RSF.log("Response success: " + response + " " + response.responseText);
+          callback(response.responseText);
+          }
+        };
+      return function() {
+         RSF.log("Firing AJAX request " + ajaxUrl + ":" + body);
+         RSF.queueAJAXRequest(link, "get", ajaxUrl, body, AJAXcallback);
+         // ensure the non-ajax action does not fire
+         return false;
+      }
+    },
+
+   /** Submit part of a form via AJAX,
+    * sourceFields is a list of the JS form elements which you want to send in this request
+    * (should include the submit element if you want to trigger a method, can include only this also)
+    * the results of the submit are returned in the response 
+    * value which is passed to the callback function
+    */
+    getAJAXPartialUpdater: function (sourceFields, callback) {
+      RSF.log("getAJAXPartialUpdater: " + sourceFields);
+      var form = sourceFields[0].form; // form from the first element
+      var ajaxUrl = form.action;
+      var AJAXcallback = {
+        success: function(response) {
+          RSF.log("Response success: " + response + " " + response.responseText);
+          callback(response.responseText);
+          }
+        };
+      return function() {
+         var body = RSF.getPartialSubmissionBody(sourceFields);
+         RSF.log("Firing AJAX request " + body);
+         RSF.queueAJAXRequest(form, form.method, ajaxUrl, body, AJAXcallback);
+         // ensure the non-ajax action does not fire
+         return false;
+      }
+    },
+
+   /** 
+    * Transform all the action elements inside a DOM block into AJAX action elements,
+    * This will keep the forms from submitting, the page from changing, and the links
+    * from causing navigation to proceed off the page
+    * parentNode: all action elements contained within this node will be transformed,
+    * this parent node will remain unaffected and must be able to be affected by innerHTML
+    * RETURN: the list of updated action elements
+    */
+    transformActionDomToAJAX: function (parentNode) {
+      var type = parentNode.nodeName.toLowerCase();
+      RSF.log("transformActionDomToAJAX: node=" + parentNode);
+      var updatedElements = [];
+
+      // define the callback function for the ajax response
+      var callback = function(results) {
+         // specifically purge the existing items before putting in the new stuff
+         while( parentNode.hasChildNodes() ) {
+            parentNode.removeChild( parentNode.lastChild );
+         }
+         // now drop in the new xhtml result into this node
+         parentNode.innerHTML = results;
+         // rerun the dom transformer on the replacement xhtml
+         RSF.transformActionDomToAJAX(parentNode);
+      }
+
+      // get elementsbyname to get the forms
+      var forms = parentNode.getElementsByTagName("form");
+      for (var i=0; i < forms.length; i++) {
+         var form = forms[i];
+
+         var updater = RSF.getAJAXFormUpdater(form, callback);
+
+         RSF.addEventToElement(form, "submit", updater);
+         updatedElements.push(form);
+      }
+
+      // get elementsbyname to get the links (a)
+      var links = parentNode.getElementsByTagName("a");
+      for (var i=0; i < links.length; i++) {
+         var link = links[i];
+
+         if (!link.href || link.href.length == 0) {
+            RSF.log("link is empty or appears to be invalid so skipping it: " + link.href);
+            continue;            
+         }
+         
+         var parsed = parseUri(link.href);
+         if (parsed.host != document.domain) {
+            RSF.log("link is not in this domain so skipping it: " + link.href);
+            continue;
+         }
+
+         var updater = RSF.getAJAXLinkUpdater(link, callback);
+
+         RSF.addEventToElement(link, "click", updater);
+         updatedElements.push(link);
+      }
+      return updatedElements;
     }
-      
-    }; // end return internal "Object"
-  }(); // end namespace RSF
+
+  }; // end return internal "Object"
+}(); // end namespace RSF
