@@ -1,7 +1,5 @@
 // RSF.js - primitive definitions for parsing RSF-rendered forms and bindings
-
-// definitions placed in RSF namespace, following approach recommended in 
-// http://www.dustindiaz.com/namespace-your-javascript/
+// definitions placed in RSF namespace, following approach recommended in http://www.dustindiaz.com/namespace-your-javascript/
 
 var RSF = function() {
 
@@ -54,7 +52,7 @@ var RSF = function() {
       }
     return togo;
     }
-    
+
   // private defs for addEvent - see attribution comments below
   var addEvent_guid = 1;
   var addEvent_handlers = {};
@@ -249,24 +247,23 @@ var RSF = function() {
       if (logging) {
          if (typeof(YAHOO) != "undefined") {
            YAHOO.log(message);
-         }
-         else if (typeof(console) != "undefined") {
+         } else if (typeof(console) != "undefined") {
            console.log(message);
          }
-        }
-      },
+      }
+    },
 
    /** method to allow user to enable logging (off by default) */
     setLogging: function(enabled) {
-      if (enabled) {
-         logging = true;
+      if (typeof enabled == "boolean") {
+         logging = enabled;
       } else {
          logging = false;
       }
     },
 
    /**
-    * This is a set of methods to easily accumulate events on elements
+    * This is a set of three methods to easily accumulate events on elements
     */
    /** adds functions to an element which will trigger when events occur,
     * maintains any existing function and protects the execution to
@@ -314,8 +311,12 @@ var RSF = function() {
       }
     },
 
-   /** this should be a better add event that the other one in this file */
-   addEvent1: function(obj, type, newFunction) {
+   /** replaced the old add/remove Event methods with these much more compact ones */
+   /**
+    * Add an event handler function (newFunction) for 
+    * events of type (e.g. click, change) to a JS object obj 
+    */
+   addEventSimple: function(obj, type, newFunction) {
       if (obj.addEventListener) {
          obj.addEventListener(type, newFunction, false);
       } else if (obj.attachEvent) {
@@ -324,7 +325,11 @@ var RSF = function() {
       }
    },
 
-   removeEvent1: function(obj, type, newFunction) {
+   /**
+    * Remove an event handler function (newFunction) for 
+    * events of type (e.g. click, change) from a JS object obj 
+    */
+   removeEventSimple: function(obj, type, newFunction) {
       if (obj.removeEventListener) {
          obj.removeEventListener(type, newFunction, false);
       } else if (obj.detachEvent) {
@@ -363,14 +368,10 @@ var RSF = function() {
         }
       return biggestOffset;
       },
+
     // Following definitions taken from PPK's "Event handling challenge" winner
     // thread comments at 
     // http://www.quirksmode.org/blog/archives/2005/10/_and_the_winner_1.html
-    // Primary purpose: Leak avoidance in IE through closure-DOM circles
-    // written by Dean Edwards, 2005
-    // with input from Tino Zijdel - crisp@xs4all.nl
-    // http://dean.edwards.name/weblog/2005/10/add-event/
-    // Further fixed by Taco van den Broek 
     // http://dean.edwards.name/weblog/2005/10/add-event/?full#comments
     addEvent: function (element, type, handler) {
       if (element.addEventListener)
@@ -536,7 +537,7 @@ var RSF = function() {
             http_request.setRequestHeader("Connection", "close");
             http_request.send(parameters);
          }
-         delete(http_request); // clear the http object
+         //delete(http_request); // NOTE: clearing this causes problems for IE7 and lower
          return true; // true if sent to the server
       },
 
@@ -597,20 +598,20 @@ var RSF = function() {
     /** Accepts a list of elements and a list of EL paths to be queried */
     getUVBSubmissionBody: function(elements, queryEL) {
       var queries = new Array();
-      for (var i in elements) {
+      for (var i = 0; i < elements.length; i++) {
         queries.push(RSF.getPartialSubmissionSegment(elements[i]));
-        }
-      for (var i in queryEL) {
+      }
+      for (var i = 0; i < queryEL.length; i++) {
         queries.push(RSF.renderUVBQuery(queryEL[i]));
-        }
+      }
       queries.push(RSF.renderUVBAction());
       return queries.join("&");      
-      },
+    },
 
     /** Accepts a list of elements, returns the params string (body) */
     getPartialSubmissionBody: function(elements) {
       var queries = new Array();
-      for (var i in elements) {
+      for (var i = 0; i < elements.length; i++) {
          queries.push(RSF.getPartialSubmissionSegment(elements[i]));
       }
       return queries.join("&");      
@@ -620,7 +621,7 @@ var RSF = function() {
     getCompleteSubmissionBody: function(form) {
       var queries = new Array();
       var elements = form.elements;
-      for (var i in elements) {
+      for (var i = 0; i < elements.length; i++) {
          queries.push(RSF.encodeElement(elements[i].name, elements[i].value));
       }
       return queries.join("&");      
@@ -838,6 +839,7 @@ var RSF = function() {
       colpos = baseid.lastIndexOf(':');
       return baseid.substring(0, colpos + 1) + targetid;
     },
+
     /** 
      * Sends a UVB AJAX request
      * sourceFields is a list of the JS form elements which you want to send in this request,
@@ -951,8 +953,8 @@ var RSF = function() {
       // define the callback function for the ajax response
       var callback = function(results) {
          // specifically purge the existing items before putting in the new stuff
-         while( parentNode.hasChildNodes() ) {
-            parentNode.removeChild( parentNode.lastChild );
+         while (parentNode.childNodes[0])  {
+            parentNode.removeChild(parentNode.childNodes[0]);
          }
          // now drop in the new xhtml result into this node
          parentNode.innerHTML = results;
