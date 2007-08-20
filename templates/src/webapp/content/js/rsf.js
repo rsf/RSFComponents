@@ -865,10 +865,13 @@ var RSF = function() {
    /** Submit a form via AJAX,
     * the results of the submit are returned in the response 
     * value which is passed to the callback function
+    * form: the JS form object to submit via ajax
+    * ajaxUrl: optionally allows the user to specify a url to send the request to,
+    * by default this will use the url of the form action
     */
-    getAJAXFormUpdater: function (form, callback) {
+    getAJAXFormUpdater: function (form, callback, ajaxUrl) {
       RSF.log("getAJAXFormUpdater: " + form);
-      var ajaxUrl = form.action;
+      if (!ajaxUrl) ajaxUrl = form.action;
       var AJAXcallback = {
         success: function(response) {
           RSF.log("Response success: " + response + " " + response.responseText);
@@ -888,10 +891,12 @@ var RSF = function() {
     * the results of the link submission are returned in the response 
     * value which is passed to the callback function
     * link: a JS anchor element ("A" tag)
+    * ajaxUrl: optionally allows the user to specify a url to send the request to,
+    * by default this will use the url of the original link
     */
-    getAJAXLinkUpdater: function (link, callback) {
+    getAJAXLinkUpdater: function (link, callback, ajaxUrl) {
       RSF.log("getAJAXLinkUpdater: " + link);
-      var ajaxUrl = link.href;
+      if (!ajaxUrl) ajaxUrl = link.href;
       var body = "";
       if (ajaxUrl.indexOf("?") > 0) {
          var parsed = link.href.split("?");
@@ -913,15 +918,16 @@ var RSF = function() {
     },
 
    /** Submit part of a form via AJAX,
-    * sourceFields is a list of the JS form elements which you want to send in this request
+    * sourceFields: a list of the JS form elements which you want to send in this request
     * (should include the submit element if you want to trigger a method, can include only this also)
-    * the results of the submit are returned in the response 
-    * value which is passed to the callback function
+    * the results of the submit are returned in the response value which is passed to the callback function
+    * ajaxUrl: optionally allows the user to specify a url to send the request to,
+    * by default this will use the url of the form containing the first sourceField
     */
-    getAJAXPartialUpdater: function (sourceFields, callback) {
+    getAJAXPartialUpdater: function (sourceFields, callback, ajaxUrl) {
       RSF.log("getAJAXPartialUpdater: " + sourceFields);
       var form = sourceFields[0].form; // form from the first element
-      var ajaxUrl = form.action;
+      if (!ajaxUrl) ajaxUrl = form.action;
       var AJAXcallback = {
         success: function(response) {
           RSF.log("Response success: " + response + " " + response.responseText);
@@ -931,7 +937,7 @@ var RSF = function() {
       return function() {
          var body = RSF.getPartialSubmissionBody(sourceFields);
          RSF.log("Firing AJAX request " + body);
-         RSF.queueAJAXRequest(form, form.method, ajaxUrl, body, AJAXcallback);
+         RSF.queueAJAXRequest(sourceFields[0], form.method, ajaxUrl, body, AJAXcallback);
          // ensure the non-ajax action does not fire
          return false;
       }
