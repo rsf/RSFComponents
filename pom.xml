@@ -20,7 +20,7 @@
     </repository>
   </repositories>
   <properties>
-    <rsfutil.version>0.7.2M5-SNAPSHOT</rsfutil.version>
+    <rsfutil.version>0.7.2RC1</rsfutil.version>
   </properties>
   <version>${rsfutil.version}</version>
   <packaging>pom</packaging>
