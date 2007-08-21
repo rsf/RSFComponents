@@ -990,15 +990,15 @@ var RSF = function() {
          }
          
          var parsed = parseUri(link.href);
-         if (parsed.host != document.domain) {
+         if (parsed.host == "" || parsed.host == document.domain) {
+            var updater = RSF.getAJAXLinkUpdater(link, callback);
+   
+            RSF.addEventToElement(link, "click", updater);
+            updatedElements.push(link);
+         } else {
             RSF.log("link is not in this domain so skipping it: " + link.href);
             continue;
          }
-
-         var updater = RSF.getAJAXLinkUpdater(link, callback);
-
-         RSF.addEventToElement(link, "click", updater);
-         updatedElements.push(link);
       }
       return updatedElements;
     }
