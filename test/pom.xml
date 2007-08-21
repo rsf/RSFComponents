@@ -7,7 +7,7 @@
   <parent>
     <artifactId>rsf-master-pom</artifactId>
     <groupId>uk.org.ponder</groupId>
-    <version>M2</version>
+    <version>POM-3</version>
   </parent>
   <properties>
     <rsfutil.version>0.7.2M5-SNAPSHOT</rsfutil.version>
