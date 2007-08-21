@@ -15,7 +15,7 @@ import uk.org.ponder.rsf.evolvers.TextInputEvolver;
 import uk.org.ponder.stringutil.StringList;
 
 
-public class ComponentChoiceBean {
+public class ComponentChoiceManager {
   private StringList dateEvolvers;
   private StringList textEvolvers;
   private StringList selectEvolvers;
@@ -23,6 +23,8 @@ public class ComponentChoiceBean {
   
   private BeanLocator rbg;
 
+  private ComponentSelectionBean ccb;
+  
   public StringList getSelectEvolvers() {
     return selectEvolvers;
   }
@@ -54,27 +56,26 @@ public class ComponentChoiceBean {
   public void setRequestBeanLocator(BeanLocator rbg) {
     this.rbg = rbg;
   }
-  
-  public int dateEvolverIndex = 0;
-  public int textEvolverIndex = 0;
-  public int selectEvolverIndex = 0;
+ 
+  public void setComponentChoiceBean(ComponentSelectionBean ccb) {
+    this.ccb = ccb;
+  }
   
   public TextInputEvolver getTextInputEvolver() {
-    return (TextInputEvolver) rbg.locateBean(textEvolvers.stringAt(textEvolverIndex));  
+    return (TextInputEvolver) rbg.locateBean(textEvolvers.stringAt(ccb.textEvolverIndex));  
   }
   
   public DateInputEvolver getDateInputEvolver() {
-    return (DateInputEvolver) rbg.locateBean(dateEvolvers.stringAt(dateEvolverIndex));
+    return (DateInputEvolver) rbg.locateBean(dateEvolvers.stringAt(ccb.dateEvolverIndex));
   }
   
   public SelectEvolver getSelectEvolver() {
-    return (SelectEvolver) rbg.locateBean(selectEvolvers.stringAt(selectEvolverIndex));
+    return (SelectEvolver) rbg.locateBean(selectEvolvers.stringAt(ccb.selectEvolverIndex));
   }
   
   public void setLocale(String localestring) {
     Locale locale = LocaleUtil.parseLocale(localestring);
     localeSetter.setLocale(locale);
-  
   }
 
 }

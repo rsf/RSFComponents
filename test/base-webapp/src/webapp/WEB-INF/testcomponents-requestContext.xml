@@ -7,8 +7,8 @@
 
   <bean id="dataBean" class="uk.ac.cam.caret.rsf.testcomponents.beans.DataBean" />
 
-  <bean id="componentChoice"
-    class="uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceBean">
+  <bean id="componentChoiceManager"
+    class="uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceManager">
     <property name="requestBeanLocator" ref="requestBeanLocator"/>
     <property name="dateEvolvers" ref="dateEvolvers" />
     <property name="textEvolvers" ref="textEvolvers" />
@@ -16,13 +16,13 @@
     <property name="localeSetter" ref="localeSetter" />
   </bean>
 
-  <bean id="textEvolver" factory-bean="componentChoice"
+  <bean id="textEvolver" factory-bean="componentChoiceManager"
     factory-method="getTextInputEvolver" />
 
-  <bean id="dateEvolver" factory-bean="componentChoice"
+  <bean id="dateEvolver" factory-bean="componentChoiceManager"
     factory-method="getDateInputEvolver" singleton="false" />
     
-  <bean id="selectEvolver" factory-bean="componentChoice"
+  <bean id="selectEvolver" factory-bean="componentChoiceManager"
     factory-method="getSelectEvolver" singleton="false" />
 
   <bean id="localeSetter" class="uk.org.ponder.localeutil.LocaleReceiver"/>
@@ -32,7 +32,7 @@
   <bean class="uk.ac.cam.caret.rsf.testcomponents.producers.IndexProducer">
     <!-- This would not be injected with OTP -->
     <property name="dataBean" ref="dataBean" />
-    <property name="choiceBean" ref="componentChoice" />
+    <property name="choiceBean" ref="componentChoiceManager" />
     <property name="dateEvolver1" ref="dateEvolver" />
     <property name="dateEvolver2" ref="fieldDateInputEvolver" />
     <property name="textEvolver" ref="textEvolver" />

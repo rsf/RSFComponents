@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceBean;
+import uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceManager;
 import uk.ac.cam.caret.rsf.testcomponents.beans.DataBean;
 import uk.org.ponder.rsf.components.UIBranchContainer;
 import uk.org.ponder.rsf.components.UICommand;
@@ -41,7 +41,7 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
   private FormatAwareDateInputEvolver dateevolver2;
   private TextInputEvolver textevolver;
   private DataBean databean;
-  private ComponentChoiceBean choicebean;
+  private ComponentChoiceManager choicebean;
   private Locale locale;
   private SelectEvolver selectevolver;
 
@@ -70,7 +70,7 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
     this.databean = databean;
   }
 
-  public void setChoiceBean(ComponentChoiceBean choicebean) {
+  public void setChoiceBean(ComponentChoiceManager choicebean) {
     this.choicebean = choicebean;
   }
 
