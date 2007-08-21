@@ -23,7 +23,7 @@ public class ComponentChoiceManager {
   
   private BeanLocator rbg;
 
-  private ComponentSelectionBean ccb;
+  private ComponentChoiceBean ccb;
   
   public StringList getSelectEvolvers() {
     return selectEvolvers;
@@ -57,7 +57,7 @@ public class ComponentChoiceManager {
     this.rbg = rbg;
   }
  
-  public void setComponentChoiceBean(ComponentSelectionBean ccb) {
+  public void setComponentChoiceBean(ComponentChoiceBean ccb) {
     this.ccb = ccb;
   }
   

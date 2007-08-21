@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceManager;
 import uk.ac.cam.caret.rsf.testcomponents.beans.DataBean;
+import uk.org.ponder.arrayutil.ListUtil;
 import uk.org.ponder.rsf.components.UIBranchContainer;
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
@@ -128,7 +129,7 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
       locnames[i] = s[i].toString();
     }
     UISelect.make(lform, "locale-select", locnames,
-        "#{componentChoice.locale}", locale.toString());
+        "#{componentChoiceManager.locale}", locale.toString());
     UICommand.make(lform, "submit-locale");
   }
 
@@ -148,10 +149,8 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
   }
 
   public List reportNavigationCases() {
-    List togo = new ArrayList();
-    togo.add(new NavigationCase("updated", new SimpleViewParameters(
+    return ListUtil.instance(new NavigationCase("updated", new SimpleViewParameters(
         ResultsProducer.VIEW_ID), ARIResult.FLOW_ONESTEP));
-    return togo;
   }
 
 }

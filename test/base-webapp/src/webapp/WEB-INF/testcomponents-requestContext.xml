@@ -7,9 +7,12 @@
 
   <bean id="dataBean" class="uk.ac.cam.caret.rsf.testcomponents.beans.DataBean" />
 
+  <bean id="componentChoice" class="uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceBean"/>
+
   <bean id="componentChoiceManager"
     class="uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceManager">
     <property name="requestBeanLocator" ref="requestBeanLocator"/>
+    <property name="componentChoiceBean" ref="componentChoice"/>
     <property name="dateEvolvers" ref="dateEvolvers" />
     <property name="textEvolvers" ref="textEvolvers" />
     <property name="selectEvolvers" ref="selectEvolvers"/>

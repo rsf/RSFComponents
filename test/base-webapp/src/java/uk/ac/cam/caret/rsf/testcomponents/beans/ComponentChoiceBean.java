@@ -3,7 +3,7 @@
  */
 package uk.ac.cam.caret.rsf.testcomponents.beans;
 
-public class ComponentSelectionBean {
+public class ComponentChoiceBean {
   public int dateEvolverIndex = 0;
   public int textEvolverIndex = 0;
   public int selectEvolverIndex = 0;

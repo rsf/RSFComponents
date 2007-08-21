@@ -7,7 +7,7 @@
   <parent>
     <artifactId>rsf-master-pom</artifactId>
     <groupId>uk.org.ponder</groupId>
-    <version>POM-2</version>
+    <version>POM-3</version>
   </parent>
   <artifactId>RSFComponents-evolvers</artifactId>
   <name>RSFComponents Evolvers</name>
