@@ -15,8 +15,9 @@ Date.prototype.setISO8601 = function (string) {
     var d = string.match(new RegExp(regexp));
 
     var offset = 0;
-    var date = new Date(d[1], 0, 1);
-
+    var date = new Date(1970, 0, 1);
+    
+    if (d[1]) { date.setUTCFullYear(d[1]); }
     if (d[3]) { date.setUTCMonth(d[3] - 1); }
     if (d[5]) { date.setUTCDate(d[5]); }
     if (d[7]) { date.setUTCHours(d[7]); }
