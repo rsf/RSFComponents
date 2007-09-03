@@ -4,6 +4,7 @@
 package uk.ac.cam.caret.rsf.evolverimpl;
 
 import uk.org.ponder.htmlutil.HTMLUtil;
+import uk.org.ponder.rsf.components.UIInitBlock;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.components.UIOutputMany;
@@ -69,8 +70,7 @@ public class StandardDoubleSelectEvolver implements DoubleSelectEvolver {
     rightselect.selection.willinput = false;
     rightselect.selection.fossilize = false;
     
-    String initdate = HTMLUtil.emitJavascriptCall(JSInitName, togo.getFullID());
-    UIVerbatim.make(togo, "init-select", initdate);
+    UIInitBlock.make(togo, "init-select", JSInitName, togo);
     
     UIOutput.make(togo, "move-left");
     UIOutput.make(togo, "move-right");

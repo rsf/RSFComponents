@@ -109,10 +109,8 @@ public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
     UIOutput.make(togo, "date-container");
     UIOutput.make(togo, "date-link");
     
-    ViewParameters uvbparams = new SimpleViewParameters(UVBProducer.VIEW_ID);
-    
     UIInitBlock.make(togo, "init-date", JSInitName, 
-        new Object[] {togo, title.get(), ttb, uvbparams});
+        new Object[] {togo, title.get(), ttb, UVBProducer.PARAMS});
    
     return togo;
   }
