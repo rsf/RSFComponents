@@ -4,14 +4,13 @@
 package uk.ac.cam.caret.rsf.evolverimpl;
 
 import uk.org.ponder.beanutil.BeanGetter;
-import uk.org.ponder.htmlutil.HTMLUtil;
 import uk.org.ponder.rsf.components.UIBasicListMember;
 import uk.org.ponder.rsf.components.UIBoundString;
 import uk.org.ponder.rsf.components.UIBranchContainer;
+import uk.org.ponder.rsf.components.UIInitBlock;
 import uk.org.ponder.rsf.components.UIInputMany;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIOutput;
-import uk.org.ponder.rsf.components.UIVerbatim;
 import uk.org.ponder.rsf.evolvers.BoundedDynamicListInputEvolver;
 import uk.org.ponder.rsf.uitype.UITypes;
 
@@ -61,11 +60,10 @@ public class StandardDynamicListInputEvolver implements
     UIOutput.make(core, "add-row", addlabel.getValue(),
         addlabel.valuebinding == null ? null
             : addlabel.valuebinding.value);
-    String script = HTMLUtil.emitJavascriptCall(
-        "DynamicListInput.init_DynamicListInput", new String[] {
-            core.getFullID(), Integer.toString(limit),
-            Integer.toString(minlength), Integer.toString(maxlength) });
-    UIVerbatim.make(togo, "init-script", script);
+    UIInitBlock.make(togo, "init-script", 
+        "DynamicListInput.init_DynamicListInput", 
+        new Object[] {core, limit, minlength, maxlength});
+   
     return togo;
   }
 

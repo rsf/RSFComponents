@@ -9,11 +9,11 @@ import uk.org.ponder.beanutil.BeanGetter;
 import uk.org.ponder.dateutil.FieldDateTransit;
 import uk.org.ponder.dateutil.LocalSDF;
 import uk.org.ponder.htmlutil.DateSymbolJSEmitter;
-import uk.org.ponder.htmlutil.HTMLUtil;
 import uk.org.ponder.rsf.builtin.UVBProducer;
 import uk.org.ponder.rsf.components.ELReference;
 import uk.org.ponder.rsf.components.UIELBinding;
 import uk.org.ponder.rsf.components.UIForm;
+import uk.org.ponder.rsf.components.UIInitBlock;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIOutput;
@@ -22,7 +22,6 @@ import uk.org.ponder.rsf.evolvers.FormatAwareDateInputEvolver;
 import uk.org.ponder.rsf.util.RSFUtil;
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
-import uk.org.ponder.rsf.viewstate.ViewStateHandler;
 import uk.org.ponder.stringutil.StringGetter;
 import uk.org.ponder.stringutil.StringHolder;
 
@@ -37,16 +36,10 @@ public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
 
   private BeanGetter rbg;
   
-  private ViewStateHandler vsh;
-
   private String JSInitName = "RSF_Calendar.initYahooCalendar_Datefield";
 
   private String style = DATE_INPUT;
   
-  public void setViewStateHandler(ViewStateHandler vsh) {
-    this.vsh = vsh;
-  }
-
   public void setJSEmitter(DateSymbolJSEmitter jsemitter) {
     this.jsemitter = jsemitter;
   }
@@ -118,12 +111,9 @@ public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
     
     ViewParameters uvbparams = new SimpleViewParameters(UVBProducer.VIEW_ID);
     
-    String initdate = HTMLUtil.emitJavascriptCall(JSInitName, 
-        new String[] {togo.getFullID(), title.get(), ttb, 
-        vsh.getFullURL(uvbparams)});
-    
-    UIVerbatim.make(togo, "init-date", initdate);
-
+    UIInitBlock.make(togo, "init-date", JSInitName, 
+        new Object[] {togo, title.get(), ttb, uvbparams});
+   
     return togo;
   }
 

@@ -22,8 +22,9 @@
     <url>http://www.caret.cam.ac.uk/</url>
   </organization>
   <inceptionYear>2005</inceptionYear>
-  <description>Components package for RSF - produces a JAR containing the
-  Java definitions of evolvers.
+  <description>
+    Components package for RSF - produces a JAR containing the Java
+    definitions of evolvers.
   </description>
   <repositories>
     <repository>
@@ -78,7 +79,8 @@
       <type>jar</type>
     </dependency>
   </dependencies>
-   <build>
+
+  <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
       <resource>
@@ -90,5 +92,14 @@
         <filtering>false</filtering>
       </resource>
     </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 </project>

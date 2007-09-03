@@ -42,7 +42,7 @@ public class SingleProducer implements ViewComponentProducer,  NavigationCaseRep
       ComponentChecker checker) {
     UIForm form = UIForm.make(tofill, "components-form");
     String[] list = new String[] {"Initial marmosets", "Inchoate marsupials"};
-    UIInputMany input = UIInputMany.make(form, "list-input:", "dataBean.selection", list);
+    UIInputMany input = UIInputMany.make(form, "list-input:", "dataBean.selections", list);
     dynamicListInputEvolver.setLabels(UIOutput.make("Remove"), UIOutput.make("Add marsupial"));
     dynamicListInputEvolver.evolve(input);
     UICommand.make(form, "submit");

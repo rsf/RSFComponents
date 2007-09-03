@@ -5,7 +5,7 @@ var DynamicListInput = function() {
   }
   
   function deriveRowId(nameBase, index) {
-    return nameBase + 'dynamic-list-input-row::' + index + ":";
+    return nameBase + 'dynamic-list-input-row:' + index + ":";
     }
   
   function getControl(nameBase, index, extension) {
