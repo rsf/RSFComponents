@@ -24,7 +24,7 @@ at the standard path
     <property name="templateResourceBase" ref="componentsTemplateResourceBase"/>
     <property name="templateNames"
       value="old-date, yahoo-date, plainTextEditor, 
-      plainSelect, double-list-select, dynamic-list-input" />
+      plainSelect, double-list-select, dynamic-list-input, TableWidgets" />
   </bean>
 
   <bean parent="requestAddressibleParent">
