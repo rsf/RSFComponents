@@ -33,6 +33,10 @@
   <bean id="selectEvolvers" class="uk.org.ponder.springutil.StringListFactory">
     <property name="strings" value="standardDoubleSelectEvolver, plainSelectEvolver"/>
   </bean>
+  
+  <bean id="componentsTemplateResourceBase" class="java.lang.String">
+    <constructor-arg value="/../RSFComponents-templates/"/>
+  </bean>
 <!-- 
   <bean parent="templateContributorParent">
     <property name="templateNames" value="sakai-old-date, sakai-FCKEditor, 

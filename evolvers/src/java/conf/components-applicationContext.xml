@@ -2,9 +2,17 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
+<!-- Use this version when the templates are deployed in a different webapp
+at the standard path 
   <bean id="componentsTemplateResourceBase" class="java.lang.String">
     <constructor-arg value="/../RSFComponents-templates/"/>
   </bean>
+-->
+  <bean id="componentsTemplateResourceBase"
+    class="java.lang.String">
+    <constructor-arg value="/" />
+  </bean>
+
 
   <bean id="dateSymbolJSEmitter"
     class="uk.org.ponder.htmlutil.DateSymbolJSEmitter">
