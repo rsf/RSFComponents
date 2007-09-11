@@ -73,7 +73,7 @@ public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
     if (value == null) {
       value = (Date) rbg.getBean(toevolve.valuebinding.value);
     }
-    else {
+    if (value != null) {
       transit.setDate(value);
     }
 
