@@ -8,8 +8,7 @@ at the standard path
     <constructor-arg value="/../RSFComponents-templates/"/>
   </bean>
 -->
-  <bean id="componentsTemplateResourceBase"
-    class="java.lang.String">
+  <bean id="componentsTemplateResourceBase" class="java.lang.String">
     <constructor-arg value="/" />
   </bean>
 
