@@ -708,7 +708,7 @@ var RSF = function() {
       var fossil;
       var bindings = new Array(); // an array of parsed bindings
   
-      var bindingex = /(.*)-binding/; // recognises el-binding as well as virtual-el-binding
+      var bindingex = /^(.*)-binding$/; // recognises el-binding as well as virtual-el-binding
   
       for (var i in inputs) {
         var input = inputs[i];
