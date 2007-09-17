@@ -8,34 +8,39 @@
  * be processed in a Javascript environment.
  */
 
-Date.prototype.setISO8601 = function (string) {
+var FixedDate = {
+  fromDate: function(date) {
+    var togo = new Object();
+    togo.fullYear = Number(date.getFullYear());
+    togo.month = Number(date.getMonth() + 1);
+    togo.day = Number(date.getDate());
+    togo.hours = Number(date.getHours());
+    togo.minutes = Number(date.getMinutes());
+    togo.seconds = Number(date.getSeconds());
+    return togo;
+    },
+
+  parseISO8601: function (string) {
+    
     var regexp = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
         "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
         "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
     var d = string.match(new RegExp(regexp));
 
     var offset = 0;
-    var date = new Date(1970, 0, 1);
-    
-    if (d[1]) { date.setUTCFullYear(d[1]); }
-    if (d[3]) { date.setUTCMonth(d[3] - 1); }
-    if (d[5]) { date.setUTCDate(d[5]); }
-    if (d[7]) { date.setUTCHours(d[7]); }
-    if (d[8]) { date.setUTCMinutes(d[8]); }
-    if (d[10]) { date.setUTCSeconds(d[10]); }
-    if (d[12]) { date.setUTCMilliseconds(Number("0." + d[12]) * 1000); }
-//    if (d[14]) {
-//        offset = (Number(d[16]) * 60) + Number(d[17]);
-//        offset *= ((d[15] == '-') ? 1 : -1);
-//    }
-
-//    offset -= date.getTimezoneOffset();
-    time = (Number(date) + (offset * 60 * 1000));
-    this.setTime(Number(time));
-}
+    var date = new Object();
+    date.fullYear = Number(d[1]);
+    date.month = Number(d[3]);
+    date.day = Number(d[5]);
+    date.hours = Number(d[7]);
+    date.minutes = Number(d[8]);
+    date.seconds = Number(d[10]);
+    date.milliseconds = Number(d[12]);
+    return date;
+  },
 
 
-Date.prototype.toISO8601String = function (format, offset) {
+  renderISO8601: function (fixeddate, format, offset) {
     /* accepted values for the format [1-6]:
      1 Year:
        YYYY (eg 1997)
@@ -54,36 +59,35 @@ Date.prototype.toISO8601String = function (format, offset) {
     if (!format) { var format = 6; }
     if (!offset) {
         var offset = 'Z';
-        var date = this;
     } else {
         var d = offset.match(/([-+])([0-9]{2}):([0-9]{2})/);
         var offsetnum = (Number(d[2]) * 60) + Number(d[3]);
         offsetnum *= ((d[1] == '-') ? -1 : 1);
-        var date = new Date(Number(Number(this) + (offsetnum * 60000)));
     }
 
     var zeropad = function (num, width) {
       if (!width) width = 2;
-      var numstr = num.toString();
+      var numstr = (num == undefined? "" : num.toString());
       return "00000".substring(5 - width + numstr.length) + numstr;
       }
       
     var str = "";
-    str += date.getUTCFullYear();
-    if (format > 1) { str += "-" + zeropad(date.getUTCMonth() + 1); }
-    if (format > 2) { str += "-" + zeropad(date.getUTCDate()); }
+    str += fixeddate.fullYear;
+    if (format > 1) { str += "-" + zeropad(fixeddate.month); }
+    if (format > 2) { str += "-" + zeropad(fixeddate.day); }
     if (format > 3) {
-        str += "T" + zeropad(date.getUTCHours()) +
-               ":" + zeropad(date.getUTCMinutes());
+        str += "T" + zeropad(fixeddate.hours) +
+               ":" + zeropad(fixeddate.minutes);
     }
 
     if (format > 4) { 
-      str += ":" + zeropad(date.getUTCSeconds()); 
+      str += ":" + zeropad(fixeddate.seconds); 
       if (format == 6) {
-        str += "." + zeropad(date.getUTCMilliseconds(), 3);
+        str += "." + zeropad(fixeddate.milliseconds, 3);
         }
       }
 
     if (format > 3) { str += offset; }
     return str;
 }
+};

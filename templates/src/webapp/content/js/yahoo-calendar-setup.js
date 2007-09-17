@@ -203,7 +203,8 @@ var RSF_Calendar = function() {
         updateAnnotation(annotationField, isvalid, "08 November 2006", dateformat);
         if (isvalid) {
           var trueDate = new Date(2006, 11, 8);
-          updateTrueValue(false, trueDate.toISO8601String());
+          var fixedDate= FixedDate.fromDate(trueDate);
+          updateTrueValue(false, FixedDate.renderISO8601(fixedDate));
           }
         };
       var trueValueChanged = function() {
@@ -249,11 +250,10 @@ var RSF_Calendar = function() {
     RSF.addElementListener(trueValueField, function() {
       YAHOO.log("Fire cal change");
       YAHOO.log("Cal change for " + trueValueField.id + " value " + trueValueField.value);
-      var date = new Date();
-      date.setISO8601(trueValueField.value);
-      var year = date.getFullYear();
-      var day = date.getDate();
-      var month = date.getMonth() + 1;
+      var date = FixedDate.parseISO8601(trueValueField.value);
+      var year = date.fullYear;
+      var day = date.day;
+      var month = date.month;
       YAHOO.log("Cal id " + newcal.outerContainer.id + " controlDate before: " + newcal.getSelectedDates()[0]);
       YAHOO.log("Cal selecting " + month + "/" + day + "/" + year);
       newcal.select(month + "/" + day + "/" + year);     
@@ -267,12 +267,9 @@ var RSF_Calendar = function() {
       function() {
         newcal.hide();
         var controlDate = newcal.getSelectedDates()[0];
-        var normDate = new Date();
-        normDate.setUTCDate(controlDate.getDate());
-        normDate.setUTCMonth(controlDate.getMonth());
-        normDate.setUTCFullYear(controlDate.getFullYear());
+        var normDate = FixedDate.fromDate(controlDate);
         YAHOO.log("controlDate " + controlDate);
-        var converted = normDate.toISO8601String();
+        var converted = FixedDate.renderISO8601(normDate);
         YAHOO.log("Converted " + converted);
         // do not trash time value in underlying date!
         var fused = converted.substring(0, 10) + trueValueField.value.substring(10);
@@ -298,13 +295,13 @@ var RSF_Calendar = function() {
   function initYahooCalendar_base(value, nameBase, controlIDs, title) {
     var containerID = nameBase + "date-container";
 
-    var thisMonth = value.getMonth();
-    var thisDay = value.getDate();
-    var thisYear = value.getFullYear();
+    var thisMonth = value.month;
+    var thisDay = value.day;
+    var thisYear = value.fullYear;
   
     var newcal = 
       new YAHOO.widget.Calendar2up_PUC("YAHOO.calendar."+containerID,
-      containerID, (thisMonth+1)+"/"+thisYear, (thisMonth+1)+"/"+thisDay+"/"+thisYear);
+      containerID, (thisMonth)+"/"+thisYear, (thisMonth)+"/"+thisDay+"/"+thisYear);
   
     var dateLinkID = nameBase + "date-link";
     var dateLink = $it(dateLinkID);
@@ -334,9 +331,9 @@ var RSF_Calendar = function() {
   function initYahooCalendar_Dropdowns(nameBase, title) {
     var today = new Date();
 
-    var thisMonth = today.getMonth();
-    var thisDay = today.getDate();
-    var thisYear = today.getFullYear();
+    var thisMonth = today.month;
+    var thisDay = today.day;
+    var thisYear = today.fullYear;
 
     var selMonthID = nameBase + "select-month";
     var selDayID = nameBase + "select-day";
@@ -354,7 +351,7 @@ var RSF_Calendar = function() {
         });
           
     selMonth.selectedIndex = thisMonth;
-    selDay.selectedIndex = thisDay-1;
+    selDay.selectedIndex = thisDay;
 
     selMonth.onchange = function() {
 	  yahoo_changeDate_Dropdowns(newcal, this, selDay);
@@ -395,9 +392,9 @@ from the controls of an active calendar dismisses its popup **/
 	  var timeFieldID = nameBase + "time-field";
       var trueDate = $it(nameBase + "true-date");
       var valuestring = trueDate.value;
-      var value = new Date();
+      var value = FixedDate.fromDate(new Date());
       if (valuestring.length != 0) {
-        value.setISO8601(valuestring);
+        value = FixedDate.parseISO8601(valuestring);
         }
   
       controlIDs = [dateFieldID, timeFieldID];
