@@ -9,6 +9,8 @@
 
   <bean id="componentChoice" class="uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceBean"/>
 
+  <bean id="localeSetter" class="uk.org.ponder.localeutil.LocaleHolder"/>
+
   <bean id="componentChoiceManager"
     class="uk.ac.cam.caret.rsf.testcomponents.beans.ComponentChoiceManager">
     <property name="requestBeanLocator" ref="requestBeanLocator"/>
@@ -27,8 +29,6 @@
     
   <bean id="selectEvolver" factory-bean="componentChoiceManager"
     factory-method="getSelectEvolver" singleton="false" />
-
-  <bean id="localeSetter" class="uk.org.ponder.localeutil.LocaleReceiver"/>
 
   <bean id="requestLocale" factory-bean="localeSetter" factory-method="getLocale"/>
 

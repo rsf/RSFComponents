@@ -129,7 +129,7 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
       locnames[i] = s[i].toString();
     }
     UISelect.make(lform, "locale-select", locnames,
-        "#{componentChoiceManager.locale}", locale.toString());
+        "#{localeSetter.locale}", locale.toString());
     UICommand.make(lform, "submit-locale");
   }
 

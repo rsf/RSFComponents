@@ -5,7 +5,7 @@
   <!-- For security purposes, only beans listed in this collection may be the
     target of EL operations coming in over the request -->
   <bean parent="requestAddressibleParent">
-    <property name="value" value="dataBean, componentChoice" />
+    <property name="value" value="dataBean, componentChoice, localeSetter" />
   </bean>
   
   <!-- The beans which will be preserved across a flow via simple instance
