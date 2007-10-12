@@ -62,7 +62,7 @@ public class StandardDynamicListInputEvolver implements
             : addlabel.valuebinding.value);
     UIInitBlock.make(togo, "init-script", 
         "DynamicListInput.init_DynamicListInput", 
-        new Object[] {core, limit, minlength, maxlength});
+        new Object[] {core, new Integer(limit), new Integer(minlength), new Integer(maxlength)});
    
     return togo;
   }

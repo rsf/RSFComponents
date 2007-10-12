@@ -43,6 +43,12 @@
       <version>${rsfutil.version}</version>
       <type>jar</type>
     </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+      <type>jar</type>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
