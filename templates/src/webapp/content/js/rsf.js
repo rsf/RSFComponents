@@ -710,7 +710,7 @@ var RSF = function() {
   
       var bindingex = /^(.*)-binding$/; // recognises el-binding as well as virtual-el-binding
   
-      for (var i in inputs) {
+      for (var i = 0; i < inputs.length; ++i) {
         var input = inputs[i];
         if (input.name || input.id) {
           var name = input.name? input.name : input.id;
