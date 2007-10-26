@@ -173,7 +173,7 @@ var RSF_Calendar = function() {
           var trueresult = UVB.EL[truebinding];
           var shortresult = UVB.EL[shortbinding];
           var longtimeresult = UVB.EL[longtimebinding];
-          updateAnnotation(annotationField, !UVB.isError, longresult, dateformat);
+          updateAnnotation(annotationField, !RSF.hasUVBError(UVB, nameBase), longresult, dateformat);
           if (trueresult) {
             updateTrueValue(false, trueresult);
             }
@@ -181,7 +181,7 @@ var RSF_Calendar = function() {
             updateDateFieldValue(false, shortresult);
             }
           if (longtimeresult) {
-            updateAnnotation(timeAnnotationField, !UVB.isError, longtimeresult, timeformat);
+            updateAnnotation(timeAnnotationField, !RSF.hasUVBError(UVB, nameBase), longtimeresult, timeformat);
      //       if (sourceField != timeField) {
      //         updateTimeFieldValue(false, timeresult);
      //         }
@@ -307,7 +307,7 @@ var RSF_Calendar = function() {
     var dateLink = $it(dateLinkID);
   
     dateLink.onclick = function() { 
-     yahoo_showCalendar(newcal, this);
+      yahoo_showCalendar(newcal, this);
     };
     
     controlIDs.push(dateLinkID);

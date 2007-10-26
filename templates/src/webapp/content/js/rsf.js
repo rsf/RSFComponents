@@ -585,9 +585,6 @@ var RSF = function() {
     renderUVBQuery: function(readEL) {
       return RSF.renderBinding("UVBBean.paths", readEL);
       },
-    renderUVBAction: function() {
-      return RSF.renderActionBinding("UVBBean.populate");
-      },
     renderActionBinding: function (methodbinding) {
       return RSF.encodeElement("Fast track action", methodbinding);
       },
@@ -604,7 +601,6 @@ var RSF = function() {
       for (var i = 0; i < queryEL.length; i++) {
         queries.push(RSF.renderUVBQuery(queryEL[i]));
       }
-      queries.push(RSF.renderUVBAction());
       return queries.join("&");      
     },
 
@@ -627,6 +623,13 @@ var RSF = function() {
       return queries.join("&");      
     },
 
+    hasUVBError: function(UVB, namebase) {
+      for (var i = 0; i < UVB.message.length; ++ i) {
+        var message = UVB.message[i];
+        if (message.severity == "error" && message.target.indexOf(namebase) == 0) return true;
+        }
+        return false;
+      },  
     /** Accumulates a response from the UVBView into a compact object 
      * representation.<b>
      * @return o, where o.EL is a map from the requested EL set to the text value
