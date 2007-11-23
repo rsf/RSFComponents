@@ -6,6 +6,10 @@ var RSF = function() {
   /** control logging, set this to true to turn on logging or use the setLogging method */ 
   var logging = false;
 
+  function $it(elementID) {
+    return document.getElementById(elementID);
+  }
+
   function invalidate(invalidated, EL, entry) {
     if (!EL) {
       RSF.log("invalidate null EL: " + invalidated + " " + entry);
@@ -946,6 +950,54 @@ var RSF = function() {
       }
     },
 
+
+    hasCSSClass: function(element, class) {
+      return new RegExp('\\b'+class+'\\b').test(element.className)
+      },
+    addCSSClass: function(element, class) {
+      if (!hasCSSClass(element, class)) {
+        element.className += (element.className? ' ' + class : class); 
+        }
+      },
+    removeCSSClass: function(element, class) {
+      var rep = element.className.match(' '+class)? ' ' + class : class;
+      o.className = element.className.replace(rep, '');
+      },
+
+    getRequiredFirer(element, invalidCSSClass, packageBase) {
+      return function() {
+        var isBlank = !element.value || element.value == "";
+        if (isBlank) {
+          addCSSClass(element, invalidCSSClass);
+          }
+        else {
+          removeCSSClass(element, invalidCSSClass);
+          }
+        };
+      },
+
+    addRequiredValidator: function(element, invalidCSSClass, packageBase) {
+      var requiredFirer = getRequiredFirer(invalidCSSClass, packageBase);
+      addEventToElement(element, 'blur', requiredFirer);
+      addEventToElement(element, 'change', requiredFirer);
+      },
+
+    initValidation: function (formId, requiredCSSClass, invalidCSSClass, packageBase) {
+      var form = $it(formId);
+      var items = form.elements.length;
+      for (var i = 0; i < items; ++ i) {
+        var element = form.elements[i];
+        var valid = element.getAttribute("rsf:valid");
+        if (!valid) continue;
+        if (valid.contains("required")) {
+          if (requiredCSSClass) {
+            addCSSClass(element, requiredCSSClass);
+            }
+          addRequiredValidator(element, invalidCSSClass, packageBase);
+          }
+        }
+      },
+      
    /** 
     * Transform all the action elements inside a DOM block into AJAX action elements,
     * This will keep the forms from submitting, the page from changing, and the links
@@ -973,7 +1025,7 @@ var RSF = function() {
 
       // get elementsbyname to get the forms
       var forms = parentNode.getElementsByTagName("form");
-      for (var i=0; i < forms.length; i++) {
+      for (var i = 0; i < forms.length; i++) {
          var form = forms[i];
 
          var updater = RSF.getAJAXFormUpdater(form, callback);
@@ -984,7 +1036,7 @@ var RSF = function() {
 
       // get elementsbyname to get the links (a)
       var links = parentNode.getElementsByTagName("a");
-      for (var i=0; i < links.length; i++) {
+      for (var i = 0; i < links.length; i++) {
          var link = links[i];
 
          if (!link.href || link.href.length == 0) {
