@@ -847,6 +847,11 @@ var RSF = function() {
       return baseid.substring(0, colpos + 1) + targetid;
     },
 
+    getLocalID: function(baseid) {
+      colpos = baseid.lastIndexOf(':');
+      return baseid.substring(colpos +1);
+      },
+
     /** 
      * Sends a UVB AJAX request
      * sourceFields is a list of the JS form elements which you want to send in this request,
@@ -955,31 +960,53 @@ var RSF = function() {
       return new RegExp('\\b'+class+'\\b').test(element.className)
       },
     addCSSClass: function(element, class) {
-      if (!hasCSSClass(element, class)) {
+      if (!RSF.hasCSSClass(element, class)) {
         element.className += (element.className? ' ' + class : class); 
         }
       },
     removeCSSClass: function(element, class) {
       var rep = element.className.match(' '+class)? ' ' + class : class;
-      o.className = element.className.replace(rep, '');
+      element.className = element.className.replace(rep, '');
       },
 
-    getRequiredFirer(element, invalidCSSClass, packageBase) {
+    deriveRequiredID: function(id) {
+      local = RSF.getLocalID(id);
+      return RSF.getRelativeID(id, "required-" + local);
+      },
+      
+    deriveMessageID: function (id) {
+      local = RSF.getLocalID(id);
+      return RSF.getRelativeID(id, "message-for-" + local);
+      },
+
+    getRequiredFirer: function(element, invalidCSSClass, packageBase) {
       return function() {
         var isBlank = !element.value || element.value == "";
         if (isBlank) {
-          addCSSClass(element, invalidCSSClass);
+          RSF.addCSSClass(element, invalidCSSClass);
           }
         else {
-          removeCSSClass(element, invalidCSSClass);
+          RSF.removeCSSClass(element, invalidCSSClass);
           }
         };
       },
 
     addRequiredValidator: function(element, invalidCSSClass, packageBase) {
-      var requiredFirer = getRequiredFirer(invalidCSSClass, packageBase);
-      addEventToElement(element, 'blur', requiredFirer);
-      addEventToElement(element, 'change', requiredFirer);
+      var requiredFirer = RSF.getRequiredFirer(element, invalidCSSClass, packageBase);
+      RSF.addEventToElement(element, 'blur', requiredFirer);
+      RSF.addEventToElement(element, 'change', requiredFirer);
+      },
+
+    setRequiredStyle: function(element, requiredCSSClass) {
+      if (!requiredCSSClass) requiredCSSClass='required-css-class';
+      var requiredID = RSF.deriveRequiredID(element.id);
+      if (!$it(requiredID)) {
+        var node = document.createElement("div");
+        node.setAttribute('style', 'display:inline');
+        node.setAttribute('class', requiredCSSClass);
+        node.setAttribute('id', requiredID);
+        element.parentNode.insertBefore(node, element);
+        } 
       },
 
     initValidation: function (formId, requiredCSSClass, invalidCSSClass, packageBase) {
@@ -989,11 +1016,10 @@ var RSF = function() {
         var element = form.elements[i];
         var valid = element.getAttribute("rsf:valid");
         if (!valid) continue;
-        if (valid.contains("required")) {
-          if (requiredCSSClass) {
-            addCSSClass(element, requiredCSSClass);
-            }
-          addRequiredValidator(element, invalidCSSClass, packageBase);
+        if (valid.indexOf("required") != -1) {
+          RSF.setRequiredStyle(element, requiredCSSClass);
+          
+          RSF.addRequiredValidator(element, invalidCSSClass, packageBase);
           }
         }
       },
