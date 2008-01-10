@@ -168,11 +168,43 @@ public class TableOptions {
     }
   }
   
+  /* This version of acquireCurrentPage takes the total number of items in the
+   * table and uses that information to determine if we're on the last page.
+   */
+  public int acquireCurrentPage(int totalNumberItems) {
+      try {
+          int realPageNum = acquireCurrentPage();
+          int realPageSize = acquirePageSize(20);
+          int numberOfPages = totalNumberItems / realPageSize;
+          if ((totalNumberItems % realPageSize) != 0) 
+              numberOfPages++;
+          
+          if (realPageNum >= (numberOfPages-1))
+              return -1;
+          else
+              return realPageNum;
+      }
+      catch(NumberFormatException nfr) {
+          return 0;
+      }
+  }
+  
   public void updateCurrentPage(int curpage) {
     if (curpage < 0)
       pagenum = LASTPAGE;
     else
       pagenum = curpage+"";
+  }
+  
+  /* 
+   * Given the internal state of this set of table options return the first and
+   * last positions that should be rendered. This makes rendering for loops
+   * easier. This return an integer array of length 2, the 0 index is the first
+   * item, the 1 index is the last item to render.
+   */
+  public int[] acquirePageRange() {
+      //int[] values = new
+      return new int[] {0,0};
   }
   
 }

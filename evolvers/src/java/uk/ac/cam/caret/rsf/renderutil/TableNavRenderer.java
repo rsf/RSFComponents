@@ -43,7 +43,22 @@ public class TableNavRenderer {
   
   public void makePager(UIContainer tofill, String divID, TableOptions options, int totalsize) {
     UIJointContainer joint = new UIJointContainer(tofill, divID, "standard-sakai-pager:", numHeaders+"");
-    UIOutput.make(joint, "instructions:", "Viewing x to y of "+totalsize);
+    
+    int pageNumber = options.acquireCurrentPage();
+    int pageSize = options.acquirePageSize(20);
+    int startItem = pageSize * pageNumber;
+    int endItem = startItem + pageSize;
+    if (options.acquireCurrentPage(totalsize) < 0) {
+        int numberOfPages = totalsize / pageSize;
+        if ((totalsize % pageSize) != 0) 
+            numberOfPages++;
+        startItem = pageSize * (numberOfPages-1);
+        endItem = totalsize;
+    }
+    
+    
+    UIOutput.make(joint, "instructions:", "Viewing " + (startItem+1) + 
+            " to " + (endItem) + " of "+totalsize);
     
     String[] values = new String[] { "5", "10", "20", "50", "100", "200" };
     String[] labels = new String[] { "Show 5", "Show 10", "Show 20", "Show 50", "Show 100", "Show 200" };
@@ -55,11 +70,11 @@ public class TableNavRenderer {
     UIOutput nextPageButton = UIOutput.make(joint, "next-page-button");
     UIOutput lastPageButton = UIOutput.make(joint, "last-page-button");
     
-    if (options.acquireCurrentPage() == 0) {
+    if (options.acquireCurrentPage(totalsize) == 0) {
       firstPageButton.decorators = new DecoratorList(new UIDisabledDecorator());
       prevPageButton.decorators = new DecoratorList(new UIDisabledDecorator());
     }
-    else if (options.acquireCurrentPage() < 0) {
+    else if (options.acquireCurrentPage(totalsize) < 0) {
       nextPageButton.decorators = new DecoratorList(new UIDisabledDecorator());
       lastPageButton.decorators = new DecoratorList(new UIDisabledDecorator());
     }
