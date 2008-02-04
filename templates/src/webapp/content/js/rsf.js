@@ -492,9 +492,10 @@ var RSF = function() {
     
     issueAJAXRequest: function(method, url, parameters, callback) {
       method = method.toUpperCase(); // force method to uppercase for comparison
-      var alertContents = function() {
+      var is_http_request = url.indexOf("http") === 0;
+      var readyCallback = function() {
         if (http_request.readyState == 4) {
-          if (http_request.status == 200) {
+          if (http_request.status == 200 || !is_http_request) {
             RSF.log("AJAX request success status: " + http_request.status);
             callback.success(http_request);
             RSF.log("AJAX callback concluded");
@@ -528,7 +529,7 @@ var RSF = function() {
            return false;
          }
          
-         http_request.onreadystatechange = alertContents;
+         http_request.onreadystatechange = readyCallback;
          if (method == "GET") {
             url = url + "?" + parameters;
          }
@@ -617,12 +618,19 @@ var RSF = function() {
       return queries.join("&");      
     },
 
-    /** Accepts a form, returns the params string (body) */
-    getCompleteSubmissionBody: function(form) {
+    /** Accepts a form, returns the params string (body). If "submittingel" is
+      * set, it will exclude submissions from any other input type="submit". */
+    getCompleteSubmissionBody: function(form, submittingel) {
       var queries = new Array();
       var elements = form.elements;
       for (var i = 0; i < elements.length; i++) {
-         queries.push(RSF.encodeElement(elements[i].name, elements[i].value));
+        var element = elements[i];
+        if (submittingel != null && typeof (submittingel) != "undefined") {
+          if (element.nodeName.toLowerCase() == "input" &&
+            element.getAttribute("type") == "submit" && element != submittingel) 
+            continue;
+          }
+        queries.push(RSF.encodeElement(element.name, element.value));
       }
       return queries.join("&");      
     },
@@ -874,14 +882,16 @@ var RSF = function() {
       }
     },
 
-   /** Submit a form via AJAX,
-    * the results of the submit are returned in the response 
-    * value which is passed to the callback function
+   /** Submit a form via AJAX, the results of the submit are returned in the 
+    * response value which is passed to the callback function
     * form: the JS form object to submit via ajax
     * ajaxUrl: optionally allows the user to specify a url to send the request to,
-    * by default this will use the url of the form action
+    *   by default this will use the url of the form action
+    * submittingel: optionally allows the user to specify that a particular
+    *   control is to be used to submit the form (that is, the submitting names
+    *   of other submit controls should be suppressed).
     */
-    getAJAXFormUpdater: function (form, callback, ajaxUrl) {
+    getAJAXFormUpdater: function (form, callback, ajaxUrl, submittingel) {
       RSF.log("getAJAXFormUpdater: " + form);
       if (!ajaxUrl) ajaxUrl = form.action;
       var AJAXcallback = {
@@ -891,7 +901,7 @@ var RSF = function() {
           }
         };
       return function() {
-         var body = RSF.getCompleteSubmissionBody(form);
+         var body = RSF.getCompleteSubmissionBody(form, submittingel);
          RSF.log("Firing AJAX request " + body);
          RSF.queueAJAXRequest(form, form.method, ajaxUrl, body, AJAXcallback);
          // ensure the non-ajax action does not fire
@@ -1025,7 +1035,7 @@ var RSF = function() {
       },
       
    /** 
-    * Transform all the action elements inside a DOM block into AJAX action elements,
+    * Transform all action and navigation elements inside a DOM block into AJAX action elements,
     * This will keep the forms from submitting, the page from changing, and the links
     * from causing navigation to proceed off the page
     * parentNode: all action elements contained within this node will be transformed,
@@ -1045,20 +1055,32 @@ var RSF = function() {
          }
          // now drop in the new xhtml result into this node
          parentNode.innerHTML = results;
+         RSF.getDOMModifyFirer().fireEvent();
          // rerun the dom transformer on the replacement xhtml
          RSF.transformActionDomToAJAX(parentNode);
       }
 
+      var inputs = parentNode.getElementsByTagName("input");
+      for (var i = 0; i < inputs.length; ++ i) {
+        var input = inputs[i];
+        if (input.getAttribute("type").toLowerCase() != "submit") continue;
+        var updater = RSF.getAJAXFormUpdater(input.form, callback, null, input);
+        RSF.addEventToElement(input, "click", updater);
+        updatedElements.push(input);
+        }
       // get elementsbyname to get the forms
-      var forms = parentNode.getElementsByTagName("form");
-      for (var i = 0; i < forms.length; i++) {
-         var form = forms[i];
-
-         var updater = RSF.getAJAXFormUpdater(form, callback);
-
-         RSF.addEventToElement(form, "submit", updater);
-         updatedElements.push(form);
-      }
+      // this code disused in favor of direct "input" detection as above.
+      // however, we probably want the capability to revive it to deal with the
+      // case of existing AJAX-ly submitted forms?
+//      var forms = parentNode.getElementsByTagName("form");
+//      for (var i = 0; i < forms.length; i++) {
+//         var form = forms[i];
+//
+//         var updater = RSF.getAJAXFormUpdater(form, callback);
+//
+//         RSF.addEventToElement(form, "submit", updater);
+//         updatedElements.push(form);
+//     }
 
       // get elementsbyname to get the links (a)
       var links = parentNode.getElementsByTagName("a");
