@@ -1085,24 +1085,35 @@ var RSF = function() {
       // get elementsbyname to get the links (a)
       var links = parentNode.getElementsByTagName("a");
       for (var i = 0; i < links.length; i++) {
-         var link = links[i];
+        var link = links[i];
 
-         if (!link.href || link.href.length == 0) {
-            RSF.log("link is empty or appears to be invalid so skipping it: " + link.href);
-            continue;            
-         }
+        if (!link.href || link.href.length == 0) {
+          RSF.log("link is empty or appears to be invalid so skipping it: " + link.href);
+          continue;            
+        }
          
-         var parsed = parseUri(link.href);
-         if (parsed.host == "" || parsed.host == document.domain) {
-            var updater = RSF.getAJAXLinkUpdater(link, callback);
+        var parsed = parseUri(link.href);
+        if (parsed.host == "" || parsed.host == document.domain) {
+          var updater = RSF.getAJAXLinkUpdater(link, callback);
    
-            RSF.addEventToElement(link, "click", updater);
-            updatedElements.push(link);
-         } else {
-            RSF.log("link is not in this domain so skipping it: " + link.href);
-            continue;
-         }
+          RSF.addEventToElement(link, "click", updater);
+          updatedElements.push(link);
+        } else {
+          RSF.log("link is not in this domain so skipping it: " + link.href);
+          continue;
+        }
       }
+      var scripts = parentNode.getElementsByTagName("script");
+      for (var i = 0; i < scripts.length; i++) {
+        var strExec = scripts[i].innerHTML;
+        try {
+          eval(strExec);
+        } 
+        catch(e) {
+          RSF.log("Exception evaluating script in AHAH block: " + e);
+        }
+      }
+      
       return updatedElements;
     }
 
