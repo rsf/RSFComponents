@@ -1040,24 +1040,27 @@ var RSF = function() {
     * from causing navigation to proceed off the page
     * parentNode: all action elements contained within this node will be transformed,
     * this parent node will remain unaffected and must be able to be affected by innerHTML
+    * targetNode: 
     * RETURN: the list of updated action elements
     */
-    transformActionDomToAJAX: function (parentNode) {
-      var type = parentNode.nodeName.toLowerCase();
+    transformActionDomToAJAX: function (parentNode, targetNode) {
+      if (typeof(targetNode) == "undefined" || targetNode == null) {
+        targetNode = parentNode;
+        }
       RSF.log("transformActionDomToAJAX: node=" + parentNode);
       var updatedElements = [];
 
       // define the callback function for the ajax response
       var callback = function(results) {
          // specifically purge the existing items before putting in the new stuff
-         while (parentNode.childNodes[0])  {
-            parentNode.removeChild(parentNode.childNodes[0]);
+         while (targetNode.childNodes[0])  {
+            targetNode.removeChild(parentNode.childNodes[0]);
          }
          // now drop in the new xhtml result into this node
-         parentNode.innerHTML = results;
+         targetNode.innerHTML = results;
          RSF.getDOMModifyFirer().fireEvent();
          // rerun the dom transformer on the replacement xhtml
-         RSF.transformActionDomToAJAX(parentNode);
+         RSF.transformActionDomToAJAX(targetNode, targetNode);
       }
 
       var inputs = parentNode.getElementsByTagName("input");
