@@ -77,7 +77,6 @@ var DynamicListInput = function() {
         var nextrowid = deriveRowId(nameBase, nextrowind);
         var lastrowind = lastRowInd(existrows);
         var lastrow = $it(deriveRowId(nameBase, lastrowind));
-        alert ("id " + lastrowind + " row " + lastrow); 
         
         var duprow = RSF.duplicateBranch(sampleel, nextrowid, lastrow);
         
