@@ -18,7 +18,7 @@ var DynamicListInput = function() {
   function lastRowInd(existrows) {
     var maxi = -1;
     for (var i in existrows) {
-      if (i > maxi) maxi = i;
+      if (i != 'count' && i > maxi) maxi = i;
       }
     return maxi;
     }
@@ -77,6 +77,7 @@ var DynamicListInput = function() {
         var nextrowid = deriveRowId(nameBase, nextrowind);
         var lastrowind = lastRowInd(existrows);
         var lastrow = $it(deriveRowId(nameBase, lastrowind));
+        alert ("id " + lastrowind + " row " + lastrow); 
         
         var duprow = RSF.duplicateBranch(sampleel, nextrowid, lastrow);
         
