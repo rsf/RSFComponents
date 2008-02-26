@@ -966,16 +966,16 @@ var RSF = function() {
     },
 
 
-    hasCSSClass: function(element, class) {
-      return new RegExp('\\b'+class+'\\b').test(element.className)
+    hasCSSClass: function(element, cssClass) {
+      return new RegExp('\\b'+ cssClass +'\\b').test(element.className)
       },
-    addCSSClass: function(element, class) {
-      if (!RSF.hasCSSClass(element, class)) {
-        element.className += (element.className? ' ' + class : class); 
+    addCSSClass: function(element, cssClass) {
+      if (!RSF.hasCSSClass(element, cssClass)) {
+        element.className += (element.className? ' ' + cssClass : cssClass); 
         }
       },
-    removeCSSClass: function(element, class) {
-      var rep = element.className.match(' '+class)? ' ' + class : class;
+    removeCSSClass: function(element, cssClass) {
+      var rep = element.className.match(' '+ cssClass)? ' ' + cssClass : cssClass;
       element.className = element.className.replace(rep, '');
       },
 
