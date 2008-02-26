@@ -18,7 +18,7 @@ var DynamicListInput = function() {
   function lastRowInd(existrows) {
     var maxi = -1;
     for (var i in existrows) {
-      if (i != 'count' && i > maxi) maxi = i;
+      if (i != 'count' && parseInt(i) > parseInt(maxi)) maxi = i;
       }
     return maxi;
     }
