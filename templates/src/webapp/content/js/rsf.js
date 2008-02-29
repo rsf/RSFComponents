@@ -1038,9 +1038,10 @@ var RSF = function() {
     * Transform all action and navigation elements inside a DOM block into AJAX action elements,
     * This will keep the forms from submitting, the page from changing, and the links
     * from causing navigation to proceed off the page
-    * parentNode: all action elements contained within this node will be transformed,
-    * this parent node will remain unaffected and must be able to be affected by innerHTML
-    * targetNode: 
+    * parentNode: all action elements contained within this node will be transformed to
+    * having navigation transitions "decorated"
+    * targetNode: the effect of the decorated navigation will be to cause replacement of
+    * DOM contents of this target node.
     * RETURN: the list of updated action elements
     */
     transformActionDomToAJAX: function (parentNode, targetNode) {
@@ -1054,7 +1055,7 @@ var RSF = function() {
       var callback = function(results) {
          // specifically purge the existing items before putting in the new stuff
          while (targetNode.childNodes[0])  {
-            targetNode.removeChild(parentNode.childNodes[0]);
+            targetNode.removeChild(targetNode.childNodes[0]);
          }
          // now drop in the new xhtml result into this node
          targetNode.innerHTML = results;
