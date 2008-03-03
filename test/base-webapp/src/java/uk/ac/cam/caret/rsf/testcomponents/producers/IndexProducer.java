@@ -12,6 +12,7 @@ import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
+import uk.org.ponder.rsf.components.UIInternalLink;
 import uk.org.ponder.rsf.components.UISelect;
 import uk.org.ponder.rsf.evolvers.DateInputEvolver;
 import uk.org.ponder.rsf.evolvers.FormatAwareDateInputEvolver;
@@ -131,6 +132,8 @@ public class IndexProducer implements ViewComponentProducer, DefaultView,
     UISelect.make(lform, "locale-select", locnames,
         "#{localeSetter.locale}", locale.toString());
     UICommand.make(lform, "submit-locale");
+    
+    UIInternalLink.make(tofill, "testsingle", new SimpleViewParameters(SingleProducer.VIEW_ID));
   }
 
   private void makeEvolveSelect(UIForm tform, StringList texts,

@@ -177,23 +177,6 @@ var RSF = function() {
         }
       }
 
-    function ignorableNode(node) {
-      return node.tagName.toLowerCase() == 'select';
-      }
-
-    function getNextNode(node) {
-      if (node.firstChild && !ignorableNode(node)) {
-        return node.firstChild;
-        }
-      while (node) {
-       if (node.nextSibling) {
-          return node.nextSibling;
-          } 
-        node = node.parentNode;
-        }
-      return null;
-      }
-
    /* parseUri 1.2; MIT License
    By Steven Levithan <http://stevenlevithan.com> 
    http://blog.stevenlevithan.com/archives/parseuri
@@ -226,10 +209,67 @@ var RSF = function() {
       }
    }
 
+    function ignorableNode(node) {
+      return node.tagName.toLowerCase() == 'select';
+      }
+
+    function getNextNode(iterator) {
+      if (iterator.node.firstChild && !ignorableNode(iterator.node)) {
+        iterator.node = iterator.node.firstChild;
+        iterator.depth++;
+        return iterator;
+        }
+      while (iterator.node) {
+       if (iterator.node.nextSibling) {
+          iterator.node = iterator.node.nextSibling;
+          return iterator;
+          }
+        iterator.node = iterator.node.parentNode;
+        iterator.depth--;
+        }
+      return iterator;
+      }
+
 
   /** All public functions **/
 
   return {
+  // Work around IE circular DOM issue. This is the default max DOM depth on IE.
+  // http://msdn2.microsoft.com/en-us/library/ms761392(VS.85).aspx
+    DOM_BAIL_DEPTH: 256,
+  
+  // Compute the corrected height of an element, taking into account 
+  // any floating elements
+  // impl from http://www.three-tuns.net/~andrew/page-height-test2.html#
+    computeCorrectedHeight: function (node) {
+      var totalHeight = node.offsetHeight;
+      if (node.offsetParent) {
+        while (node.offsetParent) {
+         totalHeight += node.offsetTop;
+          node = node.offsetParent;
+          }
+        } 
+      else if (node.y) {
+        totalHeight += node.y;
+        }
+      return totalHeight;
+      },
+      
+    computeDocumentHeight: function (dokkument) {
+      var currentNode = {node: dokkument.body, depth: 0};
+      var biggestOffset = 0;
+      while (currentNode.node != null && currentNode.depth >= 0 && currentNode.depth < RSF.DOM_BAIL_DEPTH) {
+        if (currentNode.node.offsetHeight) {
+          var tempOffset = RSF.computeCorrectedHeight(currentNode.node);
+          if (tempOffset > biggestOffset) {
+            biggestOffset = tempOffset;
+            }
+          }
+        currentNode = getNextNode(currentNode);
+        }
+      return biggestOffset;
+      },
+  
    decodeRSFStringArray: function (rsfString) {
      var resultArray = new Array();
      var numStart = 0;
@@ -341,37 +381,8 @@ var RSF = function() {
       }
    },
 
-  // Compute the corrected height of an element, taking into account 
-  // any floating elements
-  // impl from http://www.three-tuns.net/~andrew/page-height-test2.html#
-    computeCorrectedHeight: function (node) {
-      var totalHeight = node.offsetHeight;
-      if (node.offsetParent) {
-        while (node.offsetParent) {
-         totalHeight += node.offsetTop;
-          node = node.offsetParent;
-          }
-        } 
-      else if (node.y) {
-        totalHeight += node.y;
-        }
-      return totalHeight;
-      },
-      
-    computeDocumentHeight: function (dokkument) {
-      var currentNode = dokkument.body;
-      var biggestOffset = 0;
-      while (currentNode != null) {
-        if (currentNode.offsetHeight) {
-          var tempOffset = RSF.computeCorrectedHeight(currentNode);
-          if (tempOffset > biggestOffset) {
-            biggestOffset = tempOffset;
-            }
-          }
-        currentNode = getNextNode(currentNode);
-        }
-      return biggestOffset;
-      },
+
+
 
     // Following definitions taken from PPK's "Event handling challenge" winner
     // thread comments at 
