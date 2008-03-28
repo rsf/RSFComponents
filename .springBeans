@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
-	<configExtensions>
-		<configExtension>xml</configExtension>
-	</configExtensions>
+	<version>1</version>
+	<pluginVersion><![CDATA[2.0.3.v200802061800]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
 		<config>evolvers/src/java/conf/components-applicationContext.xml</config>
 		<config>evolvers/src/java/conf/components-requestContext.xml</config>
 		<config>test/base-webapp/src/webapp/WEB-INF/testcomponents-applicationContext.xml</config>
 		<config>test/base-webapp/src/webapp/WEB-INF/testcomponents-requestContext.xml</config>
+		<config>evolvers/src/test/uk/ac/cam/caret/rsf/test/messages/messages-application-context.xml</config>
+		<config>evolvers/src/test/uk/ac/cam/caret/rsf/test/messages/messages-request-context.xml</config>
 	</configs>
 	<configSets>
 		<configSet>
-			<name>RSFComponents</name>
+			<name><![CDATA[RSFComponents]]></name>
 			<allowBeanDefinitionOverriding>true</allowBeanDefinitionOverriding>
 			<incomplete>false</incomplete>
 			<configs>
