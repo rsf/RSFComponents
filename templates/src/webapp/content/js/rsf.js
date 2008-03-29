@@ -681,7 +681,9 @@ var RSF = function() {
             }
           }
         else {
-          togo.EL[id] = text;
+          // In 0.7.3M2 the Dom is being populated by JSON by default, so we must
+          // eval the items. (otherwise the quotes are still on regular String objects)
+          togo.EL[id] = eval(text);
           }
         }
         return togo;
