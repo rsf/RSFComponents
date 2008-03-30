@@ -48,6 +48,8 @@ public class BrokenDateInputEvolver implements DateInputEvolver {
 
   private String monthbeanname;
 
+  private String invalidDateKey;
+
   public void setTransitBase(String transitbase) {
     this.transitbase = transitbase;
   }
@@ -123,6 +125,10 @@ public class BrokenDateInputEvolver implements DateInputEvolver {
 
   public UIJointContainer evolveDateInput(UIInput toevolve) {
     return evolveDateInput(toevolve, null);
+  }
+
+  public void setInvalidDateKey(String invalidDateKey) {
+    this.invalidDateKey = invalidDateKey;
   }
 
 }

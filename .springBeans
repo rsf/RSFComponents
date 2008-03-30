@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
 	<version>1</version>
-	<pluginVersion><![CDATA[2.0.3.v200802061800]]></pluginVersion>
+	<pluginVersion><![CDATA[2.0.4.v200803111444]]></pluginVersion>
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
@@ -20,14 +20,17 @@
 			<allowBeanDefinitionOverriding>true</allowBeanDefinitionOverriding>
 			<incomplete>false</incomplete>
 			<configs>
-				<config>/J-RSFUtil/src/conf/blank-applicationContext.xml</config>
-				<config>/J-RSFUtil/src/conf/blank-requestContext.xml</config>
-				<config>/J-RSFUtil/src/conf/rsf-config.xml</config>
-				<config>/J-RSFUtil/src/conf/rsf-requestscope-config.xml</config>
 				<config>evolvers/src/java/conf/components-applicationContext.xml</config>
 				<config>evolvers/src/java/conf/components-requestContext.xml</config>
 				<config>test/base-webapp/src/webapp/WEB-INF/testcomponents-applicationContext.xml</config>
 				<config>test/base-webapp/src/webapp/WEB-INF/testcomponents-requestContext.xml</config>
+				<config>/J-RSFUtil/src/conf/blank-applicationContext.xml</config>
+				<config>/J-RSFUtil/src/conf/blank-requestContext.xml</config>
+				<config>/J-RSFUtil/src/conf/rsf-config.xml</config>
+				<config>/J-RSFUtil/src/conf/rsf-requestscope-config.xml</config>
+				<config>/J-ServletUtil/src/conf/springutil-validators.xml</config>
+				<config>evolvers/src/test/uk/ac/cam/caret/rsf/test/messages/messages-application-context.xml</config>
+				<config>evolvers/src/test/uk/ac/cam/caret/rsf/test/messages/messages-request-context.xml</config>
 			</configs>
 		</configSet>
 	</configSets>

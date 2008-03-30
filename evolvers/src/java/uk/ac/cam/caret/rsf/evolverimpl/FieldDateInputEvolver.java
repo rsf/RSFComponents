@@ -38,6 +38,10 @@ public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
 
   private String style = DATE_INPUT;
 
+  private String invalidTimeKey;
+
+  private String invalidDateKey;
+
   public void setJSEmitter(DateSymbolJSEmitter jsemitter) {
     this.jsemitter = jsemitter;
   }
@@ -81,17 +85,25 @@ public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
 
     String jsblock = jsemitter.emitDateSymbols();
     UIVerbatim.make(togo, "datesymbols", jsblock);
+    
+    UIForm form = RSFUtil.findBasicForm(togo);
 
     if (style.equals(DATE_INPUT) || style.equals(DATE_TIME_INPUT)) {
       UIInput field = UIInput.make(togo, "date-field", ttb + "short", transit.getShort());
       field.mustapply = true;
       UIOutput.make(togo, "date-annotation", null, ttb + "shortFormat");
+      if (invalidDateKey != null) {
+        form.parameters.add(new UIELBinding(ttb + "invalidDateKey", invalidDateKey));
+      }
     }
 
     if (style.equals(TIME_INPUT) || style.equals(DATE_TIME_INPUT)) {
       UIInput field = UIInput.make(togo, "time-field", ttb + "time", transit.getTime());
       field.mustapply = true;
       UIOutput.make(togo, "time-annotation", null, ttb + "timeFormat");
+      if (invalidTimeKey != null) {
+        form.parameters.add(new UIELBinding(ttb + "invalidTimeKey", invalidTimeKey));
+      }
     }
 
     String truedateval = value == null ? null
@@ -100,7 +112,7 @@ public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
         truedateval);
     truedate.willinput = false;
 
-    UIForm form = RSFUtil.findBasicForm(togo);
+
 
     form.parameters.add(new UIELBinding(toevolve.valuebinding.value,
         new ELReference(ttb + "date")));
@@ -116,6 +128,14 @@ public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
 
   public UIJointContainer evolveDateInput(UIInput toevolve) {
     return evolveDateInput(toevolve, null);
+  }
+
+  public void setInvalidTimeKey(String invalidTimeKey) {
+    this.invalidTimeKey = invalidTimeKey;
+  }
+
+  public void setInvalidDateKey(String invalidDateKey) {
+    this.invalidDateKey = invalidDateKey;
   }
 
 }
