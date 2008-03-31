@@ -20,12 +20,18 @@ myLogReader1.formatMsg = function(oLogMsg) {
 -->
 <div class="portletBody">
 <h1>RSF Components Test Tool</h1>
+
+<div rsf:id="message-for:*">
+</div>
+
 <form rsf:id="components-form">
 Select Date 1: <div style="display:inline" rsf:id="date-1:">(Date control goes here)</div>
+<div style="display:inline" rsf:id="message-for:date-1:">Date 1 errors here</div>
 <br/>
 
 <div rsf:id="branch-test:" style="display:inline">
 Select Date 2: <div style="display:inline" rsf:id="date-2:">(Date control goes here)</div>
+<div style="display:inline" rsf:id="message-for:date-3:">Date 2 errors here</div>
 </div>
 <br/>
 Rich text control:
