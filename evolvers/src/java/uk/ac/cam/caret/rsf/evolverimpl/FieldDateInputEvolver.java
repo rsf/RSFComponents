@@ -23,6 +23,13 @@ import uk.org.ponder.rsf.util.RSFUtil;
 import uk.org.ponder.stringutil.StringGetter;
 import uk.org.ponder.stringutil.StringHolder;
 
+/** The standard framework implementation of {@link FormatAwareDateInputEvolver},
+ * implementing the server-side portion of a canonical "date widget". 
+ * 
+ * @author Antranig Basman (antranig@caret.cam.ac.uk)
+ *
+ */
+
 public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
   public static final String COMPONENT_ID = "date-field-input:";
 

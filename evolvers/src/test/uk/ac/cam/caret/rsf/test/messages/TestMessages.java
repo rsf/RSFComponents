@@ -16,6 +16,7 @@ import uk.org.ponder.rsf.bare.junit.MultipleRSFTests;
 import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.evolvers.FormatAwareDateInputEvolver;
+import uk.org.ponder.rsf.viewstate.ViewParameters;
 
 /**
  * Test for message propagation issues, and date input infrastructure
@@ -74,6 +75,11 @@ public class TestMessages extends MultipleRSFTests {
       if (!late) {
         assertEquals(dateKey == null? FieldDateTransit.INVALID_DATE_KEY : dateKey, code);
       }
+    }
+    else {
+      RenderResponse render2 = 
+        getRequestLauncher().renderView((ViewParameters) response.ARIResult.resultingView);
+      assertContains(render2, "rsf-messages::info-messages::");
     }
 
   }

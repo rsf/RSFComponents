@@ -2,7 +2,9 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
   "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-  <bean id="dateHolder" class="uk.ac.cam.caret.rsf.test.messages.DateHolder"/>
+  <bean id="dateHolder" class="uk.ac.cam.caret.rsf.test.messages.DateHolder">
+    <property name="targettedMessageList" ref="targettedMessageList"/>
+  </bean>
   
   <bean class="uk.ac.cam.caret.rsf.test.messages.TestProducer">
     <property name="dateInputEvolver" ref="fieldDateInputEvolver"/>

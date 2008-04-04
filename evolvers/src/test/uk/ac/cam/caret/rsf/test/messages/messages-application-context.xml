@@ -2,6 +2,23 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
   "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
+
+  <!-- Control the location of the html templates (default: content/templates/) -->
+  <bean id="templateResolverStrategy" parent="CRITemplateResolverStrategy">
+    <property name="baseDirectory" value="" />
+    <property name="templateResourceBase" value="classpath:uk/ac/cam/caret/rsf/test/messages/" />
+  </bean>
+
+  <bean id="messageTemplateContributor"
+    class="uk.org.ponder.rsf.templateresolver.support.StaticTemplateResolverStrategy">
+    <property name="templateResourceBase"
+      value="classpath:uk/ac/cam/caret/rsf/test/messages/" />
+    <property name="templateNames" value="Messages" />
+    <property name="rootResolverPriority" value="0" />
+    <!--  Incorrect, but will never be used -->
+    <property name="contextURLProvider" ref="contextURLProvider" />
+  </bean>
+
   <bean parent="requestAddressibleParent">
      <property name="value" value="dateHolder" />
   </bean>
