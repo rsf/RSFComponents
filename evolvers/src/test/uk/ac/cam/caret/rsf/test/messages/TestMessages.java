@@ -64,7 +64,8 @@ public class TestMessages extends MultipleRSFTests {
     DateHolder holder = (DateHolder) response.requestContext.locateBean("dateHolder");
 
     assertEquals(expected, holder.getDate0());
-
+    RenderResponse render2 = 
+       getRequestLauncher().renderView((ViewParameters) response.ARIResult.resultingView);
     if (expected == null) {
       TargettedMessageList tml = (TargettedMessageList) response.requestContext
           .locateBean("targettedMessageList");
@@ -75,10 +76,10 @@ public class TestMessages extends MultipleRSFTests {
       if (!late) {
         assertEquals(dateKey == null? FieldDateTransit.INVALID_DATE_KEY : dateKey, code);
       }
+      // test for properly scoped message-for branch
+      assertContains(render2, "date-branch::rsf-messages::error-messages::");
     }
     else {
-      RenderResponse render2 = 
-        getRequestLauncher().renderView((ViewParameters) response.ARIResult.resultingView);
       assertContains(render2, "rsf-messages::info-messages::");
     }
 
