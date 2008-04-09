@@ -1132,7 +1132,7 @@ var RSF = function() {
       }
       
       return updatedElements;
-    }
+    },
     
     /**
      * This is the leek and potatos RSF UVB function I've always wanted,
@@ -1163,7 +1163,7 @@ var RSF = function() {
      * @callback This should be a standard javascript object containing the usual
      * callback functions such as success.
      */
-    function fireUVBRequest(token, uvburl, inbindings, outbindings, actionbinding, callback) {
+    fireUVBRequest: function (token, uvburl, inbindings, outbindings, actionbinding, callback) {
       var queries = new Array();
       for (var i in inbindings) {
         queries.push(RSF.renderBinding(i,inbindings[i]));
