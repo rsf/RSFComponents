@@ -14,7 +14,7 @@
   <name>RSFComponents Test Base Webapp</name>
   <groupId>uk.org.ponder.rsfsamples</groupId>
   <properties>
-    <rsfutil.version>0.7.3M2</rsfutil.version>
+    <rsfutil.version>0.7.3M3-SNAPSHOT</rsfutil.version>
     <deploy.defeat>true</deploy.defeat>
   </properties>
 
