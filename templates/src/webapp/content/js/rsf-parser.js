@@ -166,6 +166,37 @@ var RSFParser = function() {
        };
      },
      
+     /** Accepts a hash of structures with free keys, where each entry has either
+      * href or nodeId set - on completion, callback will be called with the populated
+      * structure with fetched resource text in the field "resourceText" for each
+      * entry.
+      */
+     fetchResources: function(resourceSpecs, callback) {
+       var complete = true;
+       for (var key in resourceSpecs) {
+         var resourceSpec = resourceSpecs[key];
+         if (resourceSpec.href && !resourceSpec.resourceText) {
+           var templateCallback = {
+             success: function(response) {
+               resourceSpec.resourceText = response.responseText; 
+               RSF.fetchResources(resourceSpecs, callback);
+               }
+             }
+            RSF.queueAJAXRequest("fetchResources", "get", resourceSpec.href, "", templateCallback);
+            complete = false;             
+           }
+         else if (resourceSpec.nodeId && !resourceSpec.resourceText) {
+           var node = document.getElementById(resourceSpec.nodeId);
+           // upgrade this to somehow detect whether node is "armoured" somehow
+           // with comment or CDATA wrapping
+           resourceSpec.resourceText = RSF.getElementText(node);
+         }
+       }
+       if (complete) {
+         callback(resourceSpecs);
+       }
+     },
+     
        // TODO: find faster encoder
      XMLEncode: function (text) {
        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); 

@@ -450,7 +450,7 @@ var RSFRenderer = function() {
       texts = [];
       renderRecurse(tree, template.rootlump, template.lumps[template.roottagindex]);
       return texts.join("");
-    },
+    }
   };
 }();
 
