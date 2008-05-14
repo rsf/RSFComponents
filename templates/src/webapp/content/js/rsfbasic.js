@@ -17,23 +17,23 @@ var RSF = function() {
       else if(ie4) obj = dokkument.all[id];
       else if(ie5 || ns6) obj = dokkument.getElementById(id);
       return obj;
-      }
+      },
 
     getElement: function (id) {
       return getElementGlob(document, id);
-      }
+      },
 
     // Gets the value of an element in the current document with the given ID
     getValue: function (id) {
       return ns4? getElement(id).document : getElement(id).firstChild.nodeValue;
-    }
+    },
 
     // Gets the value of an element in the same repetitive domain as "baseid" 
     // with the local id of "targetid".
     getRelativeValue: function (baseid, targetid) {
       colpos = baseid.lastIndexOf(':');
       return getValue(baseid.substring(0, colpos + 1) + targetid);
-      }
+      },
 
     // Gets the ID of an element in the same repetitive domain as "baseid" 
     // with the local id of "targetid".
