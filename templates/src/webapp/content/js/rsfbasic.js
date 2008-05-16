@@ -1,5 +1,5 @@
 
-// RSF.js - primitive definitions for parsing RSF-rendered forms and bindings
+// RSF.js - primitive definitions for navigating RSF ID-structured documents
 
 // definitions placed in RSF namespace, following approach recommended in 
 // http://www.dustindiaz.com/namespace-your-javascript/
