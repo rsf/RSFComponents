@@ -22,20 +22,25 @@ var RSF = RSF || {};
     };
 
   RSF.getElement = function (id) {
-    return getElementGlob(document, id);
+    return RSF.getElementGlob(document, id);
     };
 
     // Gets the value of an element in the current document with the given ID
   RSF.getValue = function (id) {
-    return ns4? getElement(id).document : getElement(id).firstChild.nodeValue;
+    return ns4? RSF.getElement(id).document : RSF.getElement(id).firstChild.nodeValue;
     };
 
   // Gets the value of an element in the same repetitive domain as "baseid" 
   // with the local id of "targetid".
   RSF.getRelativeValue = function (baseid, targetid) {
     colpos = baseid.lastIndexOf(':');
-    return getValue(baseid.substring(0, colpos + 1) + targetid);
+    return RSF.getValue(baseid.substring(0, colpos + 1) + targetid);
     };
+
+  RSF.getBaseID = function(id) {
+    colpos = id.lastIndexOf(':');
+    return id.substring(0, colpos + 1)
+  };
 
   // Gets the ID of an element in the same repetitive domain as "baseid" 
   // with the local id of "targetid".
