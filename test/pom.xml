@@ -10,7 +10,7 @@
     <version>POM-3</version>
   </parent>
   <properties>
-    <rsfutil.version>0.7.3M3-SNAPSHOT</rsfutil.version>
+    <rsfutil.version>0.7.3RC1</rsfutil.version>
   </properties>
   <version>${rsfutil.version}</version>
   <packaging>pom</packaging>
