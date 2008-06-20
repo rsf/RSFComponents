@@ -292,8 +292,8 @@ var RSF = RSF || {};
     var idpos = template.indexOf(RSF.ID_ATTRIBUTE);
     if (idpos === -1) return t;
     if (scanStart) {
-      var brackpos = template.lastIndexOf('<', idpos);
-      parser = new XMLP(template.substring(brackpos));
+      var brackpos = template.indexOf('>', idpos);
+      parser = new XMLP(template.substring(brackpos + 1));
     }
     else {
       parser = new XMLP(template); 
