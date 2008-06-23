@@ -42,8 +42,9 @@ public class TestMessages extends MultipleRSFTests {
     UIForm form = (UIForm) render.viewWrapper.queryComponent(new UIForm());
     UIInput dateInput = (UIInput) render.viewWrapper.queryComponent(new UIInput(), "date-field");
     UIInput timeInput = (UIInput) render.viewWrapper.queryComponent(new UIInput(), "time-field");
+    boolean isDateInput = style.equals(FormatAwareDateInputEvolver.DATE_INPUT); 
 
-    if (style.equals(FormatAwareDateInputEvolver.DATE_INPUT)) {
+    if (isDateInput) {
       assertEquals(null, timeInput);
     }
     else {
@@ -58,7 +59,7 @@ public class TestMessages extends MultipleRSFTests {
     
     dateInput.updateValue(value);
 
-    ActionResponse response = getRequestLauncher().submitForm(form, null);
+    ActionResponse response = getRequestLauncher().submitForm(mvp, form, null);
     assertActionError(response, expected == null);
 
     DateHolder holder = (DateHolder) response.requestContext.locateBean("dateHolder");
@@ -71,7 +72,9 @@ public class TestMessages extends MultipleRSFTests {
           .locateBean("targettedMessageList");
       assertEquals(1, tml.size());
       TargettedMessage tm = tml.messageAt(0);
-      assertEquals(tm.targetid, dateInput.getFullID());
+      String dateID = dateInput.getFullID();
+      dateID = dateID.substring(0, dateID.lastIndexOf(':'));
+      assertTrue(tm.targetid.startsWith(dateID));
       String code = tm.messagecodes[0];
       if (!late) {
         assertEquals(dateKey == null? FieldDateTransit.INVALID_DATE_KEY : dateKey, code);
@@ -87,12 +90,13 @@ public class TestMessages extends MultipleRSFTests {
 
   public void testSubmit(String value, Date expected, boolean late) {
     for (int num = 1; num <= 2; ++num) {
+      testSubmitImpl(value, expected, "dateKey", null,
+          FormatAwareDateInputEvolver.DATE_TIME_INPUT, num, late);
       testSubmitImpl(value, expected, null, null, FormatAwareDateInputEvolver.DATE_INPUT,
           num, late);
       testSubmitImpl(value, expected, "dateKey", null,
           FormatAwareDateInputEvolver.DATE_INPUT, num, late);
-      testSubmitImpl(value, expected, "dateKey", null,
-          FormatAwareDateInputEvolver.DATE_TIME_INPUT, num, late);
+
       testSubmitImpl(value, expected, "dateKey", "timeKey",
           FormatAwareDateInputEvolver.DATE_TIME_INPUT, num, late);
     }
