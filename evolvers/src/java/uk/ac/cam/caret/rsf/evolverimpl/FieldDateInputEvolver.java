@@ -11,6 +11,7 @@ import uk.org.ponder.dateutil.LocalSDF;
 import uk.org.ponder.htmlutil.DateSymbolJSEmitter;
 import uk.org.ponder.rsf.builtin.UVBProducer;
 import uk.org.ponder.rsf.components.ELReference;
+import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIELBinding;
 import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInitBlock;
@@ -74,9 +75,9 @@ public class FieldDateInputEvolver implements FormatAwareDateInputEvolver {
   }
 
   public UIJointContainer evolveDateInput(UIInput toevolve, Date value) {
-    toevolve.parent.remove(toevolve);
     UIJointContainer togo = new UIJointContainer(toevolve.parent, toevolve.ID,
         COMPONENT_ID);
+    toevolve.parent.remove(toevolve);
 
     String ttbo = transitbase + "." + togo.getFullID();
 

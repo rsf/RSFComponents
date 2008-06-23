@@ -31,9 +31,8 @@ public class StandardDynamicListInputEvolver implements
   }
 
   public UIJointContainer evolve(UIInputMany toevolve) {
+    UIJointContainer togo = new UIJointContainer(toevolve.parent, toevolve.ID, COMPONENT_ID);
     toevolve.parent.remove(toevolve);
-    UIJointContainer togo = new UIJointContainer(toevolve.parent, toevolve.ID,
-        COMPONENT_ID);
     toevolve.ID = "list-control";
     togo.addComponent(toevolve);
 

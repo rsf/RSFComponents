@@ -8,8 +8,6 @@ import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.components.UIOutputMany;
 import uk.org.ponder.rsf.components.UISelect;
-import uk.org.ponder.rsf.components.decorators.DecoratorList;
-import uk.org.ponder.rsf.components.decorators.UILabelTargetDecorator;
 import uk.org.ponder.stringutil.StringList;
 import uk.org.ponder.stringutil.StringSet;
 
@@ -29,9 +27,9 @@ public class StandardDoubleSelectEvolver implements DoubleSelectEvolver {
   }
   
   public UIJointContainer evolveSelect(UISelect toevolve) {
-    toevolve.parent.remove(toevolve);
     UIJointContainer togo = new UIJointContainer(toevolve.parent, toevolve.ID, 
         COMPONENT_ID);
+    toevolve.parent.remove(toevolve);
     
     // Separate out the multiple selection into left and right 
     StringList leftnames = new StringList();
@@ -76,9 +74,7 @@ public class StandardDoubleSelectEvolver implements DoubleSelectEvolver {
     UIOutput.make(togo, "move-all-right");
     
     UIOutput label1 = UIOutput.make(togo, "label1", sourcePickText);
-    label1.decorators = new DecoratorList(new UILabelTargetDecorator(leftselect));
     UIOutput label2 = UIOutput.make(togo, "label2", destPickText);
-    label2.decorators = new DecoratorList(new UILabelTargetDecorator(rightselect));
     
     return togo;
   }

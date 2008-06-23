@@ -11,6 +11,7 @@ import uk.org.ponder.dateutil.BrokenDateTransit;
 import uk.org.ponder.dateutil.DateUtil;
 import uk.org.ponder.dateutil.MonthBean;
 import uk.org.ponder.rsf.components.ELReference;
+import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIELBinding;
 import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
@@ -71,9 +72,9 @@ public class BrokenDateInputEvolver implements DateInputEvolver {
   }
 
   public UIJointContainer evolveDateInput(UIInput toevolve, Date date) {
-    toevolve.parent.remove(toevolve);
     UIJointContainer togo = new UIJointContainer(toevolve.parent, toevolve.ID, 
         COMPONENT_ID);
+    toevolve.parent.remove(toevolve);
 
     String ttbo = transitbase + "." + togo.getFullID();
     BrokenDateTransit transit = null;
