@@ -50,7 +50,6 @@ public class StandardDynamicListInputEvolver implements
       UIBranchContainer row = UIBranchContainer.make(core,
           "dynamic-list-input-row:", Integer.toString(i));
       String thisvalue = i < value.length? value[i] : "";
-      UIOutput.make(row, "input", thisvalue);
       UIBasicListMember.makeBasic(row, "input", toevolve.getFullID(), i);
       UIOutput.make(row, "remove", removelabel.getValue(),
           removelabel.valuebinding == null ? null
