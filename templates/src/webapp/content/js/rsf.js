@@ -336,7 +336,7 @@ var RSF = RSF || {};
     * ensure that every function will have a chance to execute
     * RETURN: the return of the final function is sent back, other returns are discarded
     */
-  addEventToElement = function(element, event, newFunction) {
+  RSF.addEventToElement = function(element, event, newFunction) {
     if (typeof newFunction == "function") {
       var origEvent = element["on" + event];
       if (typeof origEvent == "function") {
@@ -427,7 +427,7 @@ var RSF = RSF || {};
     /** Gets a function that will update this field's value. Supply "oldvalue"
      * explicitly if this has been an "autonomous" change, otherwise it will
      * be taken from the current value. **/
-  getModelFirer = function(element) {
+  RSF.getModelFirer = function(element) {
     return function(primary, newvalue, oldvalue) {
       RSF.log("modelFirer element " + element.id + " fire primary=" + primary + " newvalue " + newvalue 
             + " oldvalue " + oldvalue);
