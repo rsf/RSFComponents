@@ -11,6 +11,7 @@ import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInputMany;
 import uk.org.ponder.rsf.components.UIOutput;
+import uk.org.ponder.rsf.evolvers.BoundedDynamicListInputEvolver;
 import uk.org.ponder.rsf.evolvers.DynamicListInputEvolver;
 import uk.org.ponder.rsf.flow.ARIResult;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
@@ -31,10 +32,10 @@ public class SingleProducer implements ViewComponentProducer,  NavigationCaseRep
   public String getViewID() {
     return VIEW_ID;
   }
-  private DynamicListInputEvolver dynamicListInputEvolver;
+  private BoundedDynamicListInputEvolver dynamicListInputEvolver;
 
   public void setDynamicListInputEvolver(
-      DynamicListInputEvolver dynamicListInputEvolver) {
+      BoundedDynamicListInputEvolver dynamicListInputEvolver) {
     this.dynamicListInputEvolver = dynamicListInputEvolver;
   }
   
@@ -44,6 +45,8 @@ public class SingleProducer implements ViewComponentProducer,  NavigationCaseRep
     String[] list = new String[] {"Initial marmosets", "Inchoate marsupials"};
     UIInputMany input = UIInputMany.make(form, "list-input:", "dataBean.selections", list);
     dynamicListInputEvolver.setLabels(UIOutput.make("Remove"), UIOutput.make("Add marsupial"));
+    dynamicListInputEvolver.setMinimumLength(2);
+    dynamicListInputEvolver.setMaximumLength(10);
     dynamicListInputEvolver.evolve(input);
     UICommand.make(form, "submit");
   }
