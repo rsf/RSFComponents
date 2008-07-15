@@ -47,8 +47,8 @@ var RSF = RSF || {};
   var requestactive = false;
   var queuemap = new Object();
   
-  function packAJAXRequest(method, url, parameters, callback) {
-    return {method: method, url: url, parameters: parameters, callback: callback};
+  function packAJAXRequest(method, url, parameters, callback, options) {
+    return {method: method, url: url, parameters: parameters, callback: callback, options: options};
     }
     
   function wrapCallbacks(callbacks, wrapper) {
@@ -327,7 +327,25 @@ var RSF = RSF || {};
       logging = false;
       }
     };
-
+    
+  /** Implementation pass-through for jQuery "data" function, if available. 
+   */
+  RSF.data = function(elem, name, value) {
+    if (typeof jQuery !== "undefined") {
+      return jQuery.data(elem, name, value);
+      }
+    }
+  
+  /** Recursively find any data stored under a given name from a node upwards
+   * in its DOM hierarchy **/
+   
+  RSF.findData = function(elem, name) {
+    while (elem) {
+      var data = RSF.data(elem, name);
+      if (data) return data;
+      elem = elem.parentNode;
+      }
+    }
    /**
     * This is a set of three methods to easily accumulate events on elements
     */
@@ -336,7 +354,7 @@ var RSF = RSF || {};
     * ensure that every function will have a chance to execute
     * RETURN: the return of the final function is sent back, other returns are discarded
     */
-  RSF.addEventToElement = function(element, event, newFunction) {
+  addEventToElement = function(element, event, newFunction) {
     if (typeof newFunction == "function") {
       var origEvent = element["on" + event];
       if (typeof origEvent == "function") {
@@ -427,7 +445,7 @@ var RSF = RSF || {};
     /** Gets a function that will update this field's value. Supply "oldvalue"
      * explicitly if this has been an "autonomous" change, otherwise it will
      * be taken from the current value. **/
-  RSF.getModelFirer = function(element) {
+  getModelFirer = function(element) {
     return function(primary, newvalue, oldvalue) {
       RSF.log("modelFirer element " + element.id + " fire primary=" + primary + " newvalue " + newvalue 
             + " oldvalue " + oldvalue);
@@ -467,17 +485,18 @@ var RSF = RSF || {};
     return getElementFirer(document);
     };
 
-  RSF.queueAJAXRequest = function(token, method, url, parameters, callbacks) {
+  RSF.queueAJAXRequest = function(token, method, url, parameters, callbacks, options) {
     RSF.log("queueAJAXRequest: token " + token);
+    options = options || {};
     var callbacks1 = wrapCallbacks(callbacks, restartWrapper);
     var callbacks2 = wrapCallbacks(callbacks1, primaryRestorationWrapper());
     if (requestactive) {
       RSF.log("Request is active, queuing for token " + token);
-      queuemap[token] = packAJAXRequest(method, url, parameters, callbacks2);
+      queuemap[token] = packAJAXRequest(method, url, parameters, callbacks2, options);
       }
     else {
       requestactive = true;
-      RSF.issueAJAXRequest(method, url, parameters, callbacks2);
+      RSF.issueAJAXRequest(method, url, parameters, callbacks2, options);
       }
       
     function restartWrapper(callback) {
@@ -498,8 +517,9 @@ var RSF = RSF || {};
       }
     };
     
-  RSF.issueAJAXRequest = function(method, url, parameters, callback) {
+  RSF.issueAJAXRequest = function(method, url, parameters, callback, options) {
     method = method.toUpperCase(); // force method to uppercase for comparison
+    options = options || {};
     var is_http_request = url.indexOf("http") === 0;
     var readyCallback = function() {
       if (http_request.readyState == 4) {
@@ -548,7 +568,11 @@ var RSF = RSF || {};
        if (method == "GET") {
           http_request.send(null);
        } else { // assume POST
-          http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          var contentType = "application/x-www-form-urlencoded";
+          if (options.headers || options.headers["Content-type"]) {
+            contentType = options.headers["Content-type"];
+            }
+          http_request.setRequestHeader("Content-type", contentType);
           http_request.setRequestHeader("Content-length", parameters.length);
           http_request.setRequestHeader("Connection", "close");
           http_request.send(parameters);

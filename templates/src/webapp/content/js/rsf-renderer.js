@@ -108,6 +108,10 @@ var RSF = RSF || {};
     	 tree.childmap = {};
       for (var i = 0; i < tree.children.length; ++ i) {
         var child = tree.children[i];
+        if (child.componentType === undefined) {
+          child = unzipComponent(child);
+          tree.children[i] = child;
+          }
         child.parent = tree;
         child.fullID = computeFullID(child);
         var colpos = child.ID.indexOf(":"); 
@@ -124,7 +128,7 @@ var RSF = RSF || {};
        
         	childlist[childlist.length] = child;
         }
-        
+
         var componentType = child.componentType;
         if (componentType == "UISelect") {
           child.selection.fullID = child.fullID + "-selection";
@@ -143,19 +147,25 @@ var RSF = RSF || {};
           }
           child.markup = call + ")\n";
           child.componentType = "UIVerbatim";
-        }
-        
+          }
+        else if (componentType == "UIBound") {
+         // TODO: fetching bound values on fixup, and UISelect names
+          if (child.submittingname === undefined && child.valuebinding !== undefined) {
+            child.submittingname = child.fullID;
+            }
+          }
         fixupTree(child);
+        }
       }
-    }
     return tree;
-  }
+    }
   var globalmap = {};
   var branchmap = {};
   var seenset = {};
   var collected = {};
   var out = "";
   var debugMode = false;
+  var directFossils = {}; // map of submittingname to {EL, submittingname, oldvalue}
   
   function resolveInScope(searchID, defprefix, scope, child) {
     var deflump;
@@ -358,6 +368,12 @@ var RSF = RSF || {};
   
   function dumpBoundFields(/** UIBound**/ torender) {
     if (torender) {
+      if (directFossils && torender.submittingname && torender.valuebinding) {
+        directFossils[torender.submittingname] = {
+          name: torender.submittingname,
+          EL: torender.valuebinding,
+          oldvalue: torender.value};
+        }
       if (torender.fossilizedbinding) {
         dumpHiddenField(torender.fossilizedbinding);
       }
@@ -377,11 +393,11 @@ var RSF = RSF || {};
     var componentType = torender.componentType;
     
     if (componentType === "UIBound") {
-      if (torender.willinput) {
+      //if (torender.willinput) {
         if (torender.submittingname !== undefined) {
           attrcopy.name = torender.submittingname;
           }
-        }
+      //  }
       if (typeof(torender.value) === 'boolean') {
         if (torender.value) {
           attrcopy.checked = "checked";
@@ -413,6 +429,7 @@ var RSF = RSF || {};
           rewriteLeaf(null);
           }
         else {
+          delete attrcopy.name;
           rewriteLeafOpen(value);
           }
         }
@@ -664,7 +681,6 @@ var RSF = RSF || {};
           }
         }
         
-
         renderindex = closefinal.lumpindex + 1;
       }
       else {
@@ -704,13 +720,36 @@ var RSF = RSF || {};
     };
     
   // Explodes a raw "hash" into a list of UIOutput/UIBound entries
-  RSF.explode = function(hash) {
+  RSF.explode = function(hash, basepath) {
     var togo = [];
     for (var key in hash) {
-      togo[togo.length] = {ID: key, value: hash[key]};
+      var binding = basepath === undefined? key : basepath + "." + key;
+      togo[togo.length] = {ID: key, value: hash[key], valuebinding: binding};
     }
     return togo;
   };
+  
+  RSF.parseEL = function(EL) {
+    return EL.split('.');
+    };
+  
+  /** This function implements the RSF "DARApplier" **/
+  RSF.setBeanValue = function(root, EL, newValue) {
+    var segs = RSF.parseEL(EL);
+    for (var i = 0; i < segs.length - 1; ++ i) {
+      root = root[segs[i]];
+      }
+    root[segs[segs.length - 1]] = newValue;
+    };
+  
+  /** "Automatically" apply to whatever part of the data model is
+   * relevant, the changed value received at the given DOM node*/
+  RSF.applyChange = function(node, newValue) {
+    var root = RSF.findData(node, "rsf-binding-root");
+    var name = node.name;
+    var EL = root.fossils[name].EL;
+    RSF.setBeanValue(root.data, EL, newValue);    
+    };
     
   RSF.makeBranches = function() {
     var firstBranch;
@@ -755,9 +794,10 @@ var RSF = RSF || {};
     return togo;
     };
     
-  RSF.renderTemplates = function(templates, tree, opts) {
+  RSF.renderTemplates = function(templates, tree, opts, fossilsIn) {
     opts = opts || {};
     debugMode = opts.debugMode;
+    directFossils = fossilsIn;
 
     tree = fixupTree(tree);
     var template = templates[0];
@@ -768,15 +808,28 @@ var RSF = RSF || {};
     return out;
     };
 
+  RSF.bindFossils = function(node, data, fossils) {
+    RSF.data(node, "rsf-binding-root", {data: data, fossils: fossils});
+    },
+
   // A simple driver for single node self-templating  
   RSF.selfRender = function(node, tree, opts) {
     opts = opts || {};
-    var resourceSpec = {base: {resourceText: node.innerHTML, href: "."}};
+    if (node.jquery) {
+      node = node.get(0);
+      }
+    var resourceSpec = {base: {resourceText: node.innerHTML, 
+                          href: ".", cutpoints: opts.cutpoints}
+                        };
     var templates = RSF.parseTemplates(resourceSpec, ["base"], opts);
-    var rendered = RSF.renderTemplates(templates, tree, opts);
+    var fossils = {};
+    var rendered = RSF.renderTemplates(templates, tree, opts, fossils);
     if (opts.renderRaw) {
       rendered = RSF.XMLEncode(rendered);
       rendered = rendered.replace(/\n/g, "<br/>");
+      }
+    if (opts.bind) {
+      RSF.bindFossils(node, opts.bind, fossils);
       }
     node.innerHTML = rendered;
     return templates;

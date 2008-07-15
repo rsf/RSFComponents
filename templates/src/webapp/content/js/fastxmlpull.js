@@ -33,13 +33,9 @@ var closedTags = {
   link: true, meta: true, param: true, hr: true, area: true, embed:true
 }
 
-var chars = "(?:[\\w\u0128-\uFFFF*_-]|\\\\.)",
-  quickChild = new RegExp("^>\\s*(" + chars + "+)"),
-  quickID = new RegExp("^(" + chars + "+)(#)(" + chars + "+)"),
-  quickClass = new RegExp("^([#.]?)(" + chars + "*)");
-
 
 XMLP = function(strXML) { 
+
     this.m_xml = strXML; 
     this.m_iP = 0;
     this.m_iState = XMLP._STATE_PROLOG; 

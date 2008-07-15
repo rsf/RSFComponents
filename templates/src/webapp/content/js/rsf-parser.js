@@ -17,7 +17,11 @@ var RSF = RSF || {};
   
   var debugMode = false;
   
-  function init(baseURLin, debugModeIn) {
+  var cutpoints = []; // list of selector, tree, id
+  
+  var cutstatus = [];
+  
+  function init(baseURLin, debugModeIn, cutpointsIn) {
     t.rootlump = RSF.XMLLump(0, -1);
     tagstack = [t.rootlump];
     lumpindex = 0;
@@ -27,7 +31,14 @@ var RSF = RSF || {};
     defend = -1;
     baseURL = baseURLin;
     debugMode = debugModeIn;
-  }
+    cutpoints = cutpointsIn;
+    if (cutpoints) {
+      for (var i = 0; i < cutpoints.length; ++ i) {
+        cutstatus[i] = [];
+        cutpoints[i].tree = RSF.parseSelector(cutpoints[i].selector);
+        }
+      }
+    }
   
   function findTopContainer() {
     for (var i = tagstack.length - 1; i >= 0; --i ) {
@@ -75,6 +86,73 @@ var RSF = RSF || {};
     else return baseURL + url;
   }
   
+  function debugLump(lump) {
+  // TODO expand this to agree with the Firebug "self-selector" idiom
+    return "<" + lump.tagname + ">";
+    }
+  
+  function hasCssClass(clazz, totest) {
+    if (!totest) return false;
+    // algorithm from JQuery
+    return (" " + totest + " ").indexOf(" " + clazz + " ") !== -1;
+    }
+  
+  function matchNode(term, headlump) {
+    if (term.predList) {
+      for (var i = 0; i < term.predList.length; ++ i) {
+        var pred = term.predList[i];
+        if (pred.id && headlump.attributemap.id !== pred.id) return false;
+        if (pred.clazz && !hasCssClass(pred.clazz, headlump.attributemap["class"])) return false;
+        if (pred.tag && headlump.tagname !== pred.tag) return false;
+        }
+      return true;
+      }
+    }
+  
+  function tagStartCut(headlump) {
+    var togo = null;
+    if (cutpoints) {
+      for (var i = 0; i < cutpoints.length; ++ i) {
+        var cut = cutpoints[i];
+        var cutstat = cutstatus[i];
+        var nextterm = cutstat.length; // the next term for this node
+        if (nextterm < cut.tree.length) {
+          var term = cut.tree[nextterm];
+          if (nextterm > 0) {
+            if (cut.tree[nextterm - 1].child && 
+              cutstat[nextterm - 1] !== headlump.nestingdepth - 1) {
+              continue; // it is a failure to match if not at correct nesting depth 
+              }
+            }
+          var isMatch = matchNode(term, headlump);
+          if (isMatch) {
+            cutstat[cutstat.length] = headlump.nestingdepth;
+            if (cutstat.length === cut.tree.length) {
+              if (togo !== null) {
+                throw ("Cutpoint specification error - node " 
+                + debugLump(headlump) 
+                + " has already matched with rsf:id of " + togo);
+                }
+              togo = cut.id;
+              }
+            }
+          }
+        }
+      }
+    return togo;
+    }
+    
+  function tagEndCut() {
+    if (cutpoints) {
+      for (var i = 0; i < cutpoints.length; ++ i) {
+        var cutstat = cutstatus[i];
+        if (cutstat.length > 0 && cutstat[cutstat.length - 1] == nestingdepth) {
+          cutstat.length--;
+          }
+        }
+      }
+    }
+  
   function processTagStart(isempty, text) {
     ++nestingdepth;
     if (justended) {
@@ -100,23 +178,26 @@ var RSF = RSF || {};
         }
       }
     var ID = headlump.attributemap? headlump.attributemap[RSF.ID_ATTRIBUTE] : null;
+    if (ID === null || ID === undefined) {
+      ID = tagStartCut(headlump);
+      }
     if (ID) {
-        checkContribute(ID, headlump);
-        headlump.rsfID = ID;
-        var downreg = findTopContainer();
-        if (!downreg.downmap) {
-          downreg.downmap = {};
-          }
-        addLump(downreg.downmap, ID, headlump);
-        addLump(t.globalmap, ID, headlump);
-        var colpos = ID.indexOf(":");
-       if (colpos !== -1) {
-       var prefix = ID.substring(0, colpos);
-          if (!stacktop.finallump) {
-            stacktop.finallump = {};
-            }
-          stacktop.finallump[prefix] = headlump;
+      checkContribute(ID, headlump);
+      headlump.rsfID = ID;
+      var downreg = findTopContainer();
+      if (!downreg.downmap) {
+        downreg.downmap = {};
         }
+      addLump(downreg.downmap, ID, headlump);
+      addLump(t.globalmap, ID, headlump);
+      var colpos = ID.indexOf(":");
+      if (colpos !== -1) {
+      var prefix = ID.substring(0, colpos);
+      if (!stacktop.finallump) {
+        stacktop.finallump = {};
+        }
+      stacktop.finallump[prefix] = headlump;
+      }
     }
     
     // TODO: accelerate this by grabbing original template text (requires parser
@@ -129,6 +210,7 @@ var RSF = RSF || {};
   }
   
   function processTagEnd() {
+    tagEndCut();
     var endlump = newLump();
     --nestingdepth;
     endlump.text = "</" + parser.getName() + ">";
@@ -260,8 +342,8 @@ var RSF = RSF || {};
   };
   
   /** Returns a "template structure", with globalmap in the root, and a list
-   * of entries {href, template} for each parsed template.
-*/
+   * of entries {href, template, cutpoints} for each parsed template.
+   */
   RSF.parseTemplates = function(resourceSpec, templateList, opts) {
     var togo = [];
     togo.globalmap = {};
@@ -271,7 +353,7 @@ var RSF = RSF || {};
       var baseURL = lastslash === -1? "" : resource.href.substring(0, lastslash + 1);
         
         var template = RSF.parseTemplate(resource.resourceText, baseURL, 
-          opts.scanStart && i === 0, opts);
+          opts.scanStart && i === 0, resource.cutpoints, opts);
         if (i == 0) {
           RSF.aggregateMMap(togo.globalmap, template.globalmap);
         }
@@ -284,13 +366,14 @@ var RSF = RSF || {};
       return togo;
     };
   
-  RSF.parseTemplate = function(template, baseURL, scanStart, opts) {
+  RSF.parseTemplate = function(template, baseURL, scanStart, cutpoints_in, opts) {
     t = RSF.XMLViewTemplate();
     opts = opts || {};
-    init(baseURL, opts.debugMode);     
+    
+    init(baseURL, opts.debugMode, cutpoints_in);
 
     var idpos = template.indexOf(RSF.ID_ATTRIBUTE);
-    if (idpos === -1) return t;
+    if (idpos === -1 && !cutpoints) return t;
     if (scanStart) {
       var brackpos = template.indexOf('>', idpos);
       parser = new XMLP(template.substring(brackpos + 1));
@@ -350,4 +433,69 @@ var RSF = RSF || {};
 //       alert("document complete: " + chars.length + " chars");
   
     }
+    
+  // ******* SELECTOR ENGINE *********  
+    
+  // selector regexps copied from JQuery
+  var chars = "(?:[\\w\u0128-\uFFFF*_-]|\\\\.)";
+  var quickChild = new RegExp("^>\\s*(" + chars + "+)");
+  var quickID = new RegExp("^(" + chars + "+)(#)(" + chars + "+)");
+  var selSeg = new RegExp("^\s*([#.]?)(" + chars + "*)");
+
+  var quickClass = new RegExp("([#.]?)(" + chars + "+)", "g");
+  var childSeg = new RegExp("\\s*(>)?\\s*", "g");
+  var whiteSpace = new RegExp("^\\w*$");
+
+
+  RSF.trim = function( text ) {
+    return (text || "").replace( /^\s+|\s+$/g, "" );
+    };
+
+  RSF.parseSelector = function(selstring) {
+    var togo = [];
+    selstring = RSF.trim(selstring);
+    //ws-(ss*)[ws/>]
+    quickClass.lastIndex = 0;
+    var lastIndex = 0;
+    while (true) {
+      var atNode = []; // a list of predicates at a particular node
+      while (true) {
+        var segMatch = quickClass.exec(selstring);
+        if (!segMatch || segMatch.index !== lastIndex) {
+          break;
+          }
+        var thisNode = {};
+        var text = segMatch[2];
+        if (segMatch[1] === "") {
+          thisNode.tag = text;
+        }
+        else if (segMatch[1] === "#"){
+          thisNode.id = text;
+          }
+        else if (segMatch[1] === ".") {
+          thisNode.clazz = text;
+          }
+        atNode[atNode.length] = thisNode;
+        lastIndex = quickClass.lastIndex;
+        }
+      childSeg.lastIndex = lastIndex;
+      var fullAtNode = {predList: atNode};
+      var childMatch = childSeg.exec(selstring);
+      if (!childMatch || childMatch.index !== lastIndex) {
+        var remainder = selstring.substring(lastIndex);
+        throw ("Error in selector string - can not match child selector expression at " + remainder);
+        }
+      if (childMatch[1] === ">") {
+        fullAtNode.child = true;
+        }
+      togo[togo.length] = fullAtNode;
+      if (childSeg.lastIndex === selstring.length) {
+        break;
+        }
+      lastIndex = childSeg.lastIndex;
+      quickClass.lastIndex = childSeg.lastIndex; 
+      }
+    return togo;
+    }
+    
 })();
