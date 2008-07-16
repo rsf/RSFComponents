@@ -1166,15 +1166,19 @@ var RSF = RSF || {};
 
     // define the callback function for the ajax response
     var callback = function(results) {
+      var targetNodeRes = targetNode;
+       if (typeof(targetNode) === "function") {
+         targetNodeRes = targetNode.apply();
+       }
        // specifically purge the existing items before putting in the new stuff
-       while (targetNode.childNodes[0])  {
-          targetNode.removeChild(targetNode.childNodes[0]);
+       while (targetNodeRes.childNodes[0])  {
+          targetNodeRes.removeChild(targetNodeRes.childNodes[0]);
        }
        // now drop in the new xhtml result into this node
-       targetNode.innerHTML = results;
+       targetNodeRes.innerHTML = results;
        RSF.getDOMModifyFirer().fireEvent();
        // rerun the dom transformer on the replacement xhtml
-       RSF.transformActionDomToAJAX(targetNode, targetNode);
+       RSF.transformActionDomToAJAX(targetNodeRes, targetNodeRes);
     }
 
     var inputs = parentNode.getElementsByTagName("input");
