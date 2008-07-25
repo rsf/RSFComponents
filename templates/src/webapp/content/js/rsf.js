@@ -525,11 +525,13 @@ var RSF = RSF || {};
       if (http_request.readyState == 4) {
         if (http_request.status == 200 || !is_http_request) {
           RSF.log("AJAX request success status: " + http_request.status);
-          callback.success(http_request);
+          if (callback && callback.success) {
+            callback.success(http_request);
+            }
           RSF.log("AJAX callback concluded");
           } 
         else {
-          if (callback.failure) {
+          if (callback && callback.failure) {
             callback.failure(http_request);
           }
           RSF.log("AJAX request error status: " + http_request.status);
