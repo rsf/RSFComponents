@@ -445,7 +445,7 @@ var RSF = RSF || {};
     /** Gets a function that will update this field's value. Supply "oldvalue"
      * explicitly if this has been an "autonomous" change, otherwise it will
      * be taken from the current value. **/
-  getModelFirer = function(element) {
+  RSF.getModelFirer = function(element) {
     return function(primary, newvalue, oldvalue) {
       RSF.log("modelFirer element " + element.id + " fire primary=" + primary + " newvalue " + newvalue 
             + " oldvalue " + oldvalue);
@@ -569,7 +569,7 @@ var RSF = RSF || {};
           http_request.send(null);
        } else { // assume POST
           var contentType = "application/x-www-form-urlencoded";
-          if (options.headers || options.headers["Content-type"]) {
+          if (options.headers && options.headers["Content-type"]) {
             contentType = options.headers["Content-type"];
             }
           http_request.setRequestHeader("Content-type", contentType);
