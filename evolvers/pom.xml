@@ -9,7 +9,7 @@
   <packaging>jar</packaging>
   <groupId>uk.org.ponder.rsfutil</groupId>
   <properties>
-    <rsfutil.version>0.7.3</rsfutil.version>
+    <rsfutil.version>0.7.4-SNAPSHOT</rsfutil.version>
   </properties>
   <version>${rsfutil.version}</version>
   <organization>
