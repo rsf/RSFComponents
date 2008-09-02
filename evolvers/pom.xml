@@ -8,6 +8,11 @@
   <name>RSFComponents Evolvers</name>
   <packaging>jar</packaging>
   <groupId>uk.org.ponder.rsfutil</groupId>
+  <parent>
+    <groupId>uk.org.ponder.pure-poms</groupId>
+    <artifactId>standard-jar</artifactId>
+    <version>POM-3</version>
+  </parent>
   <properties>
     <rsfutil.version>0.7.4-SNAPSHOT</rsfutil.version>
   </properties>
