@@ -5,7 +5,7 @@
                       http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <properties>
-    <rsfutil.version>0.7.4</rsfutil.version>
+    <rsfutil.version>0.8-SNAPSHOT</rsfutil.version>
     <deploy.webappname>RSFComponents-templates</deploy.webappname>
   </properties>
   <version>${rsfutil.version}</version>
