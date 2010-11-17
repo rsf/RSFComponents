@@ -105,7 +105,7 @@
     <resources>
       <resource>
         <directory>src/java</directory>
-        <targetPath>/</targetPath>
+        <targetPath>.</targetPath>
         <includes>
           <include>**/*.xml</include>
         </includes>
