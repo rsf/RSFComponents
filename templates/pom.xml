@@ -9,9 +9,9 @@
     <deploy.webappname>RSFComponents-templates</deploy.webappname>
   </properties>
   <parent>
-    <groupId>uk.org.ponder.pure-poms</groupId>
-    <artifactId>standard-war</artifactId>
-    <version>POM-3</version>
+     <groupId>uk.org.ponder.pure-poms</groupId>
+     <artifactId>rsf-components-base</artifactId>
+     <version>0.8-SNAPSHOT</version>
   </parent>
   <groupId>uk.org.ponder.rsfutil</groupId>
   <artifactId>RSFComponents-templates</artifactId>
