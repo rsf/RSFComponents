@@ -8,15 +8,16 @@
     <rsfutil.version>0.8-SNAPSHOT</rsfutil.version>
     <deploy.webappname>RSFComponents-templates</deploy.webappname>
   </properties>
-  <version>${rsfutil.version}</version>
   <parent>
     <groupId>uk.org.ponder.pure-poms</groupId>
     <artifactId>standard-war</artifactId>
     <version>POM-3</version>
   </parent>
-  <artifactId>RSFComponents-templates</artifactId>
-  <name>RSFComponents Templates</name>
   <groupId>uk.org.ponder.rsfutil</groupId>
+  <artifactId>RSFComponents-templates</artifactId>
+  <version>0.8-SNAPSHOT</version>
+  <name>RSFComponents Templates</name>
+  
 
   <repositories>
     <repository>

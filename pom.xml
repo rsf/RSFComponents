@@ -20,7 +20,6 @@
     </repository>
   </repositories>
   <properties>
-    <rsfutil.version>0.8-SNAPSHOT</rsfutil.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <version>${rsfutil.version}</version>
