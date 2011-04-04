@@ -8,6 +8,7 @@
     <groupId>uk.org.ponder.pure-poms</groupId>
     <artifactId>rsf-components-base</artifactId>
     <version>0.8-SNAPSHOT</version>
+    <relativePath>../</relativePath>
   </parent>
   <version>0.8-SNAPSHOT</version>
   <packaging>pom</packaging>
