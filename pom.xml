@@ -22,7 +22,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  <version>${rsfutil.version}</version>
+  <version>0.8-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
     <module>evolvers</module>
