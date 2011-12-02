@@ -8,12 +8,12 @@
   <parent>
      <groupId>uk.org.ponder.pure-poms</groupId>
      <artifactId>rsf-components-base</artifactId>
-     <version>0.7.5</version>
+     <version>0.7.6-SNAPSHOT</version>
      <relativePath>../</relativePath>
   </parent>
   <groupId>uk.org.ponder.rsfutil</groupId>
   <artifactId>RSFComponents-templates</artifactId>
-  <version>0.7.5</version>
+  <version>0.7.6-SNAPSHOT</version>
   <name>RSFComponents Templates</name>
   
 
