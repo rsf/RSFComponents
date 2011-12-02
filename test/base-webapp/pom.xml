@@ -15,7 +15,6 @@
   <name>RSFComponents Test Base Webapp</name>
   <groupId>uk.org.ponder.rsfsamples</groupId>
   <properties>
-    <rsfutil.version>0.8-SNAPSHOT</rsfutil.version>
     <deploy.defeat>true</deploy.defeat>
   </properties>
 
@@ -39,7 +38,6 @@
     <dependency>
       <groupId>uk.org.ponder.rsfutil</groupId>
       <artifactId>rsfutil</artifactId>
-      <version>${rsfutil.version}</version>
       <type>jar</type>
     </dependency>
    <!-- Suppress these from our WAR image -->    

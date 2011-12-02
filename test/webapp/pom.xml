@@ -35,13 +35,13 @@
     <dependency>
       <groupId>uk.org.ponder.rsfsamples</groupId>
       <artifactId>RSFComponents-test-base-webapp</artifactId>
-      <version>${rsfutil.version}</version>
+      <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>uk.org.ponder.rsfutil</groupId>
       <artifactId>RSFComponents-evolvers</artifactId>
-      <version>${rsfutil.version}</version>
+      <version>${project.version}</version>
       <type>jar</type>
     </dependency>
   </dependencies>
