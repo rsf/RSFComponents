@@ -51,5 +51,14 @@
     <developerConnection>scm:git:git://github.com/rsf/RSFComponents.git</developerConnection>
     <url>https://github.com/rsf/RSFComponents.git</url>
   </scm>
-
+<dependencyManagement>
+<dependencies>
+    <dependency>
+      <groupId>uk.org.ponder.rsfutil</groupId>
+      <artifactId>rsfutil</artifactId>
+      <version>0.7.5</version>
+      <type>jar</type>
+    </dependency>
+</dependencies>
+</dependencyManagement>
 </project>

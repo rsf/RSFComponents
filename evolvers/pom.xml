@@ -73,8 +73,6 @@
     <dependency>
       <groupId>uk.org.ponder.rsfutil</groupId>
       <artifactId>rsfutil</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
