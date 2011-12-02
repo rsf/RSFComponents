@@ -117,8 +117,8 @@
     </dependency>
   </dependencies>  
   <build>
-    <sourceDirectory>src</sourceDirectory>
-    <plugins>
+    <sourceDirectory>src/java</sourceDirectory>
+     <plugins>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
