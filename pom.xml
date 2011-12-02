@@ -46,4 +46,10 @@
             <layout>default</layout>
         </repository>
     </distributionManagement>
+  <scm>
+    <connection>scm:git:git://github.com/rsf/RSFComponents.git</connection>
+    <developerConnection>scm:git:git://github.com/rsf/RSFComponents.git</developerConnection>
+    <url>https://github.com/rsf/RSFComponents.git</url>
+  </scm>
+
 </project>
