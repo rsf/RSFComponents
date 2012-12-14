@@ -93,8 +93,8 @@
     </dependency>
     <dependency>
       <groupId>cglib</groupId>
-      <artifactId>cglib</artifactId>
-      <version>nodep-2.1_3</version>
+      <artifactId>cglib-nodep</artifactId>
+      <version>3.0</version>
       <type>jar</type>
     </dependency>
     <dependency>

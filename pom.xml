@@ -7,13 +7,18 @@
   <parent>
     <artifactId>rsf-master-pom</artifactId>
     <groupId>uk.org.ponder</groupId>
-    <version>POM-3</version>
+    <version>POM-4</version>
   </parent>
   <repositories>
     <repository>
       <id>CARET-Maven2</id>
       <name>CARET Maven 2 Repository</name>
       <url>http://www2.caret.cam.ac.uk/maven2</url>
+    </repository>
+    <repository>
+      <id>Sakai Maven</id>
+      <name>Sakai Maven 2 Repository</name>
+      <url>http://source.sakaiproject.org/maven2</url>
     </repository>
   </repositories>
   <properties>
