@@ -15,6 +15,7 @@ var RSF = RSF || {};
   function invalidate(invalidated, EL, entry) {
     if (!EL) {
       RSF.log("invalidate null EL: " + invalidated + " " + entry);
+	  return;
       }
     var stack = RSF.parseEL(EL);
     invalidated[stack[0]] = entry;
@@ -26,6 +27,7 @@ var RSF = RSF || {};
   function isInvalidated(invalidated, EL) {
     if (!EL) {
       RSF.log("isInvalidated null EL: " + invalidated);
+	  return false;
       }
     var stack = RSF.parseEL(EL);
     var togo = invalidated[stack[0]] || invalidated[stack[1]];
@@ -816,7 +818,7 @@ var RSF = RSF || {};
     // a "virtual field" has no submitting name, implicitly its id.
     var subname = element.name? element.name : element.id; 
     body.push(RSF.encodeElement(subname, element.value));
-    for (var i in upstream) {
+    for (var i = 0; i < upstream.length; i++) {
       var upel = upstream[i];
    
       var fossilex = /(.*)-fossil/;
