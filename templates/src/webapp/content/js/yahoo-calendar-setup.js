@@ -294,6 +294,11 @@ var RSF_Calendar = function() {
 
   function initYahooCalendar_base(value, nameBase, controlIDs, title) {
     var containerID = nameBase + "date-container";
+    var container = $it(containerID);
+    if (container && container.childNodes && container.childNodes.length > 0) {
+      // already rendered
+      return null;
+      }
 
     var thisMonth = value.month;
     var thisDay = value.day;
@@ -344,6 +349,9 @@ var RSF_Calendar = function() {
     var controlIDs = [selMonthID, selDayID];
 
     var newcal = initYahooCalendar_base(today, nameBase, controlIDs, title);
+    if (!newcal) {
+      return;
+      }
 
     newcal.setChildFunction("onSelect", 
       function() {
@@ -400,6 +408,9 @@ from the controls of an active calendar dismisses its popup **/
       controlIDs = [dateFieldID, timeFieldID];
   
       var newcal = initYahooCalendar_base(value, nameBase, controlIDs, title);
+      if (!newcal) {
+        return;
+        }
     
 //    var annotation = $it(nameBase + "date-annotation");
       var dateLink = $it(nameBase + "date-link");
