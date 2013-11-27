@@ -465,7 +465,10 @@ var RSF = RSF || {};
         try {
           var firer = getElementFirer(element);
           RSF.log("fieldChange: " + actualold + " to " + newvalue);
+		  //Preserve selection area
+		  var estart = element.selectionStart, eend = element.selectionEnd;
           element.value = newvalue;
+		  element.setSelectionRange(estart,eend);
           firer.fireEvent();
           }
         finally {
