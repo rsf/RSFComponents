@@ -7,7 +7,7 @@
   <parent>
     <artifactId>rsf-master-pom</artifactId>
     <groupId>uk.org.ponder</groupId>
-    <version>POM-3</version>
+    <version>POM-4-SNAPSHOT</version>
   </parent>
   <repositories>
     <repository>
@@ -26,23 +26,6 @@
     <module>templates</module>
     <module>test</module>
   </modules>
-    <distributionManagement>
-        <downloadUrl>http://source.sakaiproject.org/maven2/</downloadUrl>
-        <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>sakai-maven-snapshots-scp</id>
-            <name>Sakai snapshot Repo</name>
-            <url>scpexe://source.sakaiproject.org/var/www/html/maven2-snapshots</url>
-            <layout>default</layout>
-        </snapshotRepository>
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>sakai-maven2-scp</id>
-            <name>Sakai maven2 repository</name>
-            <url>scpexe://source.sakaiproject.org/var/www/html/maven2</url>
-            <layout>default</layout>
-        </repository>
-    </distributionManagement>
   <scm>
     <connection>scm:git:git://github.com/rsf/RSFComponents.git</connection>
     <developerConnection>scm:git:git://github.com/rsf/RSFComponents.git</developerConnection>
