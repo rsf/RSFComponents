@@ -7,7 +7,7 @@
   <parent>
     <artifactId>rsf-master-pom</artifactId>
     <groupId>uk.org.ponder</groupId>
-    <version>POM-4-SNAPSHOT</version>
+    <version>POM-6</version>
   </parent>
   <repositories>
     <repository>
@@ -18,6 +18,8 @@
   </repositories>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<rsfutil.version>0.8.0</rsfutil.version>
+    <project.scm.id>rsf-github</project.scm.id>
   </properties>
   <version>0.8.0-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -28,7 +30,7 @@
   </modules>
   <scm>
     <connection>scm:git:git://github.com/rsf/RSFComponents.git</connection>
-    <developerConnection>scm:git:git://github.com/rsf/RSFComponents.git</developerConnection>
+    <developerConnection>scm:git:https://github.com/rsf/RSFComponents.git</developerConnection>
     <url>https://github.com/rsf/RSFComponents.git</url>
   </scm>
 <dependencyManagement>
@@ -36,7 +38,7 @@
     <dependency>
       <groupId>uk.org.ponder.rsfutil</groupId>
       <artifactId>rsfutil</artifactId>
-      <version>0.8.0-SNAPSHOT</version>
+	  <version>${rsfutil.version}</version>
       <type>jar</type>
     </dependency>
 </dependencies>
